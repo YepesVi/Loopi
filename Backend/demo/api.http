@@ -1,0 +1,12 @@
+POST http://localhost:8080/api/productos
+Content-Type: application/json
+
+{
+  "titulo": "Producto desde POST",
+  "descripcion": "Con imagen ya subida",
+  "categoria": "General",
+  "precio": 10000.00,
+  "estado": "PUBLICADO",
+  "propietarioId": 10,
+  "fotos": "/uploads/uuid-imagen.jpg"
+}
