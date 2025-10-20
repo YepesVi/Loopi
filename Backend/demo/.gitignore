@@ -31,3 +31,9 @@ build/
 
 ### VS Code ###
 .vscode/
+
+# Ignorar archivos de errores JVM
+hs_err_pid*.log
+
+# Ignorar archivos replay generados por JVM
+replay_pid*.log
