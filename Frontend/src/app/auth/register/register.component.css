@@ -1,0 +1,15 @@
+.card {
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.link-button {
+  background: none;
+  border: none;
+  color: #007bff;
+  text-decoration: underline;
+  cursor: pointer;
+  margin-top: 1rem;
+  display: block;
+  width: 100%;
+  text-align: center;
+}
