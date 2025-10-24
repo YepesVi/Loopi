@@ -1,8 +1,11 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './guards/auth.guards';
+import { Home } from './components/home/home';
 
 
 export const routes: Routes = [
+  { path: '', redirectTo: 'home', pathMatch: 'full' }, // Ruta por defecto redirige a 'home'
+
   {
     path: 'login',
     loadComponent: () =>
@@ -13,7 +16,7 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./auth/register/register.component').then(m => m.RegisterComponent)
   },
-  { path: '', redirectTo: 'login', pathMatch: 'full' },
+  { path: 'home', component: Home},
 
  {
   path: 'dashboard',
