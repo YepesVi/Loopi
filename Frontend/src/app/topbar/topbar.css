@@ -1,0 +1,16 @@
+.navbar-brand i {
+    font-size: 1.5rem;
+  }
+  
+  .navbar-brand span {
+    font-size: 1.2rem;
+  }
+  
+  .badge {
+    font-size: 0.7rem;
+  }
+  
+  .dropdown-menu a {
+    cursor: pointer;
+  }
+  
