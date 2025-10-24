@@ -1,6 +1,6 @@
 .footer {
     width: 100%;
-    background-color: #222;
+    background-color: #38355d;
     color: #fff;
     padding-top: 20px;
     margin-top: 40px;
@@ -22,7 +22,7 @@
   
   .footer-section h3,
   .footer-section h4 {
-    color: #ffcc00;
+    color: white;
   }
   
   .footer-section ul {
@@ -37,7 +37,7 @@
   }
   
   .footer-section ul li a:hover {
-    color: #ffcc00;
+    color: #13162c;
   }
   
   .social-icons a {
@@ -48,7 +48,7 @@
   }
   
   .social-icons a:hover {
-    color: #ffcc00;
+    color: #13162c;
   }
   
   .footer-bottom {
