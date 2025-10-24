@@ -14,6 +14,6 @@ export class DashboardComponent {
 
   logout() {
     localStorage.removeItem('token'); // Limpia el token
-    this.router.navigate(['/login']); // Redirige al login
+    this.router.navigate(['/login-register']); // Redirige al login
   }
 }
