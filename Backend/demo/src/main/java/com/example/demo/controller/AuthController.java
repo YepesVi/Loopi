@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.nio.file.*;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -19,17 +20,17 @@ public class AuthController {
     @Autowired
     private UserService userService;
 
+    // 📝 Registro con foto
     @PostMapping("/register")
     public ResponseEntity<?> register(
-        @RequestParam String nombre,
-        @RequestParam String apellido,
-        @RequestParam String cedula,
-        @RequestParam String telefono,
-        @RequestParam String correo,
-        @RequestParam String direccion,
-        @RequestParam String password,
-        @RequestParam(required = false) MultipartFile foto
-    ) {
+            @RequestParam String nombre,
+            @RequestParam String apellido,
+            @RequestParam String cedula,
+            @RequestParam String telefono,
+            @RequestParam String correo,
+            @RequestParam String direccion,
+            @RequestParam String password,
+            @RequestParam(required = false) MultipartFile foto) {
         try {
             User user = new User();
             user.setNombre(nombre);
@@ -55,6 +56,7 @@ public class AuthController {
         }
     }
 
+    // 🔐 Login por correo y contraseña
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody User user) {
         try {
@@ -69,4 +71,38 @@ public class AuthController {
             return ResponseEntity.status(500).body("Error interno en el servidor");
         }
     }
+
+    // 📧 Solicitud de recuperación de contraseña
+   @PostMapping("/recover")
+public ResponseEntity<?> recoverPassword(@RequestBody Map<String, String> payload) {
+    String correo = payload.get("correo");
+    try {
+        boolean enviado = userService.sendRecoveryEmail(correo);
+        if (enviado) {
+            return ResponseEntity.ok("Correo de recuperación enviado");
+        } else {
+            return ResponseEntity.badRequest().body("Correo no registrado");
+        }
+    } catch (Exception e) {
+        return ResponseEntity.status(500).body("Error al enviar correo de recuperación");
+    }
+}
+
+
+    // 🔒 Restablecer contraseña 
+    @PostMapping("/reset-direct")
+public ResponseEntity<?> resetPasswordDirect(@RequestBody Map<String, String> payload) {
+    String correo = payload.get("correo");
+    String cedula = payload.get("cedula");
+    String newPassword = payload.get("newPassword");
+
+    boolean actualizado = userService.resetPasswordDirect(correo, cedula, newPassword);
+
+    if (!actualizado) {
+        return ResponseEntity.badRequest().body("Datos inválidos para restablecer la contraseña");
+    }
+
+    return ResponseEntity.ok("Contraseña actualizada correctamente");
+}
+
 }
