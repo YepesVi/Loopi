@@ -5,37 +5,19 @@ import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-topbar',
-  standalone: true, // ⚡ importante si estás usando imports en lugar de módulos
+  standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './topbar.html',
   styleUrls: ['./topbar.css']
 })
 export class Topbar {
-  userName = 'Sara';
-  searchQuery = '';
-  cartCount = 2; // número de productos en el carrito
 
-  constructor(private router: Router) {}
+  searchQuery = '';
 
   searchProduct() {
     if (this.searchQuery.trim()) {
       console.log('Buscando:', this.searchQuery);
+      // Aquí podrías navegar a una página de resultados
     }
-  }
-
-  goToCart() {
-    console.log('Ir al carrito');
-  }
-
-  goToProfile() {
-    console.log('Ir al perfil');
-  }
-
-  goToOrders() {
-    console.log('Ir a pedidos');
-  }
-
-  logout() {
-    console.log('Cerrando sesión...');
   }
 }

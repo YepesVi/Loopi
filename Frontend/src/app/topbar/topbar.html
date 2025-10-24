@@ -1,55 +1,43 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm px-4">
-    <!-- Logo y nombre -->
-    <a class="navbar-brand d-flex align-items-center" routerLink="/">
-      <i class="bi bi-shop me-2"></i>
-      <span class="fw-bold">Loopi Store</span>
+<nav class="navbar navbar-expand-lg custom-topbar px-3">
+  <!-- LOGO a la izquierda -->
+  <div class="d-flex align-items-center ms-3">
+    <a class="navbar-brand d-flex align-items-center" >
+      <img src="logo.png" alt="Logo" class="logo me-2">
     </a>
   
-    <!-- Botón menú móvil -->
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
-      <span class="navbar-toggler-icon"></span>
-    </button>
+    <a class="navbar-brand d-flex align-items-center opciones" >
+      Home
+    </a>
+    <a class="navbar-brand d-flex align-items-center opciones" >
+      Categorías
+    </a>
+  </div>
   
-    <!-- Contenido principal -->
-    <div class="collapse navbar-collapse" id="navbarContent">
-      <!-- Buscador -->
-      <form class="d-flex mx-auto w-50" (submit)="searchProduct()">
-        <input
-          class="form-control me-2"
-          type="search"
-          placeholder="Buscar productos..."
-          [(ngModel)]="searchQuery"
-          name="search"
-        >
-        <button class="btn btn-light" type="submit">
-          <i class="bi bi-search"></i>
-        </button>
-      </form>
-  
-      <!-- Carrito y usuario -->
-      <ul class="navbar-nav ms-auto align-items-center">
-        <li class="nav-item me-3 position-relative">
-          <button class="btn btn-light position-relative" (click)="goToCart()">
-            <i class="bi bi-cart3 fs-5"></i>
-            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-              {{ cartCount }}
-            </span>
-          </button>
-        </li>
-  
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown">
-            <img src="assets/user.png" alt="Usuario" class="rounded-circle me-2" width="35" height="35">
-            <span>{{ userName }}</span>
-          </a>
-          <ul class="dropdown-menu dropdown-menu-end">
-            <li><a class="dropdown-item" (click)="goToProfile()">Mi perfil</a></li>
-            <li><a class="dropdown-item" (click)="goToOrders()">Mis pedidos</a></li>
-            <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item text-danger" (click)="logout()">Cerrar sesión</a></li>
-          </ul>
-        </li>
-      </ul>
-    </div>
-  </nav>
-  
+
+  <!-- Contenedor derecho -->
+  <div class="d-flex align-items-center ms-auto">
+    <!-- Barra de búsqueda -->
+    <form class="d-flex" (ngSubmit)="searchProduct()">
+      <input
+        type="text"
+        class="form-control me-2 search-bar"
+        placeholder="Buscar productos"
+        [(ngModel)]="searchQuery"
+        name="search"
+      />
+    </form>
+    
+
+    <!-- Ícono carrito -->
+    <a class="nav-link text-light position-relative me-3" title="Carrito">
+      <i class="bi bi-cart-fill fs-4"></i>
+      <span class="badge bg-warning text-dark position-absolute top-0 start-100 translate-middle rounded-pill">
+      </span>
+    </a>
+
+    <!-- Ícono usuario -->
+    <a class="nav-link text-light me-3" title="Perfil">
+      <i class="bi bi-person-circle fs-4"></i>
+    </a>
+  </div>
+</nav>

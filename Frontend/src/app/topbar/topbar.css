@@ -1,16 +1,63 @@
-.navbar-brand i {
-    font-size: 1.5rem;
-  }
-  
-  .navbar-brand span {
-    font-size: 1.2rem;
-  }
-  
-  .badge {
-    font-size: 0.7rem;
-  }
-  
-  .dropdown-menu a {
-    cursor: pointer;
-  }
-  
+.custom-topbar {
+  background-color: #6d5d9a
+  ; /* azul Bootstrap, cámbialo a tu gusto */
+  color: white;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.logo {
+  width: 80px;
+  height: 40px;
+  object-fit: contain;
+}
+
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.nav-link {
+  font-size: 1.2rem;
+  margin-left: 10px;
+}
+
+.nav-link:hover {
+  color: #38355d !important;
+}
+
+.badge {
+  font-size: 0.8rem;
+  position: relative;
+  top: -8px;
+  right: 5px;
+}
+
+.opciones {
+  font-size: 1.1rem; /* tamaño más grande */
+  font-weight: 500;  /* más grueso */
+  color: #fff;       /* color del texto */
+  margin-left: 20px; /* separación del logo */
+  cursor: pointer;
+}
+
+.opciones:hover {
+  color: #38355d;
+}
+
+.search-bar {
+  width: 400px !important;    
+  height: 33px !important;      
+  border-radius: 8px !important; 
+}
+
+form input {
+  width: 200px; 
+  transition: width 0.3s ease;
+}
+
+form input:focus {
+  width: 250px;
+}
