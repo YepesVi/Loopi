@@ -119,6 +119,28 @@ export const productos = [
       precio: 60000,
       propietario_id: 5,
       titulo: 'Colchoneta para Yoga'
-    }
+    },
+    {
+      id: 12,
+      categoria: 'Tecnología',
+      descripcion: 'Smartwatch con monitor de ritmo cardíaco, pasos y sueño, compatible con Android e iOS.',
+      estado: 'Disponible',
+      fecha_publicacion: new Date(),
+      fotos: 'smartwatch.jpg',
+      precio: 320000,
+      propietario_id: 3,
+      titulo: 'Reloj Inteligente FitPro'
+    },
+    {
+      id: 13,
+      categoria: 'Tecnología',
+      descripcion: 'Teclado mecánico retroiluminado RGB con switches azules y diseño ergonómico.',
+      estado: 'Disponible',
+      fecha_publicacion: new Date(),
+      fotos: 'teclado_mecanico.jpg',
+      precio: 210000,
+      propietario_id: 1,
+      titulo: 'Teclado Mecánico RGB'
+    }    
   ];
   

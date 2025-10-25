@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
-import { DecimalPipe, NgFor, KeyValuePipe } from '@angular/common';
+import { CommonModule, DecimalPipe, NgFor, KeyValuePipe } from '@angular/common';
 import { productos } from './data';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [NgFor, KeyValuePipe, DecimalPipe],
+  imports: [NgFor, KeyValuePipe, DecimalPipe, CommonModule],
   templateUrl: './home.html',
   styleUrls: ['./home.css']
 })
@@ -45,4 +45,13 @@ export class Home {
      const el = document.getElementById(id);
      if (el) el.scrollBy({ left: 300, behavior: 'smooth' });
    }
+
+   dividirEnGrupos(arr: any[], tamano: number): any[][] {
+    const grupos = [];
+    for (let i = 0; i < arr.length; i += tamano) {
+      grupos.push(arr.slice(i, i + tamano));
+    }
+    return grupos;
+  }
+  
 }
