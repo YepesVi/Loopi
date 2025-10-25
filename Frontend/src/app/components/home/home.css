@@ -1,0 +1,151 @@
+.home-container {
+padding: 20px;
+}
+
+.carousel-item img {
+height: 400px;
+object-fit: cover;
+border-radius: 10px;
+}
+
+.category-section {
+margin-top: 40px;
+}
+
+.category-title {
+margin-bottom: 20px;
+font-family: 'Poppins', sans-serif;
+font-weight: 600;
+color: #333;
+}
+
+.product-card {
+transition: transform 0.3s;
+}
+
+.product-card:hover {
+transform: scale(1.05);
+}
+
+.login-section {
+background-color: #f8f9fa;
+padding: 40px;
+border-radius: 10px;
+}
+
+.card img {
+height: 180px;
+object-fit: contain;
+}
+
+h2 {
+font-weight: 600;
+border-bottom: 2px solid #007bff;
+display: inline-block;
+padding-bottom: 5px;
+}
+
+.carousel-item img {
+width: 100%;
+height: 100%;
+object-fit: contain; /* Muestra la imagen completa */
+background-color: white; /* Opcional: rellena el fondo */
+}
+  
+#mainCarousel {
+width: 100%;
+height: 400px; /* Ajusta el alto del carrusel según tu diseño */
+overflow: hidden;
+border-radius: 10px; /* Opcional: esquinas redondeadas */
+}
+
+h1 {
+    font-weight: 700;
+    text-align: center;
+  }
+  
+  .scroll-container {
+    display: flex;
+    gap: 15px;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    padding-bottom: 10px;
+  }
+  
+  .scroll-container::-webkit-scrollbar {
+    height: 8px;
+  }
+  
+  .scroll-container::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 4px;
+  }
+  
+  .product-card {
+    width: 100%;
+    height: 100%; /* Mantiene todas igual de altas dentro de su columna */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* Mantiene precios y botones alineados */
+    border-radius: 10px;
+    overflow: hidden;
+    transition: transform 0.3s;
+  }
+  
+  .product-card:hover {
+    transform: scale(1.03);
+  }
+  
+  /* 🖼️ Imagen uniforme */
+  .product-card img {
+    width: 100%;
+    height: 180px; /* Fija el alto de la imagen */
+    object-fit: cover; /* Recorta sin deformar */
+  }
+  
+  /* 📦 Contenido con tamaño equilibrado */
+  .product-card .card-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  
+  /* Asegura que los textos no empujen el tamaño */
+  .card-title, .card-text {
+    min-height: 40px; /* Opcional: fija altura base */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  
+  
+  .card-img-top {
+    height: 160px;
+    object-fit: cover;
+  }
+
+  .opcion-ver-mas {
+    color: #b48ce4;
+  }
+
+/* Solo los carruseles de productos */
+.category-carousel .carousel-inner {
+    padding: 10px;
+  }
+  
+  .category-carousel .carousel-item img {
+    object-fit: cover;
+    height: 200px;
+  }
+  
+  .category-carousel .product-card {
+    margin: 0 10px;
+    transition: transform 0.3s;
+  }
+  
+  .category-carousel .product-card:hover {
+    transform: scale(1.03);
+  }
+  
+  
