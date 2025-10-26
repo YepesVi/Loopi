@@ -1,10 +1,196 @@
-.container {
-  padding: 2rem;
-  background-color: #f9f9f9;
-  border-radius: 8px;
+/* ======== PALETA DE COLORES ======== 
+.color1 {color: #13162c;}
+.color2 {color: #38355d;}
+.color3 {color: #6d5d9a;}
+.color4 {color: #b48ce4;}
+.color5 {color: #ffc3ff;}
+*/
+
+/* ======== ESTILOS GENERALES ======== */
+body {
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(135deg, #13162c, #38355d);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 100vh;
+  margin: 0;
+  padding: 40px 0;
+  color: #fff;
 }
 
-button {
-  padding: 0.5rem 1.5rem;
-  font-size: 1rem;
+/* ======== CONTENEDOR PRINCIPAL ======== */
+.container {
+  width: 100%;
+  max-width: 1000px;
+  background: #1b1f38;
+  padding: 40px 50px;
+  border-radius: 20px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+  text-align: center;
+  border: 1px solid #38355d;
+}
+
+/* ======== TÍTULOS ======== */
+h2, h3 {
+  color: #b48ce4;
+  margin-bottom: 25px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-shadow: 0 0 6px rgba(180, 140, 228, 0.6);
+}
+
+/* ======== FORMULARIO ======== */
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  align-items: center;
+}
+
+form input[type="text"],
+form input[type="number"],
+form input[type="file"] {
+  width: 90%;
+  max-width: 500px;
+  padding: 12px 15px;
+  background: white;
+  color: #38355d;;
+  border: 1px solid #6d5d9a;
+  border-radius: 10px;
+  font-size: 15px;
+  transition: all 0.3s ease;
+}
+
+form input::placeholder {
+  color: #38355d;
+}
+
+form input:focus {
+  border-color: #b48ce4;
+  box-shadow: 0 0 8px rgba(180, 140, 228, 0.6);
+  outline: none;
+}
+
+/* ======== BOTÓN PRINCIPAL ======== */
+form button {
+  width: 220px;
+  padding: 12px;
+  background: #6d5d9a;
+  color: #ffc3ff;
+  font-weight: bold;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 10px rgba(109, 93, 154, 0.4);
+}
+
+form button:hover {
+  background: #b48ce4;
+  color: #13162c;
+  transform: scale(1.05);
+  box-shadow: 0 0 15px rgba(180, 140, 228, 0.7);
+}
+
+/* ======== GRID DE PRODUCTOS ======== */
+.productos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 25px;
+  margin-top: 30px;
+}
+
+/* ======== TARJETA DE PRODUCTO ======== */
+.producto {
+  background: white;
+  border-radius: 15px;
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  border-left: 5px solid #b48ce4;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.producto:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(180, 140, 228, 0.4);
+}
+
+/* ======== INFO DEL PRODUCTO ======== */
+.producto .info {
+  flex: 1;
+  text-align: left;
+}
+
+.producto h4 {
+  margin: 0;
+  font-size: 18px;
+  color: #13162c;
+}
+
+.producto p {
+  margin: 5px 0;
+  font-size: 15px;
+  color: #13162c;
+}
+
+/* ======== IMAGEN ======== */
+.producto img {
+  flex-shrink: 0;
+  border-radius: 12px;
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border: 2px solid #6d5d9a;
+  margin-left: 20px;
+}
+
+/* ======== BOTONES EDITAR / ELIMINAR ======== */
+.acciones {
+  margin-top: 10px;
+  display: flex;
+  gap: 10px;
+}
+
+.acciones button {
+  padding: 8px 14px;
+  border-radius: 20px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.acciones .editar {
+  background: #6d5d9a;
+  color: #ffc3ff;
+}
+
+.acciones .editar:hover {
+  background: #b48ce4;
+  color: #13162c;
+}
+
+.acciones .eliminar {
+  background: #6d5d9a;
+  color: #fff;
+}
+
+.acciones .eliminar:hover {
+  background: #b48ce4;
+}
+
+/* ======== RESPONSIVE ======== */
+@media (max-width: 600px) {
+  .producto {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .producto img {
+    margin: 15px 0 0;
+  }
 }

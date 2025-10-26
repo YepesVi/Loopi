@@ -1,6 +1,46 @@
-<div class="container mt-5 text-center">
-  <h2>Bienvenido al Dashboard</h2>
-  <p>Has iniciado sesión correctamente.</p>
+<div class="container">
+  <h2>{{ editando ? 'Editar producto' : 'Agregar producto' }}</h2>
 
-  <button (click)="logout()" class="btn btn-outline-danger mt-4">Cerrar sesión</button>
+  <form (ngSubmit)="crearProducto()" enctype="multipart/form-data">
+    <input type="text" placeholder="Título" [(ngModel)]="nuevoProducto.titulo" name="titulo" required>
+    <input type="text" placeholder="Descripción" [(ngModel)]="nuevoProducto.descripcion" name="descripcion" required>
+    <input type="text" placeholder="Categoría" [(ngModel)]="nuevoProducto.categoria" name="categoria" required>
+    <input type="number" placeholder="Precio" [(ngModel)]="nuevoProducto.precio" name="precio" required>
+    <input type="text" placeholder="Estado" [(ngModel)]="nuevoProducto.estado" name="estado" required>
+
+    <!-- ✅ Campo para subir imagen -->
+    <input type="file" (change)="onFileSelected($event)" accept="image/*">
+
+    <button type="submit">
+      {{ editando ? 'Actualizar producto' : 'Guardar producto' }}
+    </button>
+  </form>
+
+  <hr>
+
+  <h3>Productos registrados</h3>
+
+  <div class="productos-grid">
+    <div *ngFor="let p of productos" class="producto">
+      <div class="info">
+        <h4>{{ p.titulo }}</h4>
+        <p>{{ p.descripcion }}</p>
+        <p><strong>${{ p.precio }}</strong></p>
+        <div class="acciones">
+          <button class="editar" (click)="editarProducto(p)">Editar</button>
+          <button class="eliminar" (click)="eliminarProducto(p.id!)">Eliminar</button>
+        </div>
+      </div>
+
+      <!-- ✅ Imagen del producto -->
+      <img
+        *ngIf="p.fotos"
+        [src]="'http://localhost:8081' + p.fotos"
+        alt="imagen producto"
+        width="120"
+        height="120"
+        style="object-fit: cover; border-radius: 8px; margin-top: 8px;"
+      >
+    </div>
+  </div>
 </div>
