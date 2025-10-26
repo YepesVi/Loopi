@@ -1,0 +1,43 @@
+<nav class="navbar navbar-expand-lg custom-topbar px-3">
+  <!-- LOGO a la izquierda -->
+  <div class="d-flex align-items-center ms-3">
+    <a class="navbar-brand d-flex align-items-center" >
+      <img src="logo.png" alt="Logo" class="logo me-2">
+    </a>
+  
+    <a class="navbar-brand d-flex align-items-center opciones" >
+      Home
+    </a>
+    <a class="navbar-brand d-flex align-items-center opciones" >
+      Categorías
+    </a>
+  </div>
+  
+
+  <!-- Contenedor derecho -->
+  <div class="d-flex align-items-center ms-auto">
+    <!-- Barra de búsqueda -->
+    <form class="d-flex" (ngSubmit)="searchProduct()">
+      <input
+        type="text"
+        class="form-control me-2 search-bar"
+        placeholder="Buscar productos"
+        [(ngModel)]="searchQuery"
+        name="search"
+      />
+    </form>
+    
+
+    <!-- Ícono carrito -->
+    <a class="nav-link text-light position-relative me-3" title="Carrito">
+      <i class="bi bi-cart-fill fs-4"></i>
+      <span class="badge bg-warning text-dark position-absolute top-0 start-100 translate-middle rounded-pill">
+      </span>
+    </a>
+
+    <!-- Ícono usuario -->
+    <a class="nav-link text-light me-3" title="Perfil">
+      <i class="bi bi-person-circle fs-4"></i>
+    </a>
+  </div>
+</nav>
