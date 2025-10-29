@@ -23,4 +23,6 @@ public interface ProductoRepository extends JpaRepository<Producto, Long> {
            "(:precioMin IS NULL OR p.precio >= :precioMin) AND " +
            "(:precioMax IS NULL OR p.precio <= :precioMax)")
     Page<Producto> buscarConFiltros(String titulo, String categoria, Double precioMin, Double precioMax, Pageable pageable);
+
+    
 }

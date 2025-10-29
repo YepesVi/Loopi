@@ -11,6 +11,7 @@ export interface Producto {
   estado: string;
   propietarioId: number;
   fotos?: string;
+  fechaCreacion?: string;
 }
 
 @Injectable({
@@ -38,5 +39,13 @@ export class ProductosService {
   eliminarProducto(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/eliminar/${id}`);
   }
+
+  getHistorialPorUsuario(propietarioId: number, estado?: string): Observable<Producto[]> {
+  let url = `${this.apiUrl}/usuario/${propietarioId}/historial`;
+  if (estado) {
+    url += `?estado=${estado}`;
+  }
+  return this.http.get<Producto[]>(url);
+}
 
 }

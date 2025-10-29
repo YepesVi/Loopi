@@ -6,6 +6,9 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.*;
 import java.time.LocalDateTime;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 
 @Entity
 public class Producto {
@@ -35,7 +38,11 @@ public class Producto {
     @NotNull(message="El propietario es obligatorio")
     private Long propietarioId;
 
+    @JsonProperty("fechaCreacion")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime fechaPublicacion = LocalDateTime.now();
+
+    
 
     // Getters y setters
     public Long getId() { return id; }
