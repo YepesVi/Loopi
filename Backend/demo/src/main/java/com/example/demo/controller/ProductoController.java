@@ -131,4 +131,31 @@ public class ProductoController {
         return ResponseEntity.noContent().build();
     }
 
+<<<<<<< HEAD
+    @GetMapping("/usuario/{propietarioId}/historial")
+public ResponseEntity<List<Producto>> historialPublicaciones(
+        @PathVariable Long propietarioId,
+        @RequestParam(required = false) String estado) {
+
+    List<Producto> productos;
+
+    if (estado != null && !estado.isEmpty()) {
+        productos = repo.findByPropietarioId(propietarioId)
+                        .stream()
+                        .filter(p -> p.getEstado().equalsIgnoreCase(estado))
+                        .toList();
+    } else {
+        productos = repo.findByPropietarioId(propietarioId);
+    }
+
+    if (productos.isEmpty()) {
+        return ResponseEntity.noContent().build();
+    }
+
+    return ResponseEntity.ok(productos);
 }
+
+}
+=======
+}
+>>>>>>> 8e2d5e8b2b651e54bdc3d4c1a00701920a69bea3
