@@ -1,0 +1,84 @@
+
+
+.popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    
+    /* 1. ESTADO INICIAL (CERRADO): Invisible y deshabilitado para clics */
+    opacity: 0; 
+    pointer-events: none; /* Crucial: permite hacer clic a través del overlay cuando está cerrado */
+    transition: opacity 0.3s ease-out; 
+}
+
+/* 2. ESTADO FINAL (ABIERTO): Visible y activo para clics */
+.popup-overlay.show-overlay {
+    opacity: 1;
+    pointer-events: auto; /* Permite la interacción con el overlay y el popup */
+}
+
+/* --- Contenido del Popup --- */
+.popup-content {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    width: 90%;
+    max-width: 600px;
+    max-height: 90%;
+    overflow-y: auto;
+    position: relative;
+    
+    /* 1. ESTADO INICIAL (CERRADO) */
+    transform: scale(0.8); 
+    opacity: 0; 
+    transition: all 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55); 
+}
+
+/* 2. ESTADO FINAL (ABIERTO) */
+.popup-overlay.show-overlay .popup-content {
+    transform: scale(1); 
+    opacity: 1; 
+}
+
+
+/* --- Botón de cerrar --- */
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: #e74c3c;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    font-weight: bold;
+    line-height: 1;
+    font-size: 1.1em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.2s ease;
+}
+
+.close-btn:hover {
+    background: #c0392b;
+}
+
+/* --- Media Queries para responsividad (opcional) --- */
+@media (max-width: 768px) {
+  .popup-content {
+    width: 95%;
+    max-width: unset; /* Sin ancho máximo en pantallas pequeñas */
+  }
+}
