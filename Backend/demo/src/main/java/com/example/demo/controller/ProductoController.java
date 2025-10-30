@@ -131,6 +131,7 @@ public class ProductoController {
         return ResponseEntity.noContent().build();
     }
 
+<<<<<<< HEAD
     @GetMapping("/usuario/{propietarioId}/historial")
 public ResponseEntity<List<Producto>> historialPublicaciones(
         @PathVariable Long propietarioId,
@@ -155,3 +156,6 @@ public ResponseEntity<List<Producto>> historialPublicaciones(
 }
 
 }
+=======
+}
+>>>>>>> 8e2d5e8b2b651e54bdc3d4c1a00701920a69bea3

@@ -116,8 +116,10 @@ export class DashboardComponent {
 
   // ====== Logout ======
   logout() {
-    localStorage.removeItem('token');
-    this.router.navigate(['/login']);
+
+    localStorage.removeItem('token'); // Limpia el token
+    this.router.navigate(['/login-register']); // Redirige al login
+
   }
 
 filtrarPorEstado() {

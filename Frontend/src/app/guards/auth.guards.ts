@@ -16,7 +16,8 @@ export const authGuard: CanActivateFn = () => {
       return false;
     }
   } else {
-    // On server-side, allow navigation to prevent SSR errors; authentication will be handled on client-side
-    return true;
+
+    router.navigate(['/login-register']);
+
   }
 };

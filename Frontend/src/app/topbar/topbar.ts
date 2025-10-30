@@ -1,0 +1,23 @@
+import { Component } from '@angular/core';
+import { Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+
+@Component({
+  selector: 'app-topbar',
+  standalone: true,
+  imports: [CommonModule, FormsModule],
+  templateUrl: './topbar.html',
+  styleUrls: ['./topbar.css']
+})
+export class Topbar {
+
+  searchQuery = '';
+
+  searchProduct() {
+    if (this.searchQuery.trim()) {
+      console.log('Buscando:', this.searchQuery);
+      // Aquí podrías navegar a una página de resultados
+    }
+  }
+}

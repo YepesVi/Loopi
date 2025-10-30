@@ -1,0 +1,90 @@
+<div class="home-container">
+    <!-- 🖼️ Carrusel -->
+    <div id="mainCarousel" class="carousel slide mb-5" data-bs-ride="carousel">
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+            <img src="assets/carrusel/imagen1.jpg" class="d-block w-100" alt="Promoción 1">
+            </div>
+            <div class="carousel-item">
+            <img src="assets/carrusel/imagen2.jpg" class="d-block w-100" alt="Promoción 2">
+            </div>
+        </div>
+        
+        <button class="carousel-control-prev" type="button" data-bs-target="#mainCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Anterior</span>
+        </button>
+        
+        <button class="carousel-control-next" type="button" data-bs-target="#mainCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Siguiente</span>
+        </button>
+    </div>
+  
+    <!-- 🛍️ Productos por categoría -->
+    <h1 class="text-center mb-4">Categorías</h1>
+    
+    <div *ngFor="let categoria of categorias" class="mb-5">
+        <div class="d-flex align-items-center mb-3">
+            <h3 class="mb-0 me-2">{{ categoria.key }}</h3>
+            <a class="btn btn-link p-0 opcion-ver-mas" style="margin-top: 8px;">Ver más</a>
+        </div>
+          
+            <div
+              id="carousel-{{ categoria.key }}"
+              class="carousel slide category-carousel"
+              data-bs-ride="carousel"
+            >
+              <div class="carousel-inner">
+                <div
+                  *ngFor="let chunk of dividirEnGrupos(categoria.value, 4); let i = index"
+                  class="carousel-item"
+                  [ngClass]="{ active: i === 0 }"
+                >
+                  <div class="row">
+                    <div class="col-md-3" *ngFor="let producto of chunk">
+                      <div class="card product-card">
+                        <img
+                          [src]="'assets/' + producto.fotos"
+                          class="card-img-top"
+                          alt="{{ producto.titulo }}"
+                        />
+                        <div class="card-body">
+                          <h5 class="card-title">{{ producto.titulo }}</h5>
+                          <p class="card-text text-muted">{{ producto.descripcion }}</p>
+                          <p class="fw-bold">$ {{ producto.precio | number }}</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+          
+              <!-- Controles del carrusel -->
+              <button
+                class="carousel-control-prev"
+                type="button"
+                [attr.data-bs-target]="'#carousel-' + categoria.key"
+                data-bs-slide="prev"
+              >
+                <span class="carousel-control-prev-icon"></span>
+              </button>
+              <button
+                class="carousel-control-next"
+                type="button"
+                [attr.data-bs-target]="'#carousel-' + categoria.key"
+                data-bs-slide="next"
+              >
+                <span class="carousel-control-next-icon"></span>
+              </button>
+            </div>         
+    </div>    
+  
+    <!-- 🔐 Sección de inicio de sesión -->
+    <section class="login-section text-center mt-5">
+      <h3>¿Ya tienes cuenta?</h3>
+      <p>Inicia sesión para acceder a tus pedidos y más beneficios</p>
+      <button class="btn btn-dark px-4 py-2" >Iniciar sesión</button>
+    </section>
+  </div>
+  
