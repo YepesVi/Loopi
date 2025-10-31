@@ -106,11 +106,5 @@ export class DashboardComponent {
     this.editando = false;
   }
 
-  // ====== Logout ======
-  logout() {
-
-    localStorage.removeItem('token'); // Limpia el token
-    this.router.navigate(['/login-register']); // Redirige al login
-
-  }
+  
 }
