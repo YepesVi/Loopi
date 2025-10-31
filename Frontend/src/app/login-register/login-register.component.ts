@@ -70,43 +70,43 @@ export class LoginRegisterComponent {
   }
 
   private clearLoginFields(): void {
-  this.user.correo = '';
-  this.user.password = '';
-}
-
-
-  login() {
-  if (!this.user.correo || !this.user.password) {
-    this.message = '❌ Por favor ingresa correo y contraseña';
-    this.clearMessageAfterDelay();
-    return;
+    this.user.correo = '';
+    this.user.password = '';
   }
 
-  const loginPayload = {
-    correo: this.user.correo,
-    password: this.user.password
-  };
-
-  this.datosEnviados = JSON.stringify(loginPayload);
-
-  this.authService.login(loginPayload).subscribe({
-    next: res => {
-      localStorage.setItem('token', res.token);
-      this.message = '✅ Login exitoso';
+  login() {
+    if (!this.user.correo || !this.user.password) {
+      this.message = '❌ Por favor ingresa correo y contraseña';
       this.clearMessageAfterDelay();
-      this.router.navigate(['/dashboard']);
-    },
-    error: err => {
-      console.error('Error en login:', err);
-      this.message = err.status === 401
-        ? '❌ Usuario o contraseña incorrectos'
-        : '❌ Error del servidor';
-      this.clearLoginFields(); // ✅ Limpia correo y contraseña si hay error
-      this.clearMessageAfterDelay();
+      return;
     }
-  });
-}
 
+    const loginPayload = {
+      correo: this.user.correo,
+      password: this.user.password
+    };
+
+    this.datosEnviados = JSON.stringify(loginPayload);
+
+    this.authService.login(loginPayload).subscribe({
+      next: res => {
+        localStorage.setItem('token', res.token);
+        localStorage.setItem('nombreUsuario', res.nombre); // ✅ Guarda el nombre
+        localStorage.setItem('userId', res.id); // 👈 guarda el ID
+        this.message = '✅ Login exitoso';
+        this.clearMessageAfterDelay();
+        this.router.navigate(['/home']);
+      },
+      error: err => {
+        console.error('Error en login:', err);
+        this.message = err.status === 401
+          ? '❌ Usuario o contraseña incorrectos'
+          : '❌ Error del servidor';
+        this.clearLoginFields();
+        this.clearMessageAfterDelay();
+      }
+    });
+  }
 
   register() {
     const correoValido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.user.correo);
@@ -157,27 +157,25 @@ export class LoginRegisterComponent {
     });
   }
 
- recoverPassword() {
-  if (!this.user.correo) {
-    this.message = '❌ Ingresa tu correo para recuperar la contraseña';
-    this.clearMessageAfterDelay();
-    return;
-  }
-
-  this.authService.recoverPassword(this.user.correo).subscribe({
-    next: res => {
-      this.message = '✅ ' + res;
+  recoverPassword() {
+    if (!this.user.correo) {
+      this.message = '❌ Ingresa tu correo para recuperar la contraseña';
       this.clearMessageAfterDelay();
-    },
-    error: err => {
-      console.error('Error al recuperar contraseña:', err);
-      const mensajeError = typeof err.error === 'string' ? err.error : '❌ Error inesperado';
-      this.message = mensajeError;
-      this.clearMessageAfterDelay();
-       this.clearLoginFields(); // ✅ Limpia correo y contraseña si hay error
-
+      return;
     }
-  });
-}
 
+    this.authService.recoverPassword(this.user.correo).subscribe({
+      next: res => {
+        this.message = '✅ ' + res;
+        this.clearMessageAfterDelay();
+      },
+      error: err => {
+        console.error('Error al recuperar contraseña:', err);
+        const mensajeError = typeof err.error === 'string' ? err.error : '❌ Error inesperado';
+        this.message = mensajeError;
+        this.clearMessageAfterDelay();
+        this.clearLoginFields();
+      }
+    });
+  }
 }

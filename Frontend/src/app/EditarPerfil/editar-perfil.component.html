@@ -1,0 +1,58 @@
+<div class="edit-profile">
+  <!-- Imagen centrada arriba -->
+  <div class="profile-image">
+    <img [src]="avatarUrl" alt="Foto de perfil" />
+    <label (click)="toggleAvatars()">Cambiar Imagen</label>
+
+    <div class="avatar-selector" id="avatarSelector">
+      <img src="https://cdn-icons-png.flaticon.com/512/4140/4140048.png" (click)="setAvatar($event.target.src)" />
+      <img src="https://cdn-icons-png.flaticon.com/512/4140/4140052.png" (click)="setAvatar($event.target.src)" />
+      <img src="https://cdn-icons-png.flaticon.com/512/4140/4140060.png" (click)="setAvatar($event.target.src)" />
+      <img src="https://cdn-icons-png.flaticon.com/512/4140/4140087.png" (click)="setAvatar($event.target.src)" />
+      <img src="https://cdn-icons-png.flaticon.com/512/4140/4140037.png" (click)="setAvatar($event.target.src)" />
+      <img src="https://cdn-icons-png.flaticon.com/512/4140/4140070.png" (click)="setAvatar($event.target.src)" />
+      <img src="https://cdn-icons-png.flaticon.com/512/616/616408.png" (click)="setAvatar($event.target.src)" />
+      <img src="https://cdn-icons-png.flaticon.com/512/616/616554.png" (click)="setAvatar($event.target.src)" />
+      <img src="https://cdn-icons-png.flaticon.com/512/1046/1046784.png" (click)="setAvatar($event.target.src)" />
+      <img src="https://cdn-icons-png.flaticon.com/512/2103/2103658.png" (click)="setAvatar($event.target.src)" />
+      <img src="https://cdn-icons-png.flaticon.com/512/888/888879.png" (click)="setAvatar($event.target.src)" />
+    </div>
+  </div>
+
+  <!-- Formulario debajo -->
+  <div class="form-section">
+    <div class="form-group">
+      <label for="nombre">Nombre</label>
+      <input id="nombre" type="text" placeholder="Nombre" />
+    </div>
+
+    <div class="form-group">
+      <label for="apellido">Apellido</label>
+      <input id="apellido" type="text" placeholder="Apellido" />
+    </div>
+
+    <div class="form-group">
+      <label for="correo">Correo Electrónico</label>
+      <input id="correo" type="email" placeholder="Correo Electrónico" />
+    </div>
+
+    <div class="form-group">
+      <label for="telefono">Teléfono</label>
+      <input id="telefono" type="text" placeholder="Teléfono" />
+    </div>
+
+    <div class="form-group">
+      <label for="ciudad">Ciudad</label>
+      <input id="ciudad" type="text" placeholder="Ciudad" />
+    </div>
+
+    <div class="form-group">
+      <label for="password">Contraseña</label>
+      <input id="password" type="password" placeholder="Contraseña" />
+    </div>
+
+    <div class="form-actions">
+      <button class="save-btn">Guardar Cambios</button>
+    </div>
+  </div>
+</div>

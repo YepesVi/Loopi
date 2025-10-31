@@ -26,8 +26,7 @@ public class ProductoController {
     public List<Producto> listarTodos() {
         return repo.findAll();
     }
-
-    // ✅ Obtener un producto por ID
+  // ✅ Obtener un producto por ID
     @GetMapping("/{id}")
     public ResponseEntity<Producto> obtenerPorId(@PathVariable Long id) {
         return repo.findById(id)
@@ -51,7 +50,6 @@ public class ProductoController {
             if (!Files.exists(folder)) {
                 Files.createDirectories(folder);
             }
-
             String filename = UUID.randomUUID() + "-" + file.getOriginalFilename();
             Path filePath = folder.resolve(filename);
             Files.write(filePath, file.getBytes());
@@ -80,7 +78,7 @@ public class ProductoController {
             @RequestParam("descripcion") String descripcion,
             @RequestParam("categoria") String categoria,
             @RequestParam("precio") Double precio,
-            @RequestParam("estado") String estado,
+ @RequestParam("estado") String estado,
             @RequestParam("propietarioId") Long propietarioId,
             @RequestParam(value = "file", required = false) MultipartFile file) {
 
@@ -95,7 +93,7 @@ public class ProductoController {
         producto.setDescripcion(descripcion);
         producto.setCategoria(categoria);
         producto.setPrecio(precio);
-        producto.setEstado(estado);
+ producto.setEstado(estado);
         producto.setPropietarioId(propietarioId);
 
         // Si se envía una nueva imagen, la guardamos y actualizamos
@@ -121,7 +119,7 @@ public class ProductoController {
     }
 
     // ✅ Eliminar producto
-    @DeleteMapping("/eliminar/{id}")
+ @DeleteMapping("/eliminar/{id}")
     public ResponseEntity<Void> eliminarProducto(@PathVariable Long id) {
         if (!repo.existsById(id)) {
             return ResponseEntity.notFound().build();
@@ -130,5 +128,27 @@ public class ProductoController {
         repo.deleteById(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/usuario/{propietarioId}/historial")
+public ResponseEntity<List<Producto>> historialPublicaciones(
+        @PathVariable Long propietarioId,
+        @RequestParam(required = false) String estado) {
+
+    List<Producto> productos;
+    if (estado != null && !estado.isEmpty()) {
+        productos = repo.findByPropietarioId(propietarioId)
+                        .stream()
+                        .filter(p -> p.getEstado().equalsIgnoreCase(estado))
+                        .toList();
+    } else {
+        productos = repo.findByPropietarioId(propietarioId);
+    }
+
+    if (productos.isEmpty()) {
+        return ResponseEntity.noContent().build();
+    }
+
+    return ResponseEntity.ok(productos);
+}
 
 }

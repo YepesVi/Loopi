@@ -13,6 +13,9 @@ import { RouterModule, Router } from '@angular/router';
 })
 export class DashboardComponent {
   productos: Producto[] = [];
+  estadoFiltro: string = '';
+  fechaFiltro: string = '';
+  todosLosProductos: Producto[] = [];
   nuevoProducto: Producto = {
     id: 0, // <- importante para saber si es edición o creación
     titulo: '',
@@ -31,8 +34,13 @@ export class DashboardComponent {
 
   // ====== Cargar todos los productos ======
   cargarProductos() {
-    this.productosService.getProductos().subscribe(data => this.productos = data);
-  }
+  this.productosService.getProductos().subscribe(data => {
+    this.productos = data;
+    this.todosLosProductos = data;
+  });
+}
+
+
 
   // ====== Seleccionar archivo ======
   onFileSelected(event: any) {
@@ -113,4 +121,43 @@ export class DashboardComponent {
     this.router.navigate(['/login-register']); // Redirige al login
 
   }
+
+filtrarPorEstado() {
+  // Al cambiar estado llamamos al filtrado combinado
+  this.aplicarFiltros();
 }
+
+filtrarPorFecha() {
+  // Al cambiar fecha llamamos al filtrado combinado
+  this.aplicarFiltros();
+}
+
+aplicarFiltros() {
+  // Empieza desde la lista completa
+  let lista = [...this.todosLosProductos];
+
+  // 1) Filtrar por estado si hay filtro
+  if (this.estadoFiltro && this.estadoFiltro.trim() !== '') {
+    lista = lista.filter(p => (p.estado ?? '').toLowerCase() === this.estadoFiltro.toLowerCase());
+  }
+
+  // 2) Filtrar por fecha si hay fechaFiltro (número de días)
+  const dias = parseInt(this.fechaFiltro, 10);
+  if (!isNaN(dias) && dias > 0) {
+    const ahora = new Date();
+    const fechaLimite = new Date(ahora.getTime() - dias * 24 * 60 * 60 * 1000);
+
+    lista = lista.filter(p => {
+      // tomar fechaCreacion, si no existe tomar fechaPublicacion (defensivo)
+      const fechaStr = p.fechaCreacion ?? (p as any).fechaPublicacion; // 'as any' por si aún viene otro nombre
+      if (!fechaStr) return false; // si no hay fecha, no incluir
+      const fechaProducto = new Date(fechaStr); // ya es seguro: fechaStr es string
+      return fechaProducto >= fechaLimite;
+    });
+  }
+
+  // Finalmente asigna la lista filtrada
+  this.productos = lista;
+}
+}
+
