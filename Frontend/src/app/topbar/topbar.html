@@ -3,7 +3,7 @@
     <a class="navbar-brand d-flex align-items-center">
       <img src="logo.png" alt="Logo" class="logo me-2" />
     </a>
-    <a class="navbar-brand d-flex align-items-center opciones" routerLink="/home">Home</a>
+    <a class="navbar-brand d-flex align-items-center opciones" (click)="home()">Home</a>
     <a class="navbar-brand d-flex align-items-center opciones">Categorías</a>
   </div>
 
@@ -47,7 +47,7 @@
           <li><a class="dropdown-item" (click)="edit()"><i class="bi bi-pencil-square me-2"></i>Editar perfil</a></li>
           <li><a class="dropdown-item" routerLink="/ordenes"><i class="bi bi-box-seam me-2"></i>Mis órdenes</a></li>
           <li><a class="dropdown-item" routerLink="/configuracion"><i class="bi bi-gear me-2"></i>Configuración</a></li>
-                   <li><a class="dropdown-item" routerLink="/admin"><i class="bi bi-speedometer2 me-2"></i>Panel administrativo</a></li>
+                   <li><a class="dropdown-item" (click)="dashboard()"><i class="bi bi-speedometer2 me-2"></i>Panel administrativo</a></li>
           <li><hr class="dropdown-divider" /></li>
           <li><a class="dropdown-item" (click)="logout()"><i class="bi bi-box-arrow-right me-2"></i>Cerrar sesión</a></li>
         </ng-container>

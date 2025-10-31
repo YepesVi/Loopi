@@ -64,4 +64,13 @@ export class Topbar {
   edit(){
     this.router.navigateByUrl('/editar-perfil');
   }
+
+   dashboard(){
+    this.router.navigateByUrl('/dashboard');
+  }
+
+  home(){
+    this.router.navigateByUrl('/home');
+  }
 }
+
