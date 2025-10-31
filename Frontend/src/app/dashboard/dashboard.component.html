@@ -20,12 +20,38 @@
 
   <h3>Productos registrados</h3>
 
+<!-- FILTROS -->
+<div class="filtros">
+  <div class="filtro">
+    <label for="estadoFiltro">Filtrar por estado:</label>
+    <select id="estadoFiltro" name="estadoFiltro" [(ngModel)]="estadoFiltro" (change)="filtrarPorEstado()">
+      <option value="">Todos</option>
+      <option value="Publicado">Publicado</option>
+      <option value="Vendido">Vendido</option>
+      <option value="Borrador">Borrador</option>
+      <option value="Enviado">Enviado</option>
+    </select>
+  </div>
+
+  <div class="filtro">
+    <label for="fechaFiltro">Filtrar por fecha:</label>
+    <select id="fechaFiltro" name="fechaFiltro" [(ngModel)]="fechaFiltro" (change)="filtrarPorFecha()">
+      <option value="">Todo</option>
+      <option value="7">Últimos 7 días</option>
+      <option value="30">Últimos 30 días</option>
+      <option value="90">Últimos 90 días</option>
+    </select>
+  </div>
+</div>
+
+
   <div class="productos-grid">
     <div *ngFor="let p of productos" class="producto">
       <div class="info">
         <h4>{{ p.titulo }}</h4>
         <p>{{ p.descripcion }}</p>
         <p><strong>${{ p.precio }}</strong></p>
+        <span class="estado" [ngClass]="p.estado.toLowerCase()">{{ p.estado }}</span>
         <div class="acciones">
           <button class="editar" (click)="editarProducto(p)">Editar</button>
           <button class="eliminar" (click)="eliminarProducto(p.id!)">Eliminar</button>

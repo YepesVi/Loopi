@@ -183,6 +183,75 @@ form button:hover {
   background: #b48ce4;
 }
 
+.filtro {
+  margin: 20px 0 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.filtro label {
+  font-size: 16px;
+  color: #b48ce4;
+  font-weight: 500;
+}
+
+.filtro select {
+  padding: 10px 14px;
+  background: #1b1f38;
+  color: #ffc3ff;
+  border: 2px solid #6d5d9a;
+  border-radius: 25px;
+  font-size: 15px;
+  outline: none;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  box-shadow: 0 0 8px rgba(180, 140, 228, 0.3);
+}
+
+.filtro select:hover {
+  border-color: #b48ce4;
+  box-shadow: 0 0 12px rgba(180, 140, 228, 0.5);
+}
+
+.filtro select:focus {
+  background: #38355d;
+  color: #fff;
+}
+
+.estado {
+  display: inline-block;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: capitalize;
+  color: #fff;
+  margin-top: 8px;
+  letter-spacing: 0.5px;
+  box-shadow: 0 0 8px rgba(180, 140, 228, 0.3);
+}
+
+/* Colores adaptados a tu paleta */
+.publicado {
+  background-color: #6d5d9a; /* violeta */
+}
+
+.vendido {
+  background-color: #b48ce4; /* lila */
+  color: #13162c;
+}
+
+.borrador {
+  background-color: #38355d; /* gris violeta */
+}
+
+.enviado {
+  background-color: #ffc3ff; /* rosado claro */
+  color: #13162c;
+}
+
 /* ======== RESPONSIVE ======== */
 @media (max-width: 600px) {
   .producto {
