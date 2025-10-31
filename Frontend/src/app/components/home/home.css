@@ -1,6 +1,7 @@
+
 .home-container {
   padding: 20px;
-  background-color: #ffffff; /* Fondo limpio */
+  background-color: #ffffff;
   color: #13162c;
 }
 
@@ -8,48 +9,56 @@
 h2 {
   font-weight: 700;
   text-align: center;
-  color: #6d5d9a; /* Morado medio */
+  color: #6d5d9a;
   border-bottom: 3px solid #b48ce4;
   display: inline-block;
   padding-bottom: 5px;
+  margin-bottom: 25px;
 }
 
 /* 💬 Título de categorías */
 h4 {
   color: #38355d;
   border-bottom: 2px solid #b48ce4;
+  padding-bottom: 3px;
+  margin: 25px 0 15px;
 }
 
 /* 🟪 Tarjetas de productos */
 .card {
   background-color: #fff;
   color: #13162c;
-  border: 1px solid #e0d7f3; /* borde suave */
-  border-radius: 10px;
-  transition: transform 0.3s, box-shadow 0.3s;
+  border: 1px solid #e0d7f3;
+  border-radius: 12px;
+  transition: transform 0.25s ease, box-shadow 0.3s ease;
+  width: 200px;
+  min-width: 200px;
+  margin-right: 15px;
 }
 
 .card:hover {
-  transform: scale(1.03);
-  box-shadow: 0 4px 20px rgba(180, 140, 228, 0.25);
+  transform: translateY(-6px);
+  box-shadow: 0 6px 20px rgba(180, 140, 228, 0.25);
 }
 
-/* Imagen del producto */
+/* 📌 Imagen del producto */
 .card-img-top {
-  height: 180px;
+  height: 140px;
   object-fit: contain;
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
+  border-radius: 10px 10px 0 0;
 }
 
 /* 🖋️ Títulos y textos dentro de la tarjeta */
 .card-title {
   font-weight: 600;
   color: #38355d;
+  font-size: 0.95rem;
+  margin-bottom: 3px;
 }
 
 .card-text {
   color: #6d5d9a;
+  font-size: 0.85rem;
 }
 
 /* 💲 Precio */
@@ -74,8 +83,105 @@ h4 {
   color: #b48ce4;
 }
 
-/* Scroll horizontal (si hay) */
+/* Contenedor scroll */
+.scroll-container {
+  display: flex;
+  overflow-x: auto;
+  padding-bottom: 10px;
+  scroll-behavior: smooth;
+}
+
+.scroll-container::-webkit-scrollbar {
+  height: 7px;
+}
+
 .scroll-container::-webkit-scrollbar-thumb {
   background: #b48ce4;
-  border-radius: 4px;
+  border-radius: 6px;
+}
+
+/* 🖼️ Carrusel */
+.carousel-item img {
+  object-fit: cover;
+  height: 260px;
+  border-radius: 12px;
+}
+
+.carousel {
+  margin-bottom: 25px;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+/* 🔘 Botón inicio de sesión (opcional fijo abajo) */
+.btn-login {
+  position: fixed;
+  bottom: 22px;
+  right: 22px;
+  background-color: #6d5d9a;
+  border: none;
+  color: #fff;
+  font-weight: 600;
+  padding: 12px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(109, 93, 154, 0.3);
+}
+
+.btn-login:hover {
+  background-color: #b48ce4;
+
+}
+
+
+/* Título Categorías */
+.titulo-categorias {
+  color: #000;
+  font-weight: 800;
+  font-size: 2.2rem;
+  border-bottom: 3px solid #b48ce4;
+  display: inline-block;
+  padding-bottom: 6px;
+}
+
+/* Botón Ver Más */
+.btn-ver-mas {
+  background-color: #6d5d9a;
+  border: none;
+  color: white;
+  padding: 6px 12px;
+  font-size: 0.85rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.btn-ver-mas:hover {
+  background-color: #b48ce4;
+  transform: scale(1.05);
+}
+
+/* Carrusel más pequeño */
+.carousel-img {
+  max-height: 350px;
+  object-fit: cover;
+}
+
+.categoria-nombre {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #000;
+}
+
+.ver-mas-link {
+  font-size: 0.9rem;
+  color: #8c52ff;
+  cursor: pointer;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.ver-mas-link:hover {
+  text-decoration: underline;
+  color: #b48cff;
 }
