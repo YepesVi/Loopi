@@ -95,7 +95,7 @@ export class LoginRegisterComponent {
         localStorage.setItem('userId', res.id); // 👈 guarda el ID
         this.message = '✅ Login exitoso';
         this.clearMessageAfterDelay();
-        this.router.navigate(['/dashboard']);
+        this.router.navigate(['/home']);
       },
       error: err => {
         console.error('Error en login:', err);
