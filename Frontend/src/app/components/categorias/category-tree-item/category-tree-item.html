@@ -1,0 +1,11 @@
+<div *ngFor="let category of categories">
+  <div class="category-item" [ngStyle]="getIndentationStyle()">
+    {{ '—'.repeat(level) }} {{ category.nombre }} <!---(ID: {{ category.id }})-->
+  </div>
+  
+  <app-category-tree-item 
+    *ngIf="category.hijos && category.hijos.length > 0"
+    [categories]="category.hijos" 
+    [level]="level + 1">
+  </app-category-tree-item>
+</div>

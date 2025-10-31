@@ -3,6 +3,7 @@ import { Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { PopupService } from '../services/popup';
 
 @Component({
   selector: 'app-topbar',
@@ -12,6 +13,7 @@ import { FormsModule } from '@angular/forms';
   styleUrls: ['./topbar.css']
 })
 export class Topbar {
+
   searchQuery = '';
   nombreUsuario = 'Usuario';
   sesionActiva = false;

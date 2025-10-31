@@ -1,3 +1,17 @@
 <app-topbar></app-topbar>
-<router-outlet></router-outlet>
+<main class="content-area">
+    <router-outlet></router-outlet> 
+</main>
+
+<div class="popup-overlay" 
+     [class.show-overlay]="isCategoryPopupOpen$ | async" 
+     >
+    <div class="popup-content">
+        
+        <button class="close-btn" (click)="closePopup()">✕</button>
+        
+        <app-category-list></app-category-list>
+        
+    </div>
+</div>
 <app-footer></app-footer>

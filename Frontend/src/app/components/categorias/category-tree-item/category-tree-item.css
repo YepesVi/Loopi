@@ -1,0 +1,14 @@
+/* category-tree-item.component.css */
+
+.category-item {
+  /* Alineación y espaciado */
+  padding: 5px 0; 
+  border-bottom: 1px dotted #eee;
+  /* Animación (opcional) */
+  transition: all 0.2s ease-in-out; 
+}
+
+.category-item:hover {
+  background-color: #f7f7f7;
+  cursor: pointer;
+}
