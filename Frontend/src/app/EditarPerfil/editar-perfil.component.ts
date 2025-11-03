@@ -15,7 +15,8 @@ export class EditarPerfilComponent implements OnInit {
   form!: FormGroup;
   mensaje: string = '';
   error: boolean = false;
-  defaultFoto = 'https://via.placeholder.com/120?text=Foto';
+  mostrarAvatares: boolean = false;
+  defaultFoto = 'https://cdn-icons-png.flaticon.com/512/4140/4140048.png';
 
   constructor(
     private fb: FormBuilder,
@@ -43,7 +44,7 @@ export class EditarPerfilComponent implements OnInit {
       telefono: localStorage.getItem('telefono'),
       direccion: localStorage.getItem('direccion'),
       password: localStorage.getItem('password'),
-      fotoUrl: localStorage.getItem('foto')
+      fotoUrl: localStorage.getItem('foto') || this.defaultFoto
     });
   }
 
@@ -51,39 +52,45 @@ export class EditarPerfilComponent implements OnInit {
     const datos = this.form.value;
 
     this.auth.updateProfile(datos).subscribe({
-  next: (res: any) => {
-    this.mensaje = res.mensaje || '✅ Perfil actualizado';
-    this.error = false;
+      next: (res: any) => {
+        this.mensaje = res.mensaje || '✅ Perfil actualizado exitosamente.';
+        this.error = false;
 
-    // Guardar en localStorage
-    localStorage.clear();
-    localStorage.setItem('nombreUsuario', datos.nombre);
-    localStorage.setItem('apellido', datos.apellido);
-    localStorage.setItem('cedula', datos.cedula);
-    localStorage.setItem('telefono', datos.telefono);
-    localStorage.setItem('correo', datos.correo);
-    localStorage.setItem('direccion', datos.direccion);
-    localStorage.setItem('password', datos.password);
-    localStorage.setItem('foto', datos.fotoUrl);
+        localStorage.clear();
+        localStorage.setItem('nombreUsuario', datos.nombre);
+        localStorage.setItem('apellido', datos.apellido);
+        localStorage.setItem('cedula', datos.cedula);
+        localStorage.setItem('telefono', datos.telefono);
+        localStorage.setItem('correo', datos.correo);
+        localStorage.setItem('direccion', datos.direccion);
+        localStorage.setItem('password', datos.password);
+        localStorage.setItem('foto', datos.fotoUrl);
 
-    // 🔄 Actualizar nombre en servicio compartido
-    this.usuarioService.actualizarNombre(datos.nombre);
+        this.usuarioService.actualizarNombre(datos.nombre);
+        this.usuarioService.actualizarFoto(datos.fotoUrl); 
 
-    // ⏳ Ocultar mensaje después de 3 segundos
-    setTimeout(() => {
-      this.mensaje = '';
-    }, 3000);
-  },
-  error: () => {
-    this.mensaje = '❌ Error al actualizar';
-    this.error = true;
 
-    // ⏳ Ocultar mensaje de error también
-    setTimeout(() => {
-      this.mensaje = '';
-    }, 3000);
+        setTimeout(() => {
+          this.mensaje = '';
+        }, 3000);
+      },
+      error: () => {
+        this.mensaje = '❌ Error al actualizar el perfil.';
+        this.error = true;
+
+        setTimeout(() => {
+          this.mensaje = '';
+        }, 3000);
+      }
+    });
   }
-});
 
+  toggleAvatars(): void {
+    this.mostrarAvatares = !this.mostrarAvatares;
+  }
+
+  setAvatar(url: string): void {
+    this.form.patchValue({ fotoUrl: url });
+    this.mostrarAvatares = false;
   }
 }

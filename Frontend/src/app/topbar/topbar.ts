@@ -15,14 +15,19 @@ import { UsuarioService } from '../services/usuario.service';
 export class Topbar implements OnInit {
   searchQuery = '';
   nombreUsuario = 'Usuario';
+  fotoUsuario = 'https://cdn-icons-png.flaticon.com/512/4140/4140048.png';
   sesionActiva = false;
 
   constructor(private router: Router, private usuarioService: UsuarioService) {}
 
   ngOnInit(): void {
-    // 🔄 Escucha cambios en el nombre
+    // 🔄 Escucha cambios en nombre y foto
     this.usuarioService.nombreUsuario$.subscribe(nombre => {
       this.nombreUsuario = nombre || 'Usuario';
+    });
+
+    this.usuarioService.fotoUsuario$.subscribe(foto => {
+      this.fotoUsuario = foto || 'https://cdn-icons-png.flaticon.com/512/4140/4140048.png';
     });
 
     // Detecta navegación para actualizar sesión
@@ -53,15 +58,16 @@ export class Topbar implements OnInit {
   }
 
   logout() {
-  if (typeof window !== 'undefined') {
-    localStorage.clear();
+    if (typeof window !== 'undefined') {
+      localStorage.clear();
+    }
+
+    this.usuarioService.actualizarNombre('Usuario');
+    this.usuarioService.actualizarFoto('https://cdn-icons-png.flaticon.com/512/4140/4140048.png');
+
+    this.actualizarSesion();
+    this.router.navigate(['/home']);
   }
-
-  this.usuarioService.actualizarNombre('Usuario'); // 🔄 Actualiza el nombre en tiempo real
-  this.actualizarSesion();
-  this.router.navigate(['/home']);
-}
-
 
   edit() {
     this.router.navigateByUrl('/editar-perfil');

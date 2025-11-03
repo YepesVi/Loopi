@@ -94,3 +94,18 @@ form input:focus {
   font-weight: 500;
   color: #6d5d9a;
 }
+
+.topbar-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #fff;
+  box-shadow: 0 0 4px rgba(0,0,0,0.2);
+  transition: transform 0.3s;
+}
+
+.topbar-avatar:hover {
+  transform: scale(1.05);
+}
+

@@ -95,17 +95,20 @@ export class LoginRegisterComponent {
 
     this.authService.login(loginPayload).subscribe({
       next: res => {
+        // Guardar en localStorage
         localStorage.setItem('token', res.token);
-        localStorage.setItem('nombreUsuario', res.nombre); 
-        localStorage.setItem('apellido', res.apellido); 
-        localStorage.setItem('correo', res.correo); 
-        localStorage.setItem('telefono', res.telefono); 
-        localStorage.setItem('cedula', res.cedula); 
-        localStorage.setItem('direccion', res.direccion); 
-        localStorage.setItem('password', res.password); 
+        localStorage.setItem('nombreUsuario', res.nombre);
+        localStorage.setItem('apellido', res.apellido);
+        localStorage.setItem('correo', res.correo);
+        localStorage.setItem('telefono', res.telefono);
+        localStorage.setItem('cedula', res.cedula);
+        localStorage.setItem('direccion', res.direccion);
+        localStorage.setItem('password', res.password);
         localStorage.setItem('foto', res.fotoUrl);
 
-        this.usuarioService.actualizarNombre(res.nombre); // 🔄 Actualiza el topbar dinámicamente
+        // 🔄 Actualizar topbar dinámicamente
+        this.usuarioService.actualizarNombre(res.nombre);
+        this.usuarioService.actualizarFoto(res.fotoUrl);
 
         this.message = '✅ Login exitoso';
         this.clearMessageAfterDelay();
