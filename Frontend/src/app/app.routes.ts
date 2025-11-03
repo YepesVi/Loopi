@@ -30,7 +30,7 @@ export const routes: Routes = [
   path: 'editar-perfil',
   canActivate: [authGuard],
   loadComponent: () =>
-    import('./EditarPerfil/editar-perfil.component').then(m => m.EditarPerfilComponent)
+    import('./EditarPerfil/editar-perfil.component').then(m => m.EditarPerfilComponent )
 }
 
 ];

@@ -105,4 +105,25 @@ public ResponseEntity<?> resetPasswordDirect(@RequestBody Map<String, String> pa
     return ResponseEntity.ok("Contraseña actualizada correctamente");
 }
 
+// ✏️ Editar perfil
+@PutMapping("/update")
+public ResponseEntity<?> updateProfile(@RequestBody Map<String, String> body) {
+    String cedula = body.get("cedula");
+    boolean actualizado = userService.updateUserProfile(cedula, body);
+
+    if (actualizado) {
+        return ResponseEntity.ok(Map.of(
+            "success", true,
+            "mensaje", "✅ Tu perfil ha sido actualizado exitosamente."
+        ));
+    } else {
+        return ResponseEntity.status(404).body(Map.of(
+            "success", false,
+            "mensaje", "❌ Usuario no encontrado. Verifica la cédula."
+        ));
+    }
+}
+
+
+
 }

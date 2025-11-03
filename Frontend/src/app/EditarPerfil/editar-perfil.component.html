@@ -1,58 +1,35 @@
-<div class="edit-profile">
-  <!-- Imagen centrada arriba -->
-  <div class="profile-image">
-    <img [src]="avatarUrl" alt="Foto de perfil" />
-    <label (click)="toggleAvatars()">Cambiar Imagen</label>
+<div class="container mt-4">
+  <h2 class="text-center mb-4">Editar Perfil</h2>
 
-    <div class="avatar-selector" id="avatarSelector">
-      <img src="https://cdn-icons-png.flaticon.com/512/4140/4140048.png" (click)="setAvatar($event.target.src)" />
-      <img src="https://cdn-icons-png.flaticon.com/512/4140/4140052.png" (click)="setAvatar($event.target.src)" />
-      <img src="https://cdn-icons-png.flaticon.com/512/4140/4140060.png" (click)="setAvatar($event.target.src)" />
-      <img src="https://cdn-icons-png.flaticon.com/512/4140/4140087.png" (click)="setAvatar($event.target.src)" />
-      <img src="https://cdn-icons-png.flaticon.com/512/4140/4140037.png" (click)="setAvatar($event.target.src)" />
-      <img src="https://cdn-icons-png.flaticon.com/512/4140/4140070.png" (click)="setAvatar($event.target.src)" />
-      <img src="https://cdn-icons-png.flaticon.com/512/616/616408.png" (click)="setAvatar($event.target.src)" />
-      <img src="https://cdn-icons-png.flaticon.com/512/616/616554.png" (click)="setAvatar($event.target.src)" />
-      <img src="https://cdn-icons-png.flaticon.com/512/1046/1046784.png" (click)="setAvatar($event.target.src)" />
-      <img src="https://cdn-icons-png.flaticon.com/512/2103/2103658.png" (click)="setAvatar($event.target.src)" />
-      <img src="https://cdn-icons-png.flaticon.com/512/888/888879.png" (click)="setAvatar($event.target.src)" />
-    </div>
+  <!-- Avatar -->
+  <div class="avatar-preview mb-3 text-center">
+    <img [src]="form.value.fotoUrl || defaultFoto" alt="Foto de perfil" class="avatar rounded-circle shadow" width="120" height="120">
   </div>
 
-  <!-- Formulario debajo -->
-  <div class="form-section">
-    <div class="form-group">
-      <label for="nombre">Nombre</label>
-      <input id="nombre" type="text" placeholder="Nombre" />
-    </div>
+  <!-- Formulario -->
+  <form [formGroup]="form" (ngSubmit)="actualizar()">
+    <input class="form-control mb-2" formControlName="cedula" placeholder="Cédula" readonly>
+    <input class="form-control mb-2" formControlName="nombre" placeholder="Nombre">
+    <input class="form-control mb-2" formControlName="apellido" placeholder="Apellido">
+    <input class="form-control mb-2" formControlName="telefono" placeholder="Teléfono">
+    <input class="form-control mb-2" formControlName="correo" placeholder="Correo" readonly>
+    <input class="form-control mb-2" formControlName="direccion" placeholder="Dirección">
+    <input class="form-control mb-2" formControlName="password" placeholder="Nueva contraseña" type="password">
 
-    <div class="form-group">
-      <label for="apellido">Apellido</label>
-      <input id="apellido" type="text" placeholder="Apellido" />
-    </div>
+    <select class="form-control mb-3" formControlName="fotoUrl">
+      <option value="">Selecciona una foto</option>
+      <option value="https://i.pravatar.cc/150?u=usuario1">Avatar 1</option>
+      <option value="https://i.pravatar.cc/150?u=usuario2">Avatar 2</option>
+      <option value="https://i.pravatar.cc/150?u=usuario3">Avatar 3</option>
+      <option value="https://i.pravatar.cc/150?u=usuario4">Avatar 4</option>
+      <option value="https://i.pravatar.cc/150?u=usuario5">Avatar 5</option>
+    </select>
 
-    <div class="form-group">
-      <label for="correo">Correo Electrónico</label>
-      <input id="correo" type="email" placeholder="Correo Electrónico" />
-    </div>
+    <button class="btn btn-primary w-100">Actualizar</button>
+  </form>
 
-    <div class="form-group">
-      <label for="telefono">Teléfono</label>
-      <input id="telefono" type="text" placeholder="Teléfono" />
-    </div>
-
-    <div class="form-group">
-      <label for="ciudad">Ciudad</label>
-      <input id="ciudad" type="text" placeholder="Ciudad" />
-    </div>
-
-    <div class="form-group">
-      <label for="password">Contraseña</label>
-      <input id="password" type="password" placeholder="Contraseña" />
-    </div>
-
-    <div class="form-actions">
-      <button class="save-btn">Guardar Cambios</button>
-    </div>
+  <!-- Mensaje de respuesta -->
+  <div *ngIf="mensaje" class="mt-3 text-center" [ngClass]="{ 'text-success': !error, 'text-danger': error }">
+    {{ mensaje }}
   </div>
 </div>

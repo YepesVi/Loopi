@@ -1,9 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { PopupService } from '../services/popup';
+import { UsuarioService } from '../services/usuario.service';
 
 @Component({
   selector: 'app-topbar',
@@ -12,40 +12,39 @@ import { PopupService } from '../services/popup';
   templateUrl: './topbar.html',
   styleUrls: ['./topbar.css']
 })
-export class Topbar {
-
+export class Topbar implements OnInit {
   searchQuery = '';
   nombreUsuario = 'Usuario';
   sesionActiva = false;
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private usuarioService: UsuarioService) {}
 
   ngOnInit(): void {
-    // Detecta navegación para actualizar sesión sin recargar
+    // 🔄 Escucha cambios en el nombre
+    this.usuarioService.nombreUsuario$.subscribe(nombre => {
+      this.nombreUsuario = nombre || 'Usuario';
+    });
+
+    // Detecta navegación para actualizar sesión
     this.router.events
       .pipe(filter(event => event instanceof NavigationEnd))
       .subscribe(() => {
         this.actualizarSesion();
       });
 
-    // También ejecuta al cargar el componente
     this.actualizarSesion();
   }
 
   actualizarSesion() {
     if (typeof window !== 'undefined') {
       const token = localStorage.getItem('token');
-      const nombre = localStorage.getItem('nombreUsuario');
       this.sesionActiva = !!token;
-      this.nombreUsuario = nombre || 'Usuario';
     }
   }
 
   searchProduct() {
     if (this.searchQuery.trim()) {
       console.log('Buscando:', this.searchQuery);
-      // Puedes activar navegación si tienes una ruta de búsqueda
-      // this.router.navigate(['/buscar'], { queryParams: { q: this.searchQuery } });
     }
   }
 
@@ -54,25 +53,25 @@ export class Topbar {
   }
 
   logout() {
-    if (typeof window !== 'undefined') {
-      localStorage.removeItem('token');
-      localStorage.removeItem('nombreUsuario');
-      localStorage.removeItem('userId');
-    }
-    this.actualizarSesion(); // ✅ Refresca el estado local
-    this.router.navigate(['/home']);
+  if (typeof window !== 'undefined') {
+    localStorage.clear();
   }
 
-  edit(){
+  this.usuarioService.actualizarNombre('Usuario'); // 🔄 Actualiza el nombre en tiempo real
+  this.actualizarSesion();
+  this.router.navigate(['/home']);
+}
+
+
+  edit() {
     this.router.navigateByUrl('/editar-perfil');
   }
 
-   dashboard(){
+  dashboard() {
     this.router.navigateByUrl('/dashboard');
   }
 
-  home(){
+  home() {
     this.router.navigateByUrl('/home');
   }
 }
-

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../services/auth.service';
 import { Router, RouterModule } from '@angular/router';
+import { UsuarioService } from '../services/usuario.service';
 
 @Component({
   selector: 'app-login-register',
@@ -27,7 +28,11 @@ export class LoginRegisterComponent {
     foto: null as File | null
   };
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private usuarioService: UsuarioService
+  ) {}
 
   goToRegister() {
     this.mode = 'register';
@@ -91,8 +96,17 @@ export class LoginRegisterComponent {
     this.authService.login(loginPayload).subscribe({
       next: res => {
         localStorage.setItem('token', res.token);
-        localStorage.setItem('nombreUsuario', res.nombre); // ✅ Guarda el nombre
-        localStorage.setItem('userId', res.id); // 👈 guarda el ID
+        localStorage.setItem('nombreUsuario', res.nombre); 
+        localStorage.setItem('apellido', res.apellido); 
+        localStorage.setItem('correo', res.correo); 
+        localStorage.setItem('telefono', res.telefono); 
+        localStorage.setItem('cedula', res.cedula); 
+        localStorage.setItem('direccion', res.direccion); 
+        localStorage.setItem('password', res.password); 
+        localStorage.setItem('foto', res.fotoUrl);
+
+        this.usuarioService.actualizarNombre(res.nombre); // 🔄 Actualiza el topbar dinámicamente
+
         this.message = '✅ Login exitoso';
         this.clearMessageAfterDelay();
         this.router.navigate(['/home']);
