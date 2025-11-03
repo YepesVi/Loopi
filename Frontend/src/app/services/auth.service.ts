@@ -19,17 +19,20 @@ export class AuthService {
   }
 
   // 📧 Recuperación de contraseña por correo
-recoverPassword(correo: string): Observable<any> {
-  return this.http.post(`${this.baseUrl}/recover`, { correo }, { responseType: 'text' });
-}
-
+  recoverPassword(correo: string): Observable<any> {
+    return this.http.post(`${this.baseUrl}/recover`, { correo }, { responseType: 'text' });
+  }
 
   // 🔒 Restablecer contraseña 
-resetPasswordDirecto(payload: any): Observable<any> {
-  return this.http.post(`${this.baseUrl}/reset-direct`, payload, { responseType: 'text' });
+  resetPasswordDirecto(payload: any): Observable<any> {
+    return this.http.post(`${this.baseUrl}/reset-direct`, payload, { responseType: 'text' });
+  }
+
+ 
+
+  // 🔄 Actualizar perfil
+  updateProfile(data: any): Observable<string> {
+  return this.http.put(`${this.baseUrl}/update`, data, { responseType: 'text' });
 }
 
-
-
 }
-

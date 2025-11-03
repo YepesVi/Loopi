@@ -80,4 +80,27 @@ public class UserService {
     return true;
 }
 
+public boolean updateUserProfile(String cedula, Map<String, String> updates) {
+    Optional<User> userOpt = userRepository.findByCedula(cedula);
+
+    if (userOpt.isEmpty()) {
+        return false;
+    }
+
+    User user = userOpt.get();
+
+    // Actualizar campos si están presentes
+    if (updates.containsKey("nombre")) user.setNombre(updates.get("nombre"));
+    if (updates.containsKey("apellido")) user.setApellido(updates.get("apellido"));
+    if (updates.containsKey("telefono")) user.setTelefono(updates.get("telefono"));
+    if (updates.containsKey("correo")) user.setCorreo(updates.get("correo"));
+    if (updates.containsKey("direccion")) user.setDireccion(updates.get("direccion"));
+    if (updates.containsKey("fotoUrl")) user.setFotoUrl(updates.get("fotoUrl"));
+    if (updates.containsKey("password")) user.setPassword(updates.get("password")); // encripta si usas BCrypt
+
+    userRepository.save(user);
+    return true;
+}
+
+
 }
