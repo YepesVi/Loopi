@@ -1,7 +1,7 @@
 package com.example.demo;
 
 import com.example.demo.controller.ProductoController;
-import com.example.demo.model.Producto;
+import com.example.demo.entity.Producto;
 import com.example.demo.repository.ProductoRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 

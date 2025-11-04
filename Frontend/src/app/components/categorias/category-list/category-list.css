@@ -1,0 +1,39 @@
+/* src/app/views/category-list/category-list.component.css */
+
+/* --- Título principal --- */
+h1 {
+  font-size: 1.8em;
+  color: #34495e; /* Azul oscuro elegante */
+  border-bottom: 2px solid #ecf0f1; /* Línea separadora */
+  padding-bottom: 10px;
+  margin-bottom: 20px;
+}
+
+/* --- Contenedor del Árbol de Categorías --- */
+.tree-container {
+  /* Fondo ligero para resaltar la sección */
+  background-color: #fcfcfc; 
+  border: 1px solid #dcdcdc;
+  border-radius: 8px;
+  padding: 15px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); /* Sombra sutil */
+}
+
+/* --- Mensajes de Estado (Cargando y Error) --- */
+.alert-error {
+  padding: 10px;
+  margin-bottom: 15px;
+  background-color: #fbe6e4; /* Rojo claro */
+  border: 1px solid #c83d4c;
+  color: #c83d4c;
+  border-radius: 4px;
+  font-weight: bold;
+}
+
+/* Estilo para el mensaje de carga o vacío */
+div:not([class]):empty,
+div:not([class]):has(div.tree-container) + div {
+  padding: 10px;
+  color: #7f8c8d; /* Gris */
+  font-style: italic;
+}

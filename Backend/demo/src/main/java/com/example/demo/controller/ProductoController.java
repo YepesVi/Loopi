@@ -1,6 +1,6 @@
 package com.example.demo.controller;
 
-import com.example.demo.model.Producto;
+import com.example.demo.entity.Producto;
 import com.example.demo.repository.ProductoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
@@ -43,42 +43,32 @@ public class ProductoController {
             @RequestParam("precio") Double precio,
             @RequestParam("estado") String estado,
             @RequestParam("propietarioId") Long propietarioId,
-             @RequestParam("file") List<MultipartFile> files) {  // 👈 ahora recibe una lista de archivos
-    try {
-        Path folder = Paths.get(UPLOAD_DIR);
-        if (!Files.exists(folder)) {
-            Files.createDirectories(folder);
-        }
+            @RequestParam("file") MultipartFile file) {
 
-        List<String> rutas = new ArrayList<>();
-
-        for (MultipartFile file : files) {
-            if (!file.isEmpty()) {
-                String filename = UUID.randomUUID() + "-" + file.getOriginalFilename();
-                Path filePath = folder.resolve(filename);
-                Files.write(filePath, file.getBytes());
-                rutas.add("/uploads/" + filename);
+        try {
+            Path folder = Paths.get(UPLOAD_DIR);
+            if (!Files.exists(folder)) {
+                Files.createDirectories(folder);
             }
+            String filename = UUID.randomUUID() + "-" + file.getOriginalFilename();
+            Path filePath = folder.resolve(filename);
+            Files.write(filePath, file.getBytes());
+
+            Producto producto = new Producto();
+            producto.setTitulo(titulo);
+            producto.setDescripcion(descripcion);
+            producto.setCategoria(categoria);
+            producto.setPrecio(precio);
+            producto.setEstado(estado);
+            producto.setPropietarioId(propietarioId);
+            producto.setFotos("/uploads/" + filename);
+
+            return ResponseEntity.ok(repo.save(producto));
+
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
-
-        Producto producto = new Producto();
-        producto.setTitulo(titulo);
-        producto.setDescripcion(descripcion);
-        producto.setCategoria(categoria);
-        producto.setPrecio(precio);
-        producto.setEstado(estado);
-        producto.setPropietarioId(propietarioId);
-
-        // Guarda todas las rutas separadas por coma
-        producto.setFotos(String.join(",", rutas));
-
-        return ResponseEntity.ok(repo.save(producto));
-
-    } catch (IOException e) {
-        e.printStackTrace();
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
-}
 
     // ✅ Actualizar producto (con opción de cambiar imagen)
     @PutMapping("/actualizar/{id}")
@@ -160,22 +150,5 @@ public ResponseEntity<List<Producto>> historialPublicaciones(
 
     return ResponseEntity.ok(productos);
 }
-
-@GetMapping("/publicados")
-public ResponseEntity<List<Producto>> listarPublicados() {
-    try {
-        List<Producto> productos = repo.findByEstadoIgnoreCase("Publicado");
-        if (productos.isEmpty()) {
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.ok(productos);
-    } catch (Exception e) {
-        // Loguear error
-        e.printStackTrace();
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-    }
-}
-
-
 
 }
