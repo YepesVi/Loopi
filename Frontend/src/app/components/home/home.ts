@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule, DecimalPipe, NgFor, KeyValuePipe } from '@angular/common';
-import { productos } from './data';
+import { ProductosService, Producto } from '../../services/productos';
 
 @Component({
   selector: 'app-home',
@@ -9,49 +9,47 @@ import { productos } from './data';
   templateUrl: './home.html',
   styleUrls: ['./home.css']
 })
-export class Home {
-   // Tipado explícito: cada categoría es un array de productos
-   productosPorCategoria: Record<string, any[]> = {};
+export class Home implements OnInit {
 
-   // Arreglo que usa *ngFor en el template
-   categorias: { key: string; value: any[] }[] = [];
- 
-   constructor() {
-     this.agruparPorCategoria();
-   }
- 
-   agruparPorCategoria() {
-     // rellenamos el objeto agrupado
-     this.productosPorCategoria = productos.reduce((grupo: Record<string, any[]>, producto: any) => {
-       const categoria = producto.categoria || 'Otros';
-       if (!grupo[categoria]) grupo[categoria] = [];
-       grupo[categoria].push(producto);
-       return grupo;
-     }, {});
- 
-     // Convertimos a arreglo con tipos claros y hacemos un "cast" seguro del value
-     this.categorias = Object.entries(this.productosPorCategoria || {}).map(
-       ([key, value]) => ({ key, value: value as any[] })
-     );
-   }
- 
-   // funciones de scroll (si las usas)
-   scrollLeft(id: string) {
-     const el = document.getElementById(id);
-     if (el) el.scrollBy({ left: -300, behavior: 'smooth' });
-   }
- 
-   scrollRight(id: string) {
-     const el = document.getElementById(id);
-     if (el) el.scrollBy({ left: 300, behavior: 'smooth' });
-   }
+  productosPorCategoria: Record<string, Producto[]> = {};
+  categorias: { key: string; value: Producto[] }[] = [];
 
-   dividirEnGrupos(arr: any[], tamano: number): any[][] {
-    const grupos = [];
+  constructor(private productosService: ProductosService) {}
+
+  ngOnInit(): void {
+    this.productosService.getProductos().subscribe((productos: Producto[]) => {
+      this.agruparPorCategoria(productos);
+    });
+  }
+
+  agruparPorCategoria(productos: Producto[]): void {
+    this.productosPorCategoria = productos.reduce((grupo: Record<string, Producto[]>, producto: Producto) => {
+      const categoria = producto.categoria || 'Otros';
+      if (!grupo[categoria]) grupo[categoria] = [];
+      grupo[categoria].push(producto);
+      return grupo;
+    }, {});
+
+    this.categorias = Object.entries(this.productosPorCategoria).map(
+      ([key, value]) => ({ key, value })
+    );
+  }
+
+  dividirEnGrupos(arr: Producto[], tamano: number): Producto[][] {
+    const grupos: Producto[][] = [];
     for (let i = 0; i < arr.length; i += tamano) {
       grupos.push(arr.slice(i, i + tamano));
     }
     return grupos;
   }
-  
+
+  scrollLeft(id: string): void {
+    const el = document.getElementById(id);
+    if (el) el.scrollBy({ left: -300, behavior: 'smooth' });
+  }
+
+  scrollRight(id: string): void {
+    const el = document.getElementById(id);
+    if (el) el.scrollBy({ left: 300, behavior: 'smooth' });
+  }
 }

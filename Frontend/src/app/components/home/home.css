@@ -1,151 +1,187 @@
+
 .home-container {
-padding: 20px;
+  padding: 20px;
+  background-color: #ffffff;
+  color: #13162c;
 }
 
-.carousel-item img {
-height: 400px;
-object-fit: cover;
-border-radius: 10px;
-}
-
-.category-section {
-margin-top: 40px;
-}
-
-.category-title {
-margin-bottom: 20px;
-font-family: 'Poppins', sans-serif;
-font-weight: 600;
-color: #333;
-}
-
-.product-card {
-transition: transform 0.3s;
-}
-
-.product-card:hover {
-transform: scale(1.05);
-}
-
-.login-section {
-background-color: #f8f9fa;
-padding: 40px;
-border-radius: 10px;
-}
-
-.card img {
-height: 180px;
-object-fit: contain;
-}
-
+/* 💜 Título principal */
 h2 {
-font-weight: 600;
-border-bottom: 2px solid #007bff;
-display: inline-block;
-padding-bottom: 5px;
+  font-weight: 700;
+  text-align: center;
+  color: #6d5d9a;
+  border-bottom: 3px solid #b48ce4;
+  display: inline-block;
+  padding-bottom: 5px;
+  margin-bottom: 25px;
 }
 
+/* 💬 Título de categorías */
+h4 {
+  color: #38355d;
+  border-bottom: 2px solid #b48ce4;
+  padding-bottom: 3px;
+  margin: 25px 0 15px;
+}
+
+/* 🟪 Tarjetas de productos */
+.card {
+  background-color: #fff;
+  color: #13162c;
+  border: 1px solid #e0d7f3;
+  border-radius: 12px;
+  transition: transform 0.25s ease, box-shadow 0.3s ease;
+  width: 200px;
+  min-width: 200px;
+  margin-right: 15px;
+}
+
+.card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 6px 20px rgba(180, 140, 228, 0.25);
+}
+
+/* 📌 Imagen del producto */
+.card-img-top {
+  height: 140px;
+  object-fit: contain;
+  border-radius: 10px 10px 0 0;
+}
+
+/* 🖋️ Títulos y textos dentro de la tarjeta */
+.card-title {
+  font-weight: 600;
+  color: #38355d;
+  font-size: 0.95rem;
+  margin-bottom: 3px;
+}
+
+.card-text {
+  color: #6d5d9a;
+  font-size: 0.85rem;
+}
+
+/* 💲 Precio */
+.card-footer {
+  background-color: transparent;
+  border-top: 1px solid #b48ce4;
+}
+
+.card-footer span {
+  color: #b48ce4;
+  font-weight: 600;
+}
+
+/* 🔗 Enlace o botón de "ver más" */
+.opcion-ver-mas {
+  color: #6d5d9a;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.opcion-ver-mas:hover {
+  color: #b48ce4;
+}
+
+/* Contenedor scroll */
+.scroll-container {
+  display: flex;
+  overflow-x: auto;
+  padding-bottom: 10px;
+  scroll-behavior: smooth;
+}
+
+.scroll-container::-webkit-scrollbar {
+  height: 7px;
+}
+
+.scroll-container::-webkit-scrollbar-thumb {
+  background: #b48ce4;
+  border-radius: 6px;
+}
+
+/* 🖼️ Carrusel */
 .carousel-item img {
-width: 100%;
-height: 100%;
-object-fit: contain; /* Muestra la imagen completa */
-background-color: white; /* Opcional: rellena el fondo */
-}
-  
-#mainCarousel {
-width: 100%;
-height: 400px; /* Ajusta el alto del carrusel según tu diseño */
-overflow: hidden;
-border-radius: 10px; /* Opcional: esquinas redondeadas */
+  object-fit: cover;
+  height: 260px;
+  border-radius: 12px;
 }
 
-h1 {
-    font-weight: 700;
-    text-align: center;
-  }
-  
-  .scroll-container {
-    display: flex;
-    gap: 15px;
-    overflow-x: auto;
-    scroll-behavior: smooth;
-    padding-bottom: 10px;
-  }
-  
-  .scroll-container::-webkit-scrollbar {
-    height: 8px;
-  }
-  
-  .scroll-container::-webkit-scrollbar-thumb {
-    background: #ccc;
-    border-radius: 4px;
-  }
-  
-  .product-card {
-    width: 100%;
-    height: 100%; /* Mantiene todas igual de altas dentro de su columna */
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between; /* Mantiene precios y botones alineados */
-    border-radius: 10px;
-    overflow: hidden;
-    transition: transform 0.3s;
-  }
-  
-  .product-card:hover {
-    transform: scale(1.03);
-  }
-  
-  /* 🖼️ Imagen uniforme */
-  .product-card img {
-    width: 100%;
-    height: 180px; /* Fija el alto de la imagen */
-    object-fit: cover; /* Recorta sin deformar */
-  }
-  
-  /* 📦 Contenido con tamaño equilibrado */
-  .product-card .card-body {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-  }
-  
-  /* Asegura que los textos no empujen el tamaño */
-  .card-title, .card-text {
-    min-height: 40px; /* Opcional: fija altura base */
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-  
-  
-  .card-img-top {
-    height: 160px;
-    object-fit: cover;
-  }
+.carousel {
+  margin-bottom: 25px;
+  border-radius: 12px;
+  overflow: hidden;
+}
 
-  .opcion-ver-mas {
-    color: #b48ce4;
-  }
+/* 🔘 Botón inicio de sesión (opcional fijo abajo) */
+.btn-login {
+  position: fixed;
+  bottom: 22px;
+  right: 22px;
+  background-color: #6d5d9a;
+  border: none;
+  color: #fff;
+  font-weight: 600;
+  padding: 12px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(109, 93, 154, 0.3);
+}
 
-/* Solo los carruseles de productos */
-.category-carousel .carousel-inner {
-    padding: 10px;
-  }
-  
-  .category-carousel .carousel-item img {
-    object-fit: cover;
-    height: 200px;
-  }
-  
-  .category-carousel .product-card {
-    margin: 0 10px;
-    transition: transform 0.3s;
-  }
-  
-  .category-carousel .product-card:hover {
-    transform: scale(1.03);
-  }
-  
-  
+.btn-login:hover {
+  background-color: #b48ce4;
+
+}
+
+
+/* Título Categorías */
+.titulo-categorias {
+  color: #000;
+  font-weight: 800;
+  font-size: 2.2rem;
+  border-bottom: 3px solid #b48ce4;
+  display: inline-block;
+  padding-bottom: 6px;
+}
+
+/* Botón Ver Más */
+.btn-ver-mas {
+  background-color: #6d5d9a;
+  border: none;
+  color: white;
+  padding: 6px 12px;
+  font-size: 0.85rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.btn-ver-mas:hover {
+  background-color: #b48ce4;
+  transform: scale(1.05);
+}
+
+/* Carrusel más pequeño */
+.carousel-img {
+  max-height: 350px;
+  object-fit: cover;
+}
+
+.categoria-nombre {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #000;
+}
+
+.ver-mas-link {
+  font-size: 0.9rem;
+  color: #8c52ff;
+  cursor: pointer;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.ver-mas-link:hover {
+  text-decoration: underline;
+  color: #b48cff;
+}
