@@ -151,4 +151,16 @@ public ResponseEntity<List<Producto>> historialPublicaciones(
     return ResponseEntity.ok(productos);
 }
 
+@GetMapping("/publicados")
+public ResponseEntity<List<Producto>> obtenerPublicados() {
+    List<Producto> productos = repo.findByEstadoIgnoreCase("publicado");
+
+    if (productos.isEmpty()) {
+        return ResponseEntity.noContent().build();
+    }
+
+    return ResponseEntity.ok(productos);
+}
+
+
 }
