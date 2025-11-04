@@ -95,6 +95,11 @@ export class LoginRegisterComponent {
 
     this.authService.login(loginPayload).subscribe({
       next: res => {
+<<<<<<< HEAD
+        localStorage.setItem('token', res.token);
+        localStorage.setItem('nombreUsuario', res.nombre); // ✅ Guarda el nombre
+        localStorage.setItem('userId', res.id); // 👈 guarda el ID
+=======
         // Guardar en localStorage
         localStorage.setItem('token', res.token);
         localStorage.setItem('nombreUsuario', res.nombre);
@@ -110,6 +115,7 @@ export class LoginRegisterComponent {
         this.usuarioService.actualizarNombre(res.nombre);
         this.usuarioService.actualizarFoto(res.fotoUrl);
 
+>>>>>>> f9003cf33cfd3f7456d03fc3156dcc45d35f17fe
         this.message = '✅ Login exitoso';
         this.clearMessageAfterDelay();
         this.router.navigate(['/home']);

@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { ProductosService, Producto } from '../services/productos';
 import { RouterModule, Router } from '@angular/router';
 
+
 @Component({
   selector: 'app-dashboard',
   standalone: true,
@@ -16,6 +17,12 @@ export class DashboardComponent {
   estadoFiltro: string = '';
   fechaFiltro: string = '';
   todosLosProductos: Producto[] = [];
+  estados = ['Publicado', 'Borrador', 'Oculto', 'vendido'];
+  categorias: string[] = ['Electrónica','Celulares y Accesorios','Computadoras y Tablets','Audio y Video','Fotografía y Cámaras','Electrodomésticos','Hogar y Muebles','Decoración','Cocina y Menaje','Ropa y Calzado','Bolsos y Accesorios','Joyería y Relojes','Deporte y Fitness','Bicicletas y Scooters','Instrumentos Musicales','Libros y Revistas','Cine, Música y Series','Videojuegos y Consolas','Juguetes y Juegos de Mesa','Coleccionismo','Antigüedades y Arte','Jardín y Herramientas','Mascotas y Accesorios','Salud y Belleza','Productos para Bebés','Coche y Moto','Industria y Oficina','Papelería y Material Escolar','Material de Construcción','Servicios','Otros'];
+imagenesSeleccionadas: File[] = [];
+imagenesPreviewUrl: string[] = [];
+imagenesInvalidas = false;
+
   nuevoProducto: Producto = {
     id: 0, // <- importante para saber si es edición o creación
     titulo: '',
@@ -43,48 +50,81 @@ export class DashboardComponent {
 
 
   // ====== Seleccionar archivo ======
-  onFileSelected(event: any) {
-    this.imagenSeleccionada = event.target.files[0];
+  onFilesSelected(event: any) {
+  const files: FileList = event.target.files;
+
+  if (files && files.length > 0) {
+    const validFormats = ['image/png', 'image/jpeg', 'image/webp'];
+    const maxSize = 2 * 1024 * 1024; // 2 MB
+
+    const imagenesValidas = Array.from(files).filter(
+      (file) => validFormats.includes(file.type) && file.size <= maxSize
+    );
+
+    this.imagenesInvalidas = imagenesValidas.length !== files.length;
+    this.imagenesSeleccionadas = imagenesValidas;
+
+    // 👇 Previsualización en tiempo real
+    this.imagenesPreviewUrl = [];
+    imagenesValidas.forEach(file => {
+      const reader = new FileReader();
+      reader.onload = (e: any) => this.imagenesPreviewUrl.push(e.target.result);
+      reader.readAsDataURL(file);
+    });
   }
 
-  // ====== Crear o actualizar producto ======
+  }
+
+
+
+
   crearProducto() {
-    const formData = new FormData();
-    Object.entries(this.nuevoProducto).forEach(([k, v]) => {
-  if (v !== null && v !== undefined) formData.append(k, String(v));
-});
-    if (this.imagenSeleccionada) formData.append('file', this.imagenSeleccionada);
-
-    if (this.editando && this.nuevoProducto.id) {
-      // ACTUALIZAR
-      this.productosService.actualizarProducto(this.nuevoProducto.id, formData).subscribe({
-        next: () => {
-          alert('Producto actualizado correctamente');
-          this.resetFormulario();
-          this.cargarProductos();
-        },
-        error: (e) => console.error('Error al actualizar', e)
-      });
-    } else {
-      // CREAR NUEVO
-      this.productosService.crearProductoConImagen(formData).subscribe({
-        next: (p) => {
-          alert('Producto agregado correctamente');
-          this.productos.push(p);
-          this.resetFormulario();
-        },
-        error: (e) => console.error('Error al crear', e)
-      });
-    }
+  // Validación previa de imágenes
+  if (!this.editando && this.imagenesSeleccionadas.length === 0) {
+    this.imagenesInvalidas = true;
+    return;
   }
 
-  // ====== Editar producto ======
-  editarProducto(producto: Producto): void {
-    this.nuevoProducto = { ...producto };
-    this.editando = true;
-    this.imagenSeleccionada = null;
-  }
+  const formData = new FormData();
+  Object.entries(this.nuevoProducto).forEach(([k, v]) => {
+    if (v !== null && v !== undefined) formData.append(k, String(v));
+  });
 
+  // Solo agregas imágenes al FormData si hay imágenes nuevas seleccionadas
+  if (this.imagenesSeleccionadas.length > 0) {
+  this.imagenesSeleccionadas.forEach(img => formData.append('file', img));
+
+}
+
+  if (this.editando && this.nuevoProducto.id) {
+    // ACTUALIZAR
+    this.productosService.actualizarProducto(this.nuevoProducto.id, formData).subscribe({
+      next: () => {
+        alert('Producto actualizado correctamente');
+        this.resetFormulario();
+        this.cargarProductos();
+      },
+      error: (e) => console.error('Error al actualizar', e)
+    });
+  } else {
+    // CREAR NUEVO
+    this.productosService.crearProductoConImagen(formData).subscribe({
+      next: (p) => {
+        alert('Producto agregado correctamente');
+        this.productos.push(p);
+        this.resetFormulario();
+      },
+      error: (e) => console.error('Error al crear', e)
+    });
+  }
+}
+
+editarProducto(producto: Producto): void {
+  this.nuevoProducto = { ...producto };
+  this.editando = true;
+  this.imagenesSeleccionadas = []; // Solo cargas nuevas si el usuario cambia
+  this.imagenesPreviewUrl = [];
+}
   // ====== Eliminar producto ======
   eliminarProducto(id: number): void {
     if (confirm('¿Seguro que deseas eliminar este producto?')) {
@@ -101,18 +141,20 @@ export class DashboardComponent {
 
   // ====== Resetear formulario ======
   resetFormulario(): void {
-    this.nuevoProducto = {
-      id: 0,
-      titulo: '',
-      descripcion: '',
-      categoria: '',
-      precio: 0,
-      estado: '',
-      propietarioId: 1
-    };
-    this.imagenSeleccionada = null;
-    this.editando = false;
-  }
+  this.nuevoProducto = {
+    id: 0,
+    titulo: '',
+    descripcion: '',
+    categoria: '',
+    precio: 0,
+    estado: '',
+    propietarioId: 1
+  };
+  this.imagenesSeleccionadas = [];
+  this.imagenesPreviewUrl = [];
+  this.imagenesInvalidas = false;
+  this.editando = false;
+}
 
   // ====== Logout ======
   logout() {
@@ -159,5 +201,20 @@ aplicarFiltros() {
   // Finalmente asigna la lista filtrada
   this.productos = lista;
 }
+
+scrollLeft(elementId: string) {
+  const el = document.getElementById(elementId);
+  if (el) el.scrollBy({ left: -200, behavior: 'smooth' });
 }
+
+scrollRight(elementId: string) {
+  const el = document.getElementById(elementId);
+  if (el) el.scrollBy({ left: 200, behavior: 'smooth' });
+}
+
+
+
+}
+
+
 

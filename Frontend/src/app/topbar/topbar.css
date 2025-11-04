@@ -94,6 +94,8 @@ form input:focus {
   font-weight: 500;
   color: #6d5d9a;
 }
+<<<<<<< HEAD
+=======
 
 .topbar-avatar {
   width: 36px;
@@ -109,3 +111,4 @@ form input:focus {
   transform: scale(1.05);
 }
 
+>>>>>>> f9003cf33cfd3f7456d03fc3156dcc45d35f17fe
