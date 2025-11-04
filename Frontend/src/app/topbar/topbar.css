@@ -1,6 +1,5 @@
 .custom-topbar {
-  background-color: #6d5d9a
-  ; /* azul Bootstrap, cámbialo a tu gusto */
+  background-color: #6d5d9a;
   color: white;
   position: sticky;
   top: 0;
@@ -36,10 +35,10 @@
 }
 
 .opciones {
-  font-size: 1.1rem; /* tamaño más grande */
-  font-weight: 500;  /* más grueso */
-  color: #fff;       /* color del texto */
-  margin-left: 20px; /* separación del logo */
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: #fff;
+  margin-left: 20px;
   cursor: pointer;
 }
 
@@ -48,16 +47,50 @@
 }
 
 .search-bar {
-  width: 400px !important;    
-  height: 33px !important;      
-  border-radius: 8px !important; 
+  width: 400px !important;
+  height: 33px !important;
+  border-radius: 8px !important;
 }
 
 form input {
-  width: 200px; 
+  width: 200px;
   transition: width 0.3s ease;
 }
 
 form input:focus {
   width: 250px;
+}
+
+/* Menú desplegable del usuario */
+.dropdown-menu {
+  min-width: 220px;
+  font-size: 15px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.dropdown-header {
+  font-weight: bold;
+  color: #38355d;
+  font-size: 16px;
+  padding: 8px 16px;
+}
+
+.dropdown-item {
+  padding: 10px 16px;
+  transition: background-color 0.2s ease;
+}
+
+.dropdown-item:hover {
+  background-color: #f0f0f0;
+}
+
+.dropdown-item i {
+  color: #6d5d9a;
+  margin-right: 8px;
+}
+
+.login-only {
+  font-weight: 500;
+  color: #6d5d9a;
 }

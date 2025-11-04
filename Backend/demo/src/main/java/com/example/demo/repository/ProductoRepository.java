@@ -13,9 +13,12 @@ public interface ProductoRepository extends JpaRepository<Producto, Long> {
 
     Page<Producto> findByEstadoIgnoreCase(String estado, Pageable pageable);
 
+    List<Producto> findByEstadoIgnoreCase(String estado);
+
     Page<Producto> findByPropietarioId(Long propietarioId, Pageable pageable);
 
     List<Producto> findByPropietarioId(Long propietarioId);
+    
 
     @Query("SELECT p FROM Producto p WHERE " +
            "(:titulo IS NULL OR LOWER(p.titulo) LIKE LOWER(CONCAT('%', :titulo, '%'))) AND " +

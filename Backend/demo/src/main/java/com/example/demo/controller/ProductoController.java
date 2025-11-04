@@ -26,8 +26,7 @@ public class ProductoController {
     public List<Producto> listarTodos() {
         return repo.findAll();
     }
-
-    // ✅ Obtener un producto por ID
+  // ✅ Obtener un producto por ID
     @GetMapping("/{id}")
     public ResponseEntity<Producto> obtenerPorId(@PathVariable Long id) {
         return repo.findById(id)
@@ -44,33 +43,42 @@ public class ProductoController {
             @RequestParam("precio") Double precio,
             @RequestParam("estado") String estado,
             @RequestParam("propietarioId") Long propietarioId,
-            @RequestParam("file") MultipartFile file) {
-
-        try {
-            Path folder = Paths.get(UPLOAD_DIR);
-            if (!Files.exists(folder)) {
-                Files.createDirectories(folder);
-            }
-
-            String filename = UUID.randomUUID() + "-" + file.getOriginalFilename();
-            Path filePath = folder.resolve(filename);
-            Files.write(filePath, file.getBytes());
-
-            Producto producto = new Producto();
-            producto.setTitulo(titulo);
-            producto.setDescripcion(descripcion);
-            producto.setCategoria(categoria);
-            producto.setPrecio(precio);
-            producto.setEstado(estado);
-            producto.setPropietarioId(propietarioId);
-            producto.setFotos("/uploads/" + filename);
-
-            return ResponseEntity.ok(repo.save(producto));
-
-        } catch (IOException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+             @RequestParam("file") List<MultipartFile> files) {  // 👈 ahora recibe una lista de archivos
+    try {
+        Path folder = Paths.get(UPLOAD_DIR);
+        if (!Files.exists(folder)) {
+            Files.createDirectories(folder);
         }
+
+        List<String> rutas = new ArrayList<>();
+
+        for (MultipartFile file : files) {
+            if (!file.isEmpty()) {
+                String filename = UUID.randomUUID() + "-" + file.getOriginalFilename();
+                Path filePath = folder.resolve(filename);
+                Files.write(filePath, file.getBytes());
+                rutas.add("/uploads/" + filename);
+            }
+        }
+
+        Producto producto = new Producto();
+        producto.setTitulo(titulo);
+        producto.setDescripcion(descripcion);
+        producto.setCategoria(categoria);
+        producto.setPrecio(precio);
+        producto.setEstado(estado);
+        producto.setPropietarioId(propietarioId);
+
+        // Guarda todas las rutas separadas por coma
+        producto.setFotos(String.join(",", rutas));
+
+        return ResponseEntity.ok(repo.save(producto));
+
+    } catch (IOException e) {
+        e.printStackTrace();
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
+}
 
     // ✅ Actualizar producto (con opción de cambiar imagen)
     @PutMapping("/actualizar/{id}")
@@ -80,7 +88,7 @@ public class ProductoController {
             @RequestParam("descripcion") String descripcion,
             @RequestParam("categoria") String categoria,
             @RequestParam("precio") Double precio,
-            @RequestParam("estado") String estado,
+ @RequestParam("estado") String estado,
             @RequestParam("propietarioId") Long propietarioId,
             @RequestParam(value = "file", required = false) MultipartFile file) {
 
@@ -95,7 +103,7 @@ public class ProductoController {
         producto.setDescripcion(descripcion);
         producto.setCategoria(categoria);
         producto.setPrecio(precio);
-        producto.setEstado(estado);
+ producto.setEstado(estado);
         producto.setPropietarioId(propietarioId);
 
         // Si se envía una nueva imagen, la guardamos y actualizamos
@@ -121,7 +129,7 @@ public class ProductoController {
     }
 
     // ✅ Eliminar producto
-    @DeleteMapping("/eliminar/{id}")
+ @DeleteMapping("/eliminar/{id}")
     public ResponseEntity<Void> eliminarProducto(@PathVariable Long id) {
         if (!repo.existsById(id)) {
             return ResponseEntity.notFound().build();
@@ -137,7 +145,6 @@ public ResponseEntity<List<Producto>> historialPublicaciones(
         @RequestParam(required = false) String estado) {
 
     List<Producto> productos;
-
     if (estado != null && !estado.isEmpty()) {
         productos = repo.findByPropietarioId(propietarioId)
                         .stream()
@@ -154,5 +161,21 @@ public ResponseEntity<List<Producto>> historialPublicaciones(
     return ResponseEntity.ok(productos);
 }
 
+@GetMapping("/publicados")
+public ResponseEntity<List<Producto>> listarPublicados() {
+    try {
+        List<Producto> productos = repo.findByEstadoIgnoreCase("Publicado");
+        if (productos.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(productos);
+    } catch (Exception e) {
+        // Loguear error
+        e.printStackTrace();
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    }
 }
 
+
+
+}

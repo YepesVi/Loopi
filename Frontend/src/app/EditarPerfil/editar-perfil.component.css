@@ -1,0 +1,148 @@
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(40px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+:host {
+  display: block;
+  padding: 20px;
+  background: linear-gradient(120deg, #e4d9ff, #fefcff);
+  min-height: 100vh;
+  animation: fadeInUp 1s ease-out;
+}
+
+.edit-profile {
+  background: #fff;
+  border-radius: 25px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  align-items: center;
+  width: 100%;
+  max-width: 1100px;
+  min-height: 700px;
+  margin: 40px auto;
+  overflow: hidden;
+}
+
+.profile-image {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+}
+
+.profile-image img {
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  border: 4px solid #a176d1;
+  object-fit: cover;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  transition: transform 0.4s;
+}
+
+.profile-image img:hover {
+  transform: scale(1.1);
+}
+
+.profile-image label {
+  background: linear-gradient(90deg, #7b4dbf, #b183d8);
+  color: #fff;
+  border-radius: 20px;
+  padding: 8px 15px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.profile-image label:hover {
+  background: linear-gradient(90deg, #623b9a, #9d6bd1);
+}
+
+.avatar-selector {
+  display: none;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 10px;
+  animation: fadeInUp 0.6s ease;
+}
+
+.avatar-selector img {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: 0.3s;
+  object-fit: cover;
+}
+
+.avatar-selector img:hover {
+  border-color: #a176d1;
+  transform: scale(1.1);
+}
+
+.form-section {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-group label {
+  font-weight: 500;
+  color: #5c438c;
+  font-size: 0.9rem;
+  margin-left: 4px;
+}
+
+.form-section input {
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: 1px solid #d6b6ee;
+  background-color: #faf5ff;
+  outline: none;
+  transition: 0.3s;
+  font-size: 0.95rem;
+  color: #4e3d76;
+  width: 100%;
+}
+
+.form-section input:focus {
+  border-color: #a76be7;
+  box-shadow: 0 0 8px #cba6f2;
+  background-color: #fff;
+}
+
+.form-actions {
+  grid-column: span 2;
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.save-btn {
+  background: linear-gradient(90deg, #7b4dbf, #b183d8);
+  border: none;
+  border-radius: 20px;
+  color: #fff;
+  padding: 12px 24px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: transform 0.3s, box-shadow 0.4s;
+}
+
+.save-btn:hover {
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 8px 15px rgba(123,77,191,0.4);
+}

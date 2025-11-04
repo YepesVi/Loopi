@@ -50,7 +50,8 @@ form {
 
 form input[type="text"],
 form input[type="number"],
-form input[type="file"] {
+form input[type="file"],
+form input[class="form-control"] {
   width: 90%;
   max-width: 500px;
   padding: 12px 15px;
@@ -67,6 +68,24 @@ form input::placeholder {
 }
 
 form input:focus {
+  border-color: #b48ce4;
+  box-shadow: 0 0 8px rgba(180, 140, 228, 0.6);
+  outline: none;
+}
+
+form select {
+  width: 90%;
+  max-width: 500px;
+  padding: 12px 15px;
+  background: white;
+  color: #38355d;
+  border: 1px solid #6d5d9a;
+  border-radius: 10px;
+  font-size: 15px;
+  transition: all 0.3s ease;
+}
+
+form select:focus {
   border-color: #b48ce4;
   box-shadow: 0 0 8px rgba(180, 140, 228, 0.6);
   outline: none;
@@ -252,7 +271,89 @@ form button:hover {
   color: #13162c;
 }
 
-/* ======== RESPONSIVE ======== */
+.producto-carrusel {
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+  border-radius: 12px;
+  overflow: hidden;
+  background: transparent;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Contenedor del scroll */
+.preview-scroll {
+  display: flex;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  gap: 10px;
+  scroll-snap-type: x mandatory;
+  align-items: center;
+  padding: 10px 40px; /* espacio para las flechas */
+}
+
+/* Oculta scrollbar */
+.preview-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+/* Imágenes */
+.preview-scroll img {
+  width: 180px;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 12px;
+  border: 2px solid #4b0082;
+  flex-shrink: 0;
+  scroll-snap-align: start; /* <--- aquí el cambio clave */
+  transition: transform 0.3s ease;
+}
+
+/* Efecto al pasar el mouse */
+.preview-scroll img:hover {
+  transform: scale(1.05);
+}
+
+/* Flechas */
+.scroll-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(75, 0, 130, 0.25);
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 34px;
+  height: 34px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 5;
+  transition: background 0.3s;
+}
+
+.scroll-btn:hover {
+  background: rgba(75, 0, 130, 0.6);
+}
+
+.scroll-btn.left {
+  left: 8px;
+}
+
+.scroll-btn.right {
+  right: 8px;
+}
+
+/* Si solo hay una imagen, oculta las flechas */
+.producto-carrusel.single-image .scroll-btn {
+  display: none;
+}
+
+
 @media (max-width: 600px) {
   .producto {
     flex-direction: column;

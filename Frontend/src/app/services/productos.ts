@@ -26,6 +26,10 @@ export class ProductosService {
     return this.http.get<Producto[]>(this.apiUrl);
   }
 
+  getProductosPublicados(): Observable<Producto[]> {
+  return this.http.get<Producto[]>(`${this.apiUrl}/publicados`);
+}
+
   crearProductoConImagen(formData: FormData): Observable<Producto> {
     return this.http.post<Producto>(`${this.apiUrl}/crear-con-imagen`, formData);
   }
@@ -47,5 +51,6 @@ export class ProductosService {
   }
   return this.http.get<Producto[]>(url);
 }
+
 
 }
