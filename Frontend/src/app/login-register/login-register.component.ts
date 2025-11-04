@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../services/auth.service';
 import { Router, RouterModule } from '@angular/router';
+import { UsuarioService } from '../services/usuario.service';
 
 @Component({
   selector: 'app-login-register',
@@ -27,7 +28,11 @@ export class LoginRegisterComponent {
     foto: null as File | null
   };
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private usuarioService: UsuarioService
+  ) {}
 
   goToRegister() {
     this.mode = 'register';
@@ -70,43 +75,55 @@ export class LoginRegisterComponent {
   }
 
   private clearLoginFields(): void {
-  this.user.correo = '';
-  this.user.password = '';
-}
-
-
-  login() {
-  if (!this.user.correo || !this.user.password) {
-    this.message = '❌ Por favor ingresa correo y contraseña';
-    this.clearMessageAfterDelay();
-    return;
+    this.user.correo = '';
+    this.user.password = '';
   }
 
-  const loginPayload = {
-    correo: this.user.correo,
-    password: this.user.password
-  };
-
-  this.datosEnviados = JSON.stringify(loginPayload);
-
-  this.authService.login(loginPayload).subscribe({
-    next: res => {
-      localStorage.setItem('token', res.token);
-      this.message = '✅ Login exitoso';
+  login() {
+    if (!this.user.correo || !this.user.password) {
+      this.message = '❌ Por favor ingresa correo y contraseña';
       this.clearMessageAfterDelay();
-      this.router.navigate(['/dashboard']);
-    },
-    error: err => {
-      console.error('Error en login:', err);
-      this.message = err.status === 401
-        ? '❌ Usuario o contraseña incorrectos'
-        : '❌ Error del servidor';
-      this.clearLoginFields(); // ✅ Limpia correo y contraseña si hay error
-      this.clearMessageAfterDelay();
+      return;
     }
-  });
-}
 
+    const loginPayload = {
+      correo: this.user.correo,
+      password: this.user.password
+    };
+
+    this.datosEnviados = JSON.stringify(loginPayload);
+
+    this.authService.login(loginPayload).subscribe({
+      next: res => {
+        // Guardar en localStorage
+        localStorage.setItem('token', res.token);
+        localStorage.setItem('nombreUsuario', res.nombre);
+        localStorage.setItem('apellido', res.apellido);
+        localStorage.setItem('correo', res.correo);
+        localStorage.setItem('telefono', res.telefono);
+        localStorage.setItem('cedula', res.cedula);
+        localStorage.setItem('direccion', res.direccion);
+        localStorage.setItem('password', res.password);
+        localStorage.setItem('foto', res.fotoUrl);
+
+        // 🔄 Actualizar topbar dinámicamente
+        this.usuarioService.actualizarNombre(res.nombre);
+        this.usuarioService.actualizarFoto(res.fotoUrl);
+
+        this.message = '✅ Login exitoso';
+        this.clearMessageAfterDelay();
+        this.router.navigate(['/home']);
+      },
+      error: err => {
+        console.error('Error en login:', err);
+        this.message = err.status === 401
+          ? '❌ Usuario o contraseña incorrectos'
+          : '❌ Error del servidor';
+        this.clearLoginFields();
+        this.clearMessageAfterDelay();
+      }
+    });
+  }
 
   register() {
     const correoValido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.user.correo);
@@ -157,27 +174,25 @@ export class LoginRegisterComponent {
     });
   }
 
- recoverPassword() {
-  if (!this.user.correo) {
-    this.message = '❌ Ingresa tu correo para recuperar la contraseña';
-    this.clearMessageAfterDelay();
-    return;
-  }
-
-  this.authService.recoverPassword(this.user.correo).subscribe({
-    next: res => {
-      this.message = '✅ ' + res;
+  recoverPassword() {
+    if (!this.user.correo) {
+      this.message = '❌ Ingresa tu correo para recuperar la contraseña';
       this.clearMessageAfterDelay();
-    },
-    error: err => {
-      console.error('Error al recuperar contraseña:', err);
-      const mensajeError = typeof err.error === 'string' ? err.error : '❌ Error inesperado';
-      this.message = mensajeError;
-      this.clearMessageAfterDelay();
-       this.clearLoginFields(); // ✅ Limpia correo y contraseña si hay error
-
+      return;
     }
-  });
-}
 
+    this.authService.recoverPassword(this.user.correo).subscribe({
+      next: res => {
+        this.message = '✅ ' + res;
+        this.clearMessageAfterDelay();
+      },
+      error: err => {
+        console.error('Error al recuperar contraseña:', err);
+        const mensajeError = typeof err.error === 'string' ? err.error : '❌ Error inesperado';
+        this.message = mensajeError;
+        this.clearMessageAfterDelay();
+        this.clearLoginFields();
+      }
+    });
+  }
 }

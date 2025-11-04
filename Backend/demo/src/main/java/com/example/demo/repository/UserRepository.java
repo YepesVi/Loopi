@@ -6,9 +6,11 @@ import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Long> {
 
-   
-    // Buscar por correo (si usas correo para login o validación)
+    // Buscar por correo (login o recuperación)
     Optional<User> findByCorreo(String correo);
+
+    // Buscar por cédula (para edición de perfil)
+    Optional<User> findByCedula(String cedula);
 
     // Validar si ya existe una cédula registrada
     boolean existsByCedula(String cedula);

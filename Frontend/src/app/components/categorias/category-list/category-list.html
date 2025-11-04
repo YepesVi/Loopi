@@ -1,0 +1,16 @@
+<h1 >Categorías de Productos</h1>
+
+<div *ngIf="isLoading">Cargando categorías...</div>
+
+<div *ngIf="error" class="alert-error">{{ error }}</div>
+
+<div *ngIf="!isLoading && !error && categoryTree.length > 0" class="tree-container">
+  <app-category-tree-item 
+    [categories]="categoryTree" 
+    [level]="0">
+  </app-category-tree-item>
+</div>
+
+<div *ngIf="!isLoading && !error && categoryTree.length === 0">
+  No hay categorías principales definidas.
+</div>

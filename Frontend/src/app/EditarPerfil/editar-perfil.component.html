@@ -1,0 +1,67 @@
+<div class="edit-profile">
+  <!-- Imagen centrada arriba -->
+  <div class="profile-image">
+    <img [src]="form.value.fotoUrl || defaultFoto" alt="Foto de perfil" />
+    <label (click)="toggleAvatars()">Cambiar Imagen</label>
+
+    <div class="avatar-selector" [style.display]="mostrarAvatares ? 'flex' : 'none'">
+      <img src="https://cdn-icons-png.flaticon.com/512/4140/4140052.png" (click)="setAvatar($event.target.src)" />
+      <img src="https://cdn-icons-png.flaticon.com/512/4140/4140060.png" (click)="setAvatar($event.target.src)" />
+      <img src="https://cdn-icons-png.flaticon.com/512/4140/4140087.png" (click)="setAvatar($event.target.src)" />
+      <img src="https://cdn-icons-png.flaticon.com/512/4140/4140037.png" (click)="setAvatar($event.target.src)" />
+      <img src="https://cdn-icons-png.flaticon.com/512/4140/4140070.png" (click)="setAvatar($event.target.src)" />
+      <img src="https://cdn-icons-png.flaticon.com/512/616/616408.png" (click)="setAvatar($event.target.src)" />
+      <img src="https://cdn-icons-png.flaticon.com/512/616/616554.png" (click)="setAvatar($event.target.src)" />
+      <img src="https://cdn-icons-png.flaticon.com/512/1046/1046784.png" (click)="setAvatar($event.target.src)" />
+      <img src="https://cdn-icons-png.flaticon.com/512/2103/2103658.png" (click)="setAvatar($event.target.src)" />
+      <img src="https://cdn-icons-png.flaticon.com/512/888/888879.png" (click)="setAvatar($event.target.src)" />
+    </div>
+  </div>
+
+  <!-- Formulario -->
+  <form [formGroup]="form" (ngSubmit)="actualizar()" class="form-section">
+    <div class="form-group">
+      <label for="cedula">Cédula</label>
+      <input id="cedula" formControlName="cedula" type="text" readonly />
+    </div>
+
+    <div class="form-group">
+      <label for="nombre">Nombre</label>
+      <input id="nombre" formControlName="nombre" type="text" />
+    </div>
+
+    <div class="form-group">
+      <label for="apellido">Apellido</label>
+      <input id="apellido" formControlName="apellido" type="text" />
+    </div>
+
+    <div class="form-group">
+      <label for="telefono">Teléfono</label>
+      <input id="telefono" formControlName="telefono" type="text" />
+    </div>
+
+    <div class="form-group">
+      <label for="correo">Correo</label>
+      <input id="correo" formControlName="correo" type="email" readonly />
+    </div>
+
+    <div class="form-group">
+      <label for="direccion">Dirección</label>
+      <input id="direccion" formControlName="direccion" type="text" />
+    </div>
+
+    <div class="form-group">
+      <label for="password">Contraseña</label>
+      <input id="password" formControlName="password" type="password" />
+    </div>
+
+    <div class="form-actions">
+      <button class="save-btn">Guardar Cambios</button>
+    </div>
+  </form>
+
+  <!-- Mensaje de respuesta -->
+  <div *ngIf="mensaje" class="mt-3 text-center" [ngClass]="{ 'text-success': !error, 'text-danger': error }">
+    {{ mensaje }}
+  </div>
+</div>

@@ -159,5 +159,5 @@ aplicarFiltros() {
   // Finalmente asigna la lista filtrada
   this.productos = lista;
 }
-
 }
+
