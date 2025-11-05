@@ -1,11 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule, DecimalPipe, NgFor, KeyValuePipe } from '@angular/common';
+import { CommonModule, DecimalPipe } from '@angular/common';
+import { Router } from '@angular/router';
 import { ProductosService, Producto } from '../../services/productos';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [NgFor, KeyValuePipe, DecimalPipe, CommonModule],
+  imports: [CommonModule, DecimalPipe],
   templateUrl: './home.html',
   styleUrls: ['./home.css']
 })
@@ -13,16 +15,26 @@ export class Home implements OnInit {
   productosPorCategoria: Record<string, Producto[]> = {};
   categorias: { key: string; value: Producto[] }[] = [];
 
-  constructor(private productosService: ProductosService) {}
+  mostrarAdvertencia = false;
 
-  ngOnInit() {
+  constructor(
+    private productosService: ProductosService,
+    private auth: AuthService,
+    private router: Router
+  ) {}
+
+  // ✅ Getter reactivo para estado de sesión
+  get isLoggedIn(): boolean {
+    return this.auth.loggedInSignal();
+  }
+
+  ngOnInit(): void {
     this.cargarProductosPublicados();
   }
 
-  cargarProductosPublicados() {
+  cargarProductosPublicados(): void {
     this.productosService.getProductosPublicados().subscribe({
       next: (productos: Producto[]) => {
-        // Filtrar solo los productos publicados
         const publicados = productos.filter(p => p.estado?.toLowerCase() === 'publicado');
         this.agruparPorCategoria(publicados);
       },
@@ -30,7 +42,7 @@ export class Home implements OnInit {
     });
   }
 
-  agruparPorCategoria(productos: Producto[]) {
+  agruparPorCategoria(productos: Producto[]): void {
     this.productosPorCategoria = productos.reduce((grupo, producto) => {
       const categoria = producto.categoria || 'Otros';
       if (!grupo[categoria]) grupo[categoria] = [];
@@ -38,7 +50,6 @@ export class Home implements OnInit {
       return grupo;
     }, {} as Record<string, Producto[]>);
 
-    
     this.categorias = Object.entries(this.productosPorCategoria).map(
       ([key, value]) => ({ key, value })
     );
@@ -52,17 +63,30 @@ export class Home implements OnInit {
     return grupos;
   }
 
- scrollLeft(elementId: string) {
-  const el = document.getElementById(elementId);
-  if (el) el?.scrollBy({ left: -200, behavior: 'smooth' });
-  
-}
+  scrollLeft(elementId: string): void {
+    const el = document.getElementById(elementId);
+    if (el) el.scrollBy({ left: -200, behavior: 'smooth' });
+  }
 
-scrollRight(elementId: string) {
-  const el = document.getElementById(elementId);
-  if (el) el?.scrollBy({ left: 200, behavior: 'smooth' });
-   
-}
+  scrollRight(elementId: string): void {
+    const el = document.getElementById(elementId);
+    if (el) el.scrollBy({ left: 200, behavior: 'smooth' });
+  }
 
+  seleccionarProducto(producto: Producto): void {
+    if (!this.isLoggedIn) {
+      this.mostrarAdvertencia = true;
+      return;
+    }
 
+    console.log('Producto seleccionado:', producto);
+  }
+
+  cerrarAdvertencia(): void {
+    this.mostrarAdvertencia = false;
+  }
+
+  irALogin(): void {
+    this.router.navigateByUrl('/login-register');
+  }
 }

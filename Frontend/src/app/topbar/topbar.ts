@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { UsuarioService } from '../services/usuario.service';
 import { PopupService } from '../services/categorias/popup';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-topbar',
@@ -18,16 +19,16 @@ export class Topbar implements OnInit {
   nombreUsuario = 'Usuario';
   fotoUsuario = 'https://cdn-icons-png.flaticon.com/512/4140/4140048.png';
   sesionActiva = false;
+  cerrandoSesion = false; // ✅ NUEVO
 
-  constructor(private router: Router, private usuarioService: UsuarioService,private popupService: PopupService) { }
-
-
-   toggleCategoryPopup(): void {
-    this.popupService.toggleCategoryPopup();
-  }
+  constructor(
+    private router: Router,
+    private usuarioService: UsuarioService,
+    private popupService: PopupService,
+    private auth: AuthService
+  ) {}
 
   ngOnInit(): void {
-    // 🔄 Escucha cambios en nombre y foto
     this.usuarioService.nombreUsuario$.subscribe(nombre => {
       this.nombreUsuario = nombre || 'Usuario';
     });
@@ -36,7 +37,6 @@ export class Topbar implements OnInit {
       this.fotoUsuario = foto || 'https://cdn-icons-png.flaticon.com/512/4140/4140048.png';
     });
 
-    // Detecta navegación para actualizar sesión
     this.router.events
       .pipe(filter(event => event instanceof NavigationEnd))
       .subscribe(() => {
@@ -46,44 +46,46 @@ export class Topbar implements OnInit {
     this.actualizarSesion();
   }
 
-  actualizarSesion() {
-    if (typeof window !== 'undefined') {
-      const token = localStorage.getItem('token');
-      this.sesionActiva = !!token;
-    }
+  actualizarSesion(): void {
+    this.sesionActiva = this.auth.loggedInSignal();
   }
 
-  searchProduct() {
+  toggleCategoryPopup(): void {
+    this.popupService.toggleCategoryPopup();
+  }
+
+  searchProduct(): void {
     if (this.searchQuery.trim()) {
       console.log('Buscando:', this.searchQuery);
     }
   }
 
-  irALogin() {
+  irALogin(): void {
     this.router.navigateByUrl('/login-register');
   }
 
-  logout() {
-    if (typeof window !== 'undefined') {
-      localStorage.clear();
-    }
+  logout(): void {
+    this.cerrandoSesion = true;
 
-    this.usuarioService.actualizarNombre('Usuario');
-    this.usuarioService.actualizarFoto('https://cdn-icons-png.flaticon.com/512/4140/4140048.png');
-
-    this.actualizarSesion();
-    this.router.navigate(['/home']);
+    setTimeout(() => {
+      this.auth.logout();
+      this.usuarioService.actualizarNombre('Usuario');
+      this.usuarioService.actualizarFoto('https://cdn-icons-png.flaticon.com/512/4140/4140048.png');
+      this.cerrandoSesion = false;
+      this.actualizarSesion();
+      this.router.navigate(['/home']);
+    }, 1500); // ⏳ duración del mensaje
   }
 
-  edit() {
+  edit(): void {
     this.router.navigateByUrl('/editar-perfil');
   }
 
-  dashboard() {
+  dashboard(): void {
     this.router.navigateByUrl('/dashboard');
   }
 
-  home() {
+  home(): void {
     this.router.navigateByUrl('/home');
   }
 }
