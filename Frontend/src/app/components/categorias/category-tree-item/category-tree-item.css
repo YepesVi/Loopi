@@ -1,4 +1,10 @@
-/* category-tree-item.component.css */
+
+.category-item-container {
+    display: flex; /* Para poner el nombre y los botones en línea */
+    align-items: center;
+    justify-content: space-between; /* Empujar los botones a la derecha */
+    border-bottom: 1px dotted #eee;
+}
 
 .category-item {
   /* Alineación y espaciado */
@@ -11,4 +17,91 @@
 .category-item:hover {
   background-color: #f7f7f7;
   cursor: pointer;
+}
+
+.category-actions-group {
+    display: flex; /* <-- Clave: Alinea el botón de toggle y el div de CRUD */
+    align-items: center;
+    gap: 10px; /* Espacio entre el botón de toggle y el grupo CRUD */
+    flex-shrink: 0; /* Evita que este grupo se encoja */
+}
+
+/* Asegura que el nombre y el input ocupen el espacio restante */
+.category-info-and-toggle {
+    display: flex;
+    align-items: center;
+    flex-grow: 1; /* Permite que ocupe la mayor parte del espacio */
+}
+
+.btn-toggle-hijos {
+    background: none;
+    border: 1px solid #ccc;
+    color: #555;
+    width: 20px;
+    height: 20px;
+    border-radius: 4px;
+    margin-right: 5px;
+    font-size: 0.8em;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    line-height: 1;
+    transition: background-color 0.2s;
+}
+
+.btn-toggle-hijos:hover {
+    background-color: #eee;
+}
+
+/* Estilos para los botones CRUD */
+.crud-actions {
+    display: flex;
+    gap: 5px; /* Espacio entre los botones */
+    padding-right: 10px;
+}
+
+.btn-crud {
+    background: none;
+    border: 1px solid transparent;
+    cursor: pointer;
+    padding: 5px 8px; 
+    border-radius: 4px;
+    font-size: 1.0em;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.btn-add {
+    color: #2754ae; /* Azul */
+}
+.btn-add:hover {
+    background-color: #2754ae;
+    color: white;
+}
+
+.btn-edit {
+    color: #dba134; /* Naranja */
+}
+
+.btn-edit:hover {
+    background-color: #dba134;
+    color: white;
+}
+
+.btn-delete {
+    color: #e74c3c; /* Rojo */
+}
+
+.btn-delete:hover {
+    background-color: #e74c3c;
+    color: white;
+}
+
+.btn-root {
+    color: #343434; /* Gris oscuro */
+}
+.btn-root:hover {
+    background-color: #343434;
+    color: white;
 }

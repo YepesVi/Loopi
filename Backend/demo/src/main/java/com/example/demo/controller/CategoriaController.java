@@ -70,8 +70,25 @@ public class CategoriaController {
     }
 
     // --- 7. PUT: Actualizar Categoría (incluyendo movimiento) ---
-    @PutMapping("/{id}")
+    @PutMapping("/{id}/name")
     public ResponseEntity<?> updateCategoria(@PathVariable Long id, @Valid @RequestBody Categoria categoriaDetails) {
+        try {
+            Categoria oldCategoria = categoriaService.findById(id).orElseThrow(() -> new EntityNotFoundException("Categoría no encontrada"));
+            // El Service maneja la validación de existencia, del p y del movimiento seguro.
+            categoriaDetails.setParent(oldCategoria.getParent());
+            Categoria updatedCategoria = categoriaService.update(id, categoriaDetails);
+            return ResponseEntity.ok(updatedCategoria);
+        } catch (EntityNotFoundException e) {
+            // Captura errores si la categoría principal no existe
+            return ResponseEntity.notFound().build();
+        } catch (IllegalArgumentException e) {
+            // Captura errores de negocio (ej. "El nuevo padre no existe" o "Movimiento inválido")
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+    // --- 7. PUT: Actualizar Categoría (incluyendo movimiento) ---
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateCategoriaName(@PathVariable Long id, @Valid @RequestBody Categoria categoriaDetails) {
         try {
             // El Service maneja la validación de existencia, del parent, y del movimiento seguro.
             Categoria updatedCategoria = categoriaService.update(id, categoriaDetails);

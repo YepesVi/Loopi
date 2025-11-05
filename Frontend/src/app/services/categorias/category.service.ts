@@ -3,7 +3,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Categoria } from '../models/category.model';
+import { Categoria, CrudCategoria } from '../../models/category.model';
 
 @Injectable({
   providedIn: 'root'
@@ -17,8 +17,21 @@ export class CategoryService {
 
 
   getCategoriesTree(): Observable<Categoria[]> {
-    console.log(this.http.get<Categoria[]>(`${this.baseUrl}/roots`));
     return this.http.get<Categoria[]>(`${this.baseUrl}/roots`);
+  }
+
+  createCategory(category: CrudCategoria): Observable<Categoria> {
+    return this.http.post<Categoria>(this.baseUrl, category);
+  }
+
+ 
+  updateCategory(category: CrudCategoria): Observable<Categoria> {
+    return this.http.put<Categoria>(`${this.baseUrl}/${category.id}/name`, category);
+  }
+
+
+  deleteCategory(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/${id}`);
   }
 
   

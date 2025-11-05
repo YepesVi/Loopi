@@ -2,7 +2,7 @@ import { Component, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { Topbar } from './topbar/topbar';
 import { Footer } from './footer/footer';
-import { PopupService } from './services/popup';
+import { PopupService } from './services/categorias/popup';
 import { Observable } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { CategoryList } from './components/categorias/category-list/category-list';
