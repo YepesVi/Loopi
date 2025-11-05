@@ -5,9 +5,7 @@
     </a>
 
     <a class="navbar-brand d-flex align-items-center opciones" (click)="home()">Home</a>
-    <a class="navbar-brand d-flex align-items-center opciones" (click)="toggleCategoryPopup()" >
-      Categorías
-    </a>
+    <a class="navbar-brand d-flex align-items-center opciones" (click)="toggleCategoryPopup()">Categorías</a>
   </div>
 
   <div class="d-flex align-items-center ms-auto">
@@ -57,3 +55,18 @@
     </div>
   </div>
 </nav>
+
+<!-- ✅ Toast de "Cerrando sesión..." -->
+<div 
+  class="toast-container position-fixed top-0 end-0 p-3" 
+  style="z-index: 2000"
+  *ngIf="cerrandoSesion"
+>
+  <div class="toast show text-bg-dark border-0">
+    <div class="d-flex">
+      <div class="toast-body">
+        🔒 Cerrando sesión...
+      </div>
+    </div>
+  </div>
+</div>
