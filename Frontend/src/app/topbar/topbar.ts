@@ -4,6 +4,7 @@ import { filter } from 'rxjs/operators';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { UsuarioService } from '../services/usuario.service';
+import { PopupService } from '../services/categorias/popup';
 
 @Component({
   selector: 'app-topbar',
@@ -18,7 +19,12 @@ export class Topbar implements OnInit {
   fotoUsuario = 'https://cdn-icons-png.flaticon.com/512/4140/4140048.png';
   sesionActiva = false;
 
-  constructor(private router: Router, private usuarioService: UsuarioService) {}
+  constructor(private router: Router, private usuarioService: UsuarioService,private popupService: PopupService) { }
+
+
+   toggleCategoryPopup(): void {
+    this.popupService.toggleCategoryPopup();
+  }
 
   ngOnInit(): void {
     // 🔄 Escucha cambios en nombre y foto

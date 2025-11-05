@@ -1,11 +1,86 @@
 <div *ngFor="let category of categories">
-  <div class="category-item" [ngStyle]="getIndentationStyle()">
-    {{ '—'.repeat(level) }} {{ category.nombre }} <!---(ID: {{ category.id }})-->
+  <div class="category-item-container">
+    <div class="category-info-and-toggle">
+      <div class="category-item" [ngStyle]="getIndentationStyle()">
+        {{ '  '.repeat(level) }} 
+
+        <span *ngIf="activeEditId !== category.id">
+              {{ category.nombre }}
+        </span>
+        <input 
+            *ngIf="activeEditId === category.id" 
+            type="text" 
+            [(ngModel)]="newCategoryName"
+            (blur)="saveEditedName(category)" 
+            (keyup.enter)="saveEditedName(category)"
+        >
+        
+      </div>
+    </div>
+    <div class="category-actions-group">
+      <button 
+            *ngIf="category.hijos && category.hijos.length > 0" 
+            class="btn-toggle-hijos" 
+            (click)="toggleExpansion(category.id)"
+            [title]="isExpanded(category.id) ? 'Ocultar Subcategorías' : 'Mostrar Subcategorías'">
+            {{ isExpanded(category.id) ? '−' : '+' }} 
+      </button>
+      <div *ngIf="editingMode" class="crud-actions">
+          <button class="btn-crud btn-add" title="Añadir Subcategoría" (click)="toggleAddChildForm(category.id)">
+              <i class="bi bi-plus"></i>
+          </button>
+          <button class="btn-crud btn-edit" title="Editar Nombre" (click)="toggleEditName(category)">
+              <i class="bi bi-pen-fill"></i>
+          </button>
+          <button class="btn-crud btn-delete" title="Eliminar" (click)="emitDeleteCategory(category.id)">
+              <i class="bi bi-trash-fill"></i>
+          </button>
+      </div>
+    </div>
   </div>
   
+  <div *ngIf="activeAddChildId === category.id" class="add-child-form" [ngStyle]="getIndentationStyle()">
+    <input 
+        type="text" 
+        placeholder="Nombre subcategoría" 
+        [(ngModel)]="newCategoryName"
+        (keyup.enter)="emitAddChild(category.id)"
+    >
+  </div>
+
+  
+  
   <app-category-tree-item 
-    *ngIf="category.hijos && category.hijos.length > 0"
+    *ngIf="category.hijos && category.hijos.length > 0 && isExpanded(category.id)"
     [categories]="category.hijos" 
-    [level]="level + 1">
-  </app-category-tree-item>
+    [level]="level + 1"
+    [editingMode]="editingMode"
+
+    [activeEditId]="activeEditId"         
+    [activeAddChildId]="activeAddChildId"   
+    
+    (requestEditFocus)="onChildRequestEditFocus($event)"
+    (requestAddChildFocus)="onChildRequestAddChildFocus($event)"
+    (actionComplete)="onChildActionComplete()"
+
+    (addChild)="onChildAdded($event)" 
+    (deleteCategory)="onChildDeleted($event)"> </app-category-tree-item>
 </div>
+
+<div *ngIf="editingMode && level === 0" class="root-add-area">
+    
+    <div *ngIf="activeAddChildId !== 0" class="crud-actions">
+        <button class="btn-crud btn-root" (click)="toggleAddRootForm()">
+            + Añadir Categoría Principal
+        </button>
+    </div>
+
+    <div *ngIf="activeAddChildId === 0" class="add-root-form-in-tree" style="margin-left: 10px;">
+        <input 
+            type="text" 
+            placeholder="Nombre de la nueva categoría principal"
+            [(ngModel)]="newRootCategoryName" 
+            (keyup.enter)="emitAddRoot()" 
+        >
+    </div>
+  </div>
