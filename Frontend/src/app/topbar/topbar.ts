@@ -62,6 +62,7 @@ export class Topbar implements OnInit {
 
   irALogin(): void {
     this.router.navigateByUrl('/login-register');
+    localStorage.clear();
   }
 
   logout(): void {
@@ -70,6 +71,7 @@ export class Topbar implements OnInit {
     setTimeout(() => {
       this.auth.logout();
       this.usuarioService.actualizarNombre('Usuario');
+      localStorage.clear();
       this.usuarioService.actualizarFoto('https://cdn-icons-png.flaticon.com/512/4140/4140048.png');
       this.cerrandoSesion = false;
       this.actualizarSesion();
