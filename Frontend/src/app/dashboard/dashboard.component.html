@@ -90,24 +90,23 @@
       <span *ngIf="estadoCtrl.errors?.['required']">Debes seleccionar un estado.</span>
     </div>
 
-<!-- ✅ Campo para subir múltiples imágenes -->
-<div class="input-container">
-  <input
-    type="file"
-    (change)="onFilesSelected($event)"
-    accept="image/png, image/jpeg, image/webp"
-    multiple
-    required
-  />
-  <span class="input-warning" *ngIf="imagenesInvalidas">
-    Debes subir solo imágenes (JPG, PNG, WEBP, máx 2MB).
-  </span>
-</div>
+    <!-- ✅ Campo para subir múltiples imágenes -->
+    <div class="input-container">
+      <input
+        type="file"
+        (change)="onFilesSelected($event)"
+        accept="image/png, image/jpeg, image/webp"
+        multiple
+        required
+      />
+      <span class="input-warning" *ngIf="imagenesInvalidas">
+        Debes subir solo imágenes (JPG, PNG, WEBP, máx 2MB).
+      </span>
+    </div>
 
- <button type="submit" [disabled]="miForm.invalid" class="btn-agregar">
-  {{ editando ? 'Actualizar producto' : 'Agregar producto' }}
-</button>
-
+    <button type="submit" [disabled]="miForm.invalid" class="btn-agregar">
+      {{ editando ? 'Actualizar producto' : 'Agregar producto' }}
+    </button>
   </form>
 
 
@@ -166,20 +165,23 @@
 
       <!-- ✅ Imagen del producto -->
       <!-- ✅ Carrusel de imágenes -->
-<div *ngIf="p.fotos" class="producto-carrusel">
-  <button class="scroll-btn left" (click)="scrollLeft('productoScroll' + p.id)">&#10094;</button>
+      <div *ngIf="p.fotos" class="producto-carrusel">
+        <button class="scroll-btn left" (click)="scrollLeft('productoScroll' + p.id)">
+          &#10094;
+        </button>
 
-  <div class="preview-scroll" id="{{'productoScroll' + p.id}}">
-    <img
-      *ngFor="let img of p.fotos.split(',')"
-      [src]="'http://localhost:8081' + img"
-      alt="imagen producto"
-    />
-  </div>
+        <div class="preview-scroll" id="{{ 'productoScroll' + p.id }}">
+          <img
+            *ngFor="let img of p.fotos.split(',')"
+            [src]="'http://localhost:8081' + img"
+            alt="imagen producto"
+          />
+        </div>
 
-  <button class="scroll-btn right" (click)="scrollRight('productoScroll' + p.id)">&#10095;</button>
-</div>
-
+        <button class="scroll-btn right" (click)="scrollRight('productoScroll' + p.id)">
+          &#10095;
+        </button>
+      </div>
     </div>
   </div>
 </div>
