@@ -98,6 +98,13 @@
                   <h5 class="card-title">{{ producto.titulo }}</h5>
                   <p class="card-text text-muted">{{ producto.descripcion }}</p>
                   <p class="fw-bold">$ {{ producto.precio | number }}</p>
+
+                  <button 
+  *ngIf="producto.id !== undefined"
+  (click)="comprarProducto(producto.id)" 
+  [disabled]="producto.estado.toLowerCase() === 'vendido'">
+  Comprar
+</button>
                 </div>
               </div>
             </div>
