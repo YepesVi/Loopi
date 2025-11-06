@@ -1,16 +1,30 @@
-<h1 >Categorías de Productos</h1>
-
+<div class="category-header">
+    <h1>Catálogo de Categorías</h1>
+    
+    
+</div>
 <div *ngIf="isLoading">Cargando categorías...</div>
 
 <div *ngIf="error" class="alert-error">{{ error }}</div>
 
+
+
 <div *ngIf="!isLoading && !error && categoryTree.length > 0" class="tree-container">
   <app-category-tree-item 
     [categories]="categoryTree" 
-    [level]="0">
-  </app-category-tree-item>
+    [level]="0"
+    [editingMode]="editingMode"
+    
+    [activeEditId]="activeEditId"           [activeAddChildId]="activeAddChildId"   (requestEditFocus)="startEditing($event)"      (requestAddChildFocus)="startAddingChild($event)" (actionComplete)="onActionComplete()"        (addChild)="onChildAdded($event)"       
+    (deleteCategory)="onCategoryDeleted($event)"> </app-category-tree-item>
 </div>
-
+<div class="edit-container">
+  <button class="btn btn-outline-light" (click)="toggleEditingMode()">
+          <i class="fas fa-{{ editingMode ? 'times-circle' : 'edit' }}"></i> 
+          {{ editingMode ? 'Guardar' : 'Editar' }}
+  </button>
+</div>
 <div *ngIf="!isLoading && !error && categoryTree.length === 0">
   No hay categorías principales definidas.
 </div>
+

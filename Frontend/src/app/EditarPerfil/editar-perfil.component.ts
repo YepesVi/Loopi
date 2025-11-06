@@ -1,38 +1,12 @@
-<<<<<<< HEAD
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-=======
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../services/auth.service';
 import { UsuarioService } from '../services/usuario.service';
->>>>>>> f9003cf33cfd3f7456d03fc3156dcc45d35f17fe
 
 @Component({
   selector: 'app-editar-perfil',
   standalone: true,
-<<<<<<< HEAD
-  imports: [CommonModule, FormsModule],
-  templateUrl: './editar-perfil.component.html',
-  styleUrls: ['./editar-perfil.component.css']
-})
-export class EditarPerfilComponent {
-  avatarUrl = 'https://cdn-icons-png.flaticon.com/512/4140/4140048.png';
-
-  setAvatar(src: string) {
-    this.avatarUrl = src;
-    const selector = document.getElementById('avatarSelector');
-    if (selector) selector.style.display = 'none';
-  }
-
-  toggleAvatars() {
-    const selector = document.getElementById('avatarSelector');
-    if (selector) {
-      selector.style.display = selector.style.display === 'flex' ? 'none' : 'flex';
-    }
-=======
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './editar-perfil.component.html',
   styleUrls: ['./editar-perfil.component.css']
@@ -118,6 +92,5 @@ export class EditarPerfilComponent implements OnInit {
   setAvatar(url: string): void {
     this.form.patchValue({ fotoUrl: url });
     this.mostrarAvatares = false;
->>>>>>> f9003cf33cfd3f7456d03fc3156dcc45d35f17fe
   }
 }
