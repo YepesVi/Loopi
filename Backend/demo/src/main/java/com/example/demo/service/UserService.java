@@ -54,7 +54,7 @@ public class UserService {
     String token = UUID.randomUUID().toString();
     tokenStore.put(token, correo);
 
-    String link = "http://localhost:4200/reset-password?token=" + token;
+    String link = "http://localhost:4200/#/reset-password?token=" + token;
     SimpleMailMessage message = new SimpleMailMessage();
     message.setTo(correo);
     message.setSubject("Recuperación de contraseña");

@@ -174,25 +174,29 @@ export class LoginRegisterComponent {
     });
   }
 
-  recoverPassword() {
-    if (!this.user.correo) {
-      this.message = '❌ Ingresa tu correo para recuperar la contraseña';
-      this.clearMessageAfterDelay();
-      return;
-    }
-
-    this.authService.recoverPassword(this.user.correo).subscribe({
-      next: res => {
-        this.message = '✅ ' + res;
-        this.clearMessageAfterDelay();
-      },
-      error: err => {
-        console.error('Error al recuperar contraseña:', err);
-        const mensajeError = typeof err.error === 'string' ? err.error : '❌ Error inesperado';
-        this.message = mensajeError;
-        this.clearMessageAfterDelay();
-        this.clearLoginFields();
-      }
-    });
+ recoverPassword() {
+  if (!this.user.correo) {
+    this.message = '❌ Ingresa tu correo para recuperar la contraseña';
+    this.clearMessageAfterDelay();
+    return;
   }
+
+  // ✅ Guardar el correo en localStorage
+  localStorage.setItem('correoRecuperacion', this.user.correo);
+
+  this.authService.recoverPassword(this.user.correo).subscribe({
+    next: res => {
+      this.message = '✅ ' + res;
+      this.clearMessageAfterDelay();
+    },
+    error: err => {
+      console.error('Error al recuperar contraseña:', err);
+      const mensajeError = typeof err.error === 'string' ? err.error : '❌ Error inesperado';
+      this.message = mensajeError;
+      this.clearMessageAfterDelay();
+      this.clearLoginFields();
+    }
+  });
+}
+
 }
