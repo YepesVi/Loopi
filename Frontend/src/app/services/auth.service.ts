@@ -1,16 +1,30 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private baseUrl = 'http://localhost:8081/api/auth';
 
-  constructor(private http: HttpClient) {}
+  // Estado reactivo de sesión
+  private readonly loggedIn = signal(false);
+  readonly loggedInSignal = this.loggedIn; // ✅ acceso público al signal
+
+  constructor(private http: HttpClient) {
+    if (typeof window !== 'undefined') {
+      const stored = localStorage.getItem('loggedIn');
+      this.loggedIn.set(stored === 'true');
+    }
+  }
 
   // 🔐 Login por correo y contraseña
   login(credentials: { correo: string; password: string }): Observable<any> {
-    return this.http.post(`${this.baseUrl}/login`, credentials);
+    return this.http.post(`${this.baseUrl}/login`, credentials).pipe(
+      tap(() => {
+        this.loggedIn.set(true);
+        localStorage.setItem('loggedIn', 'true');
+      })
+    );
   }
 
   // 📝 Registro usando FormData (multipart/form-data)
@@ -28,11 +42,18 @@ export class AuthService {
     return this.http.post(`${this.baseUrl}/reset-direct`, payload, { responseType: 'text' });
   }
 
- 
-
   // 🔄 Actualizar perfil
   updateProfile(data: any): Observable<string> {
-  return this.http.put(`${this.baseUrl}/update`, data, { responseType: 'text' });
-}
+    return this.http.put(`${this.baseUrl}/update`, data, { responseType: 'text' });
+  }
 
+  // ✅ Estado de sesión
+  isLoggedIn(): boolean {
+    return this.loggedIn();
+  }
+
+  logout(): void {
+    this.loggedIn.set(false);
+    localStorage.removeItem('loggedIn');
+  }
 }

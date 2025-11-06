@@ -9,6 +9,35 @@ h1 {
   margin-bottom: 20px;
 }
 
+.category-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+
+}
+
+.edit-container {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 15px;
+}
+
+.btn-toggle-edit {
+    background-color: #b8b8b8; /* Naranja/Amarillo */
+    color: rgb(109, 109, 109);
+    border: none;
+    padding: 8px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.2s;
+}
+
+.btn-toggle-edit:hover {
+    background-color: #e67e22;
+}
+
 /* --- Contenedor del Árbol de Categorías --- */
 .tree-container {
   /* Fondo ligero para resaltar la sección */
