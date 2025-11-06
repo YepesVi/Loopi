@@ -1,10 +1,9 @@
-/* ======== PALETA DE COLORES ======== 
+/* ======== PALETA DE COLORES ORIGINAL ======== */
 .color1 {color: #13162c;}
 .color2 {color: #38355d;}
 .color3 {color: #6d5d9a;}
 .color4 {color: #b48ce4;}
 .color5 {color: #ffc3ff;}
-*/
 
 /* ======== ESTILOS GENERALES ======== */
 body {
@@ -23,7 +22,7 @@ body {
 .container {
   width: 100%;
   max-width: 1000px;
-  background: #1b1f38;
+  background: #b48ce4;
   padding: 40px 50px;
   border-radius: 20px;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
@@ -38,6 +37,28 @@ h2, h3 {
   font-weight: 600;
   letter-spacing: 1px;
   text-shadow: 0 0 6px rgba(180, 140, 228, 0.6);
+}
+
+
+/* ======== BOTÓN SUPERIOR IZQUIERDO: AGREGAR PRODUCTO ======== */
+.btn-agregar-superior {
+  padding: 10px 20px;
+  background-color: #6d5d9a; /* violeta suave */
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 15px;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(109, 93, 154, 0.3);
+}
+
+.btn-agregar-superior:hover {
+  background-color: #b48ce4; /* lila claro */
+  color: #13162c;
+  transform: scale(1.03);
+  box-shadow: 0 6px 18px rgba(180, 140, 228, 0.4);
 }
 
 /* ======== FORMULARIO ======== */
@@ -56,7 +77,7 @@ form input[class="form-control"] {
   max-width: 500px;
   padding: 12px 15px;
   background: white;
-  color: #38355d;;
+  color: #38355d;
   border: 1px solid #6d5d9a;
   border-radius: 10px;
   font-size: 15px;
@@ -95,21 +116,37 @@ form select:focus {
 form button {
   width: 220px;
   padding: 12px;
-  background: #6d5d9a;
-  color: #ffc3ff;
-  font-weight: bold;
+  background: #2c3e50;
+  color: #ffffff;
+  font-weight: 600;
   border: none;
   border-radius: 25px;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 0 10px rgba(109, 93, 154, 0.4);
+  box-shadow: 0 0 10px rgba(44, 62, 80, 0.3);
 }
 
 form button:hover {
-  background: #b48ce4;
-  color: #13162c;
-  transform: scale(1.05);
-  box-shadow: 0 0 15px rgba(180, 140, 228, 0.7);
+  background: #34495e;
+  color: #ffffff;
+  transform: scale(1.03);
+  box-shadow: 0 0 15px rgba(44, 62, 80, 0.5);
+}
+
+/* ======== BOTÓN NUEVO PRODUCTO EN MODAL ======== */
+.modal-header .btn-outline-light {
+  padding: 6px 14px;
+  border: 2px solid #ffffff;
+  border-radius: 20px;
+  background: transparent;
+  color: #ffffff;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.modal-header .btn-outline-light:hover {
+  background: #ffffff;
+  color: #2c3e50;
 }
 
 /* ======== GRID DE PRODUCTOS ======== */
@@ -184,24 +221,25 @@ form button:hover {
 }
 
 .acciones .editar {
-  background: #6d5d9a;
-  color: #ffc3ff;
+  background: #2980b9;
+  color: #fff;
 }
 
 .acciones .editar:hover {
-  background: #b48ce4;
-  color: #13162c;
+  background: #3498db;
+  color: #fff;
 }
 
 .acciones .eliminar {
-  background: #6d5d9a;
+  background: #c0392b;
   color: #fff;
 }
 
 .acciones .eliminar:hover {
-  background: #b48ce4;
+  background: #e74c3c;
 }
 
+/* ======== FILTROS ======== */
 .filtro {
   margin: 20px 0 30px;
   display: flex;
@@ -239,6 +277,7 @@ form button:hover {
   color: #fff;
 }
 
+/* ======== ESTADO ======== */
 .estado {
   display: inline-block;
   padding: 6px 14px;
@@ -252,25 +291,25 @@ form button:hover {
   box-shadow: 0 0 8px rgba(180, 140, 228, 0.3);
 }
 
-/* Colores adaptados a tu paleta */
 .publicado {
-  background-color: #6d5d9a; /* violeta */
+  background-color: #6d5d9a;
 }
 
 .vendido {
-  background-color: #b48ce4; /* lila */
+  background-color: #b48ce4;
   color: #13162c;
 }
 
 .borrador {
-  background-color: #38355d; /* gris violeta */
+  background-color: #38355d;
 }
 
 .enviado {
-  background-color: #ffc3ff; /* rosado claro */
+  background-color: #ffc3ff;
   color: #13162c;
 }
 
+/* ======== CARRUSEL DE IMÁGENES (continuación) ======== */
 .producto-carrusel {
   position: relative;
   width: 100%;
@@ -292,7 +331,7 @@ form button:hover {
   gap: 10px;
   scroll-snap-type: x mandatory;
   align-items: center;
-  padding: 10px 40px; /* espacio para las flechas */
+  padding: 10px 40px;
 }
 
 /* Oculta scrollbar */
@@ -308,7 +347,7 @@ form button:hover {
   border-radius: 12px;
   border: 2px solid #4b0082;
   flex-shrink: 0;
-  scroll-snap-align: start; /* <--- aquí el cambio clave */
+  scroll-snap-align: start;
   transition: transform 0.3s ease;
 }
 
@@ -353,7 +392,7 @@ form button:hover {
   display: none;
 }
 
-
+/* ======== RESPONSIVE ======== */
 @media (max-width: 600px) {
   .producto {
     flex-direction: column;
