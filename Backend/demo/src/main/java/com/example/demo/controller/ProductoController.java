@@ -151,4 +151,19 @@ public ResponseEntity<List<Producto>> historialPublicaciones(
     return ResponseEntity.ok(productos);
 }
 
+@PutMapping("/{id}/estado")
+public ResponseEntity<Producto> actualizarEstadoProducto(
+        @PathVariable Long id,
+        @RequestBody String nuevoEstado) {
+
+    Optional<Producto> productoOpt = repo.findById(id);
+    if (productoOpt.isEmpty()) {
+        return ResponseEntity.notFound().build();
+    }
+    Producto producto = productoOpt.get();
+    producto.setEstado(nuevoEstado);
+    repo.save(producto);
+    return ResponseEntity.ok(producto);
+}
+
 }

@@ -64,5 +64,17 @@ scrollRight(elementId: string) {
    
 }
 
+comprarProducto(id: number) {
+  this.productosService.actualizarEstado(id, 'Vendido').subscribe({
+    next: () => {
+      // Refresca el listado o recarga datos, muestra mensaje de éxito, etc.
+      this.cargarProductosPublicados();
+      alert('¡Producto comprado!');
+    },
+    error: () => {
+      alert('No se pudo completar la compra.');
+    }
+  });
+}
 
 }
