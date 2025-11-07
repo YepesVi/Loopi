@@ -1,18 +1,18 @@
 package com.example.demo.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Lob;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import java.time.LocalDateTime;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
-
+import lombok.*; 
 
 @Entity
+@Getter 
+@Setter 
+@NoArgsConstructor 
+@ToString(exclude = "categoria") // Evita bucles en logs
+@EqualsAndHashCode(exclude = {"id", "categoria"}) // Evita bucles en colecciones
 public class Producto {
 
     @Id
@@ -25,8 +25,9 @@ public class Producto {
     @NotBlank(message="La descripción es obligatoria")
     private String descripcion;
 
-    @NotBlank(message="La categoría es obligatoria")
-    private String categoria;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "categoria_id", nullable = false) // 'nullable = false' si un producto SIEMPRE debe tener categoría
+    private Categoria categoria;
 
     @NotNull(message="El precio es obligatorio")
     @Positive(message="El precio debe ser positivo")
@@ -35,7 +36,7 @@ public class Producto {
     @NotBlank(message="El estado es obligatorio")
     private String estado;
 
-    private String fotos;
+    private String fotos; 
 
     @NotNull(message="El propietario es obligatorio")
     private Long propietarioId;
@@ -44,25 +45,4 @@ public class Producto {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime fechaPublicacion = LocalDateTime.now();
 
-    
-
-    // Getters y setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
-    public String getTitulo() { return titulo; }
-    public void setTitulo(String titulo) { this.titulo = titulo; }
-    public String getDescripcion() { return descripcion; }
-    public void setDescripcion(String descripcion) { this.descripcion = descripcion; }
-    public String getCategoria() { return categoria; }
-    public void setCategoria(String categoria) { this.categoria = categoria; }
-    public Double getPrecio() { return precio; }
-    public void setPrecio(Double precio) { this.precio = precio; }
-    public String getEstado() { return estado; }
-    public void setEstado(String estado) { this.estado = estado; }
-    public String getFotos() { return fotos; }
-    public void setFotos(String fotos) { this.fotos = fotos; }
-    public Long getPropietarioId() { return propietarioId; }
-    public void setPropietarioId(Long propietarioId) { this.propietarioId = propietarioId; }
-    public LocalDateTime getFechaPublicacion() { return fechaPublicacion; }
-    public void setFechaPublicacion(LocalDateTime fechaPublicacion) { this.fechaPublicacion = fechaPublicacion; }
 }

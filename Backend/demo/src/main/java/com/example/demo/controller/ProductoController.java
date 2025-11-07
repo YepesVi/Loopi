@@ -1,191 +1,158 @@
 package com.example.demo.controller;
 
 import com.example.demo.entity.Producto;
-import com.example.demo.repository.ProductoRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.demo.service.ProductoService; // 👈 IMPORTAR SERVICIO
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.nio.file.*;
-import java.util.*;
+import java.util.List;
+import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/api/productos")
 @CrossOrigin(origins = "*")
+@RequiredArgsConstructor 
 public class ProductoController {
 
-    @Autowired
-    private ProductoRepository repo;
+    private final ProductoService productoService; 
 
-    private final String UPLOAD_DIR = "uploads/";
 
-    // ✅ Listar todos los productos
     @GetMapping
-    public List<Producto> listarTodos() {
-        return repo.findAll();
+    public ResponseEntity<List<Producto>> listarTodos() {
+        return ResponseEntity.ok(productoService.listarTodos());
     }
-  // ✅ Obtener un producto por ID
+
+    @GetMapping("/publicados")
+    public ResponseEntity<List<Producto>> obtenerPublicados() {
+        List<Producto> productos = productoService.obtenerPublicados();
+        if (productos.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(productos);
+    }
+
+
+    @GetMapping("/buscar")
+    public ResponseEntity<Page<Producto>> buscarProductos(
+            @RequestParam(required = false) String titulo,
+            @RequestParam(required = false) Long categoriaId, // 👈 CAMBIO: Recibe Long
+            @RequestParam(required = false) Double precioMin,
+            @RequestParam(required = false) Double precioMax,
+            @PageableDefault(size = 10) Pageable pageable) {
+        
+        Page<Producto> productos = productoService.buscarConFiltros(titulo, categoriaId, precioMin, precioMax, pageable);
+        return ResponseEntity.ok(productos);
+    }
+
+
+    @GetMapping("/usuario/{propietarioId}/historial")
+    public ResponseEntity<List<Producto>> historialPublicaciones(
+            @PathVariable Long propietarioId,
+            @RequestParam(required = false) String estado) {
+        List<Producto> productos = productoService.historialPublicaciones(propietarioId, estado);
+        if (productos.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(productos);
+    }
+
+
     @GetMapping("/{id}")
     public ResponseEntity<Producto> obtenerPorId(@PathVariable Long id) {
-        return repo.findById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        try {
+            return ResponseEntity.ok(productoService.obtenerPorId(id));
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
-    // ✅ Crear producto con imagen
+
     @PostMapping("/crear-con-imagen")
-    public ResponseEntity<Producto> crearProductoConImagen(
+    public ResponseEntity<?> crearProductoConImagen(
             @RequestParam("titulo") String titulo,
             @RequestParam("descripcion") String descripcion,
-            @RequestParam("categoria") String categoria,
+            @RequestParam("categoriaId") Long categoriaId, 
             @RequestParam("precio") Double precio,
             @RequestParam("estado") String estado,
             @RequestParam("propietarioId") Long propietarioId,
-             @RequestParam("file") List<MultipartFile> files) {  
-    try {
-        Path folder = Paths.get(UPLOAD_DIR);
-        if (!Files.exists(folder)) {
-            Files.createDirectories(folder);
+            @RequestParam("file") List<MultipartFile> files) {
+        
+        try {
+            Producto producto = new Producto();
+            producto.setTitulo(titulo);
+            producto.setDescripcion(descripcion);
+            producto.setPrecio(precio);
+            producto.setEstado(estado);
+            producto.setPropietarioId(propietarioId);
+
+            Producto nuevoProducto = productoService.crearProducto(producto, categoriaId, files);
+            return ResponseEntity.status(HttpStatus.CREATED).body(nuevoProducto);
+
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al guardar imágenes: " + e.getMessage());
         }
-
-        List<String> rutas = new ArrayList<>();
-
-        for (MultipartFile file : files) {
-            if (!file.isEmpty()) {
-                String filename = UUID.randomUUID() + "-" + file.getOriginalFilename();
-                Path filePath = folder.resolve(filename);
-                Files.write(filePath, file.getBytes());
-                rutas.add("/uploads/" + filename);
-            }
-        }
-
-        Producto producto = new Producto();
-        producto.setTitulo(titulo);
-        producto.setDescripcion(descripcion);
-        producto.setCategoria(categoria);
-        producto.setPrecio(precio);
-        producto.setEstado(estado);
-        producto.setPropietarioId(propietarioId);
-
-        // Guarda todas las rutas separadas por coma
-        producto.setFotos(String.join(",", rutas));
-
-        return ResponseEntity.ok(repo.save(producto));
-
-    } catch (IOException e) {
-        e.printStackTrace();
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
-}
 
-    // ✅ Actualizar producto (con opción de cambiar imagen)
+
     @PutMapping("/actualizar/{id}")
-    public ResponseEntity<Producto> actualizarProducto(
+    public ResponseEntity<?> actualizarProducto(
             @PathVariable Long id,
             @RequestParam("titulo") String titulo,
             @RequestParam("descripcion") String descripcion,
-            @RequestParam("categoria") String categoria,
+            @RequestParam("categoriaId") Long categoriaId, 
             @RequestParam("precio") Double precio,
- @RequestParam("estado") String estado,
+            @RequestParam("estado") String estado,
             @RequestParam("propietarioId") Long propietarioId,
-            @RequestParam(value = "file", required = false) MultipartFile file) {
+            @RequestParam(value = "file", required = false) List<MultipartFile> files) { // 👈 CAMBIO: Acepta Lista
 
-        Optional<Producto> productoExistente = repo.findById(id);
-        
-        if (productoExistente.isEmpty()) {
-            return ResponseEntity.notFound().build();
+        try {
+            Producto details = new Producto();
+            details.setTitulo(titulo);
+            details.setDescripcion(descripcion);
+            details.setPrecio(precio);
+            details.setEstado(estado);
+            details.setPropietarioId(propietarioId);
+
+            Producto productoActualizado = productoService.actualizarProducto(id, details, categoriaId, files);
+            return ResponseEntity.ok(productoActualizado);
+            
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al guardar imágenes: " + e.getMessage());
         }
-
-        Producto producto = productoExistente.get();
-        producto.setTitulo(titulo);
-        producto.setDescripcion(descripcion);
-        producto.setCategoria(categoria);
-        producto.setPrecio(precio);
- producto.setEstado(estado);
-        producto.setPropietarioId(propietarioId);
-
-        // Si se envía una nueva imagen, la guardamos y actualizamos
-        if (file != null && !file.isEmpty()) {
-            try {
-                Path folder = Paths.get(UPLOAD_DIR);
-                if (!Files.exists(folder)) {
-                    Files.createDirectories(folder);
-                }
-
-                String filename = UUID.randomUUID() + "-" + file.getOriginalFilename();
-                Path filePath = folder.resolve(filename);
-                Files.write(filePath, file.getBytes());
-
-                producto.setFotos("/uploads/" + filename);
-
-            } catch (IOException e) {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-            }
-        }
-
-        return ResponseEntity.ok(repo.save(producto));
     }
 
-    // ✅ Eliminar producto
- @DeleteMapping("/eliminar/{id}")
+
+    @DeleteMapping("/eliminar/{id}")
     public ResponseEntity<Void> eliminarProducto(@PathVariable Long id) {
-        if (!repo.existsById(id)) {
+        try {
+            productoService.eliminarProducto(id);
+            return ResponseEntity.noContent().build();
+        } catch (NoSuchElementException e) {
             return ResponseEntity.notFound().build();
         }
-
-        repo.deleteById(id);
-        return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/usuario/{propietarioId}/historial")
-public ResponseEntity<List<Producto>> historialPublicaciones(
-        @PathVariable Long propietarioId,
-        @RequestParam(required = false) String estado) {
 
-    List<Producto> productos;
-    if (estado != null && !estado.isEmpty()) {
-        productos = repo.findByPropietarioId(propietarioId)
-                        .stream()
-                        .filter(p -> p.getEstado().equalsIgnoreCase(estado))
-                        .toList();
-    } else {
-        productos = repo.findByPropietarioId(propietarioId);
+    @PutMapping("/{id}/estado")
+    public ResponseEntity<?> actualizarEstadoProducto(
+            @PathVariable Long id,
+            @RequestBody String nuevoEstado) {
+        try {
+            String estadoLimpio = nuevoEstado.replaceAll("\"", ""); 
+            Producto producto = productoService.actualizarEstadoProducto(id, estadoLimpio);
+            return ResponseEntity.ok(producto);
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
-
-    if (productos.isEmpty()) {
-        return ResponseEntity.noContent().build();
-    }
-
-    return ResponseEntity.ok(productos);
-}
-
-@GetMapping("/publicados")
-public ResponseEntity<List<Producto>> obtenerPublicados() {
-    List<Producto> productos = repo.findByEstadoIgnoreCase("publicado");
-
-    if (productos.isEmpty()) {
-        return ResponseEntity.noContent().build();
-    }
-
-    return ResponseEntity.ok(productos);
-}
-
-
-@PutMapping("/{id}/estado")
-public ResponseEntity<Producto> actualizarEstadoProducto(
-        @PathVariable Long id,
-        @RequestBody String nuevoEstado) {
-
-    Optional<Producto> productoOpt = repo.findById(id);
-    if (productoOpt.isEmpty()) {
-        return ResponseEntity.notFound().build();
-    }
-    Producto producto = productoOpt.get();
-    producto.setEstado(nuevoEstado);
-    repo.save(producto);
-    return ResponseEntity.ok(producto);
-}
-
 }
