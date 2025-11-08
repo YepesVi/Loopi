@@ -53,7 +53,10 @@ export class ProductosService {
 }
 
 actualizarEstado(id: number, estado: string) {
-  return this.http.put(`${this.apiUrl}/${id}/estado`, { estado }, { responseType: 'json' });
+  return this.http.put(`${this.apiUrl}/${id}/estado`, estado, { responseType: 'json' });
+
 }
+
+
 
 }

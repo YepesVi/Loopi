@@ -1,12 +1,9 @@
 package com.example.demo.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Lob;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import java.time.LocalDateTime;
+import java.util.*;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -14,6 +11,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
 public class Producto {
+
+@OneToMany(mappedBy = "producto", cascade = CascadeType.ALL, orphanRemoval = true)
+private List<Historial> historial = new ArrayList<>();
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

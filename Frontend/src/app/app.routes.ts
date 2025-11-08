@@ -25,6 +25,14 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./reset-password/reset-password.component').then(m => m.ResetPasswordComponent)
   },
+  
+    {
+  path: 'historial/:id',
+  canActivate: [authGuard],
+  loadComponent: () =>
+    import('./historial/historial.component').then(m => m.HistorialProductoComponent)
+},
+
 
   {
   path: 'editar-perfil',
@@ -32,5 +40,7 @@ export const routes: Routes = [
   loadComponent: () =>
     import('./EditarPerfil/editar-perfil.component').then(m => m.EditarPerfilComponent)
 }
+
+
 
 ];
