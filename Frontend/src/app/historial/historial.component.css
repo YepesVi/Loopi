@@ -1,0 +1,30 @@
+.contenedor {
+  max-width: 600px;
+  margin: 30px auto;
+  padding: 20px;
+  background: #fff;
+  border-radius: 15px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.evento {
+  background: #f7f7f7;
+  margin-bottom: 12px;
+  padding: 10px 15px;
+  border-radius: 10px;
+}
+
+.evento strong {
+  color: #2b2b2b;
+}
+
+.vacio {
+  text-align: center;
+  color: gray;
+  font-style: italic;
+}
