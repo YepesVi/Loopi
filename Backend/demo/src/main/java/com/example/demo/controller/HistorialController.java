@@ -54,6 +54,8 @@ public class HistorialController {
                 usuario
         );
 
+        historial.setPropietarioId(productoOpt.get().getPropietarioId());
+
         historialRepo.save(historial);
         return ResponseEntity.ok(historial);
 
@@ -72,6 +74,10 @@ public class HistorialController {
         return ResponseEntity.ok("Registro eliminado correctamente");
     }
 
+@GetMapping("/usuario/{usuarioId}")
+public List<Historial> obtenerHistorialPorUsuario(@PathVariable Long usuarioId) {
+    return historialRepo.obtenerHistorialPorUsuario(usuarioId);
+}
 
 
 }
