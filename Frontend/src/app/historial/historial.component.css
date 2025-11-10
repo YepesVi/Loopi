@@ -28,3 +28,21 @@ h2 {
   color: gray;
   font-style: italic;
 }
+
+.btn-volver {
+  padding: 10px 20px;
+  background: #343a6e;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+.btn-volver:hover {
+  background-color: #4b51a3;
+  transform: scale(1.05);
+}

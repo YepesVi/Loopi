@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
+import { Location } from '@angular/common';
+
 
 
 @Component({
@@ -18,7 +20,7 @@ export class HistorialProductoComponent implements OnInit {
   cargando: boolean = true;
   sinDatos: boolean = false;
 
-  constructor(private route: ActivatedRoute, private http: HttpClient) {}
+  constructor(private route: ActivatedRoute, private http: HttpClient,  private location: Location) {}
 
   ngOnInit(): void {
 this.productoId = Number(this.route.snapshot.paramMap.get('id'));
@@ -50,5 +52,9 @@ this.http.get<any[]>(`http://localhost:8081/api/historiales/producto/${this.prod
   );
 }
 
+
+volver() {
+  this.location.back();
+}
 
 }

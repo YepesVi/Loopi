@@ -39,7 +39,17 @@ export const routes: Routes = [
   canActivate: [authGuard],
   loadComponent: () =>
     import('./EditarPerfil/editar-perfil.component').then(m => m.EditarPerfilComponent)
+},
+
+{
+  path: 'historial-general',
+  canActivate: [authGuard],
+  loadComponent: () =>
+    import('./historial-general/historial-general.component')
+      .then(m => m.HistorialGeneralComponent)
 }
+
+
 
 
 

@@ -12,8 +12,12 @@ import java.util.List;
 public interface HistorialRepository extends JpaRepository<Historial, Long> {
     List<Historial> findByProductoIdOrderByFechaRegistroDesc(Long productoId);
 
-    @Query("SELECT h FROM Historial h WHERE h.producto.propietarioId = :propietarioId")
+     @Query("SELECT h FROM Historial h WHERE h.producto.propietarioId = :propietarioId")
 List<Historial> findByPropietarioId(@Param("propietarioId") Long propietarioId);
+
+@Query("SELECT h FROM Historial h WHERE h.producto.propietarioId = :usuarioId ORDER BY h.fechaRegistro DESC")
+List<Historial> obtenerHistorialPorUsuario(@Param("usuarioId") Long usuarioId);
+
 
 }
 
