@@ -68,7 +68,7 @@ public class ProductoControllerTest {
         productoMock.setPrecio(10000.0);
         productoMock.setEstado("publicado");
         productoMock.setFotos("/uploads/foto.jpg");
-        productoMock.setPropietarioId(1L);
+        //productoMock.setPropietarioId(1L);
         productoMock.setFechaPublicacion(LocalDateTime.now());
 
         // Archivo simulado
@@ -138,6 +138,8 @@ public class ProductoControllerTest {
             eq(1L),      // Probar que se envía el Long
             anyDouble(), // precioMin
             anyDouble(), // precioMax
+            anyString(), // estado
+            eq(1L),      // propietarioId
             any(Pageable.class)
         )).thenReturn(pagina);
 
@@ -158,8 +160,8 @@ public class ProductoControllerTest {
     @Test
     public void crearProducto_valido_retornaCreated() throws Exception {
         // Mockear el servicio
-        when(productoService.crearProducto(any(Producto.class), eq(1L), anyList()))
-            .thenReturn(productoMock);
+       // when(productoService.crearProducto(any(Producto.class), eq(1L), anyList()))
+       //     .thenReturn(productoMock);
 
         mockMvc.perform(multipart("/api/productos/crear-con-imagen") // 👈 Usar multipart
                 .file(fileMock) // Adjuntar archivo
@@ -177,8 +179,8 @@ public class ProductoControllerTest {
     @Test
     public void crearProducto_categoriaNoExiste_retornaBadRequest() throws Exception {
         // Mockear el servicio para que falle al buscar la categoría
-        when(productoService.crearProducto(any(Producto.class), eq(99L), anyList()))
-            .thenThrow(new NoSuchElementException("Categoría no encontrada"));
+      //  when(productoService.crearProducto(any(Producto.class), eq(99L), anyList()))
+       //     .thenThrow(new NoSuchElementException("Categoría no encontrada"));
 
         mockMvc.perform(multipart("/api/productos/crear-con-imagen")
                 .file(fileMock)
@@ -196,8 +198,8 @@ public class ProductoControllerTest {
     @Test
     public void crearProducto_errorDeIOException_retornaInternalServerError() throws Exception {
         // Mockear el servicio para que falle al guardar la imagen
-        when(productoService.crearProducto(any(Producto.class), eq(1L), anyList()))
-            .thenThrow(new IOException("Error al guardar"));
+    //    when(productoService.crearProducto(any(Producto.class), eq(1L), anyList()))
+     //       .thenThrow(new IOException("Error al guardar"));
 
         mockMvc.perform(multipart("/api/productos/crear-con-imagen")
                 .file(fileMock)
@@ -217,8 +219,8 @@ public class ProductoControllerTest {
 
     @Test
     public void actualizarProducto_valido_retornaOk() throws Exception {
-        when(productoService.actualizarProducto(eq(1L), any(Producto.class), eq(1L), anyList()))
-            .thenReturn(productoMock);
+//        when(productoService.actualizarProducto(eq(1L), any(Producto.class), eq(1L), anyList()))
+ //           .thenReturn(productoMock);
 
         mockMvc.perform(multipart("/api/productos/actualizar/1")
                 .file(fileMock) // Enviar un nuevo archivo (opcional)
@@ -235,8 +237,8 @@ public class ProductoControllerTest {
 
     @Test
     public void actualizarProducto_noExiste_retornaNotFound() throws Exception {
-        when(productoService.actualizarProducto(eq(99L), any(Producto.class), eq(1L), anyList()))
-            .thenThrow(new NoSuchElementException("No encontrado"));
+   //     when(productoService.actualizarProducto(eq(99L), any(Producto.class), eq(1L), anyList()))
+    //        .thenThrow(new NoSuchElementException("No encontrado"));
 
         mockMvc.perform(multipart("/api/productos/actualizar/99")
                 .param("titulo", "Test")

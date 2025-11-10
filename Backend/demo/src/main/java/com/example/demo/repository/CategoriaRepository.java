@@ -39,6 +39,25 @@ public interface CategoriaRepository extends JpaRepository<Categoria, Long> {
     """, nativeQuery = true)
     List<Categoria> findAllDescendantsById(@Param("idCategoria") Long idCategoria);
 
+
+    @Query(value = """
+        WITH RECURSIVE categoria_descendientes AS (
+            -- Ancla (Selecciona la categoría inicial)
+            SELECT id
+            FROM categoria
+            WHERE id = :idCategoria
+            
+            UNION ALL
+            
+            -- Recursión (Busca a los hijos del resultado anterior)
+            SELECT c.id
+            FROM categoria c
+            INNER JOIN categoria_descendientes cd ON c.parent_id = cd.id
+        )
+        -- Selecciona todos los IDs encontrados (incluyendo el padre)
+        SELECT id FROM categoria_descendientes
+    """, nativeQuery = true)
+    List<Long> findAllDescendantIdsWithSelfById(@Param("idCategoria") Long idCategoria);
     
     // Verifica si una categoría es descendiente de otra (hijo, nieto, etc.).
    

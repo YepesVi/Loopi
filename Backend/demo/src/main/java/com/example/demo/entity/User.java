@@ -1,9 +1,24 @@
 package com.example.demo.entity;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.*;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @Entity
 @Table(name = "users")
+@Getter 
+@Setter 
+@NoArgsConstructor 
+@ToString(exclude = "productos") // Evita recursión
+@EqualsAndHashCode(exclude = {"id", "productos"}) // Evita recursión
 public class User {
 
     @Id
@@ -33,95 +48,13 @@ public class User {
 
     private String fotoUrl; // opcional
 
-    // === Constructores ===
+    @OneToMany(
+        mappedBy = "propietario", 
+        cascade = CascadeType.ALL, 
+        fetch = FetchType.LAZY,
+        orphanRemoval = true
+    )
+    @JsonManagedReference 
+    private Set<Producto> productos = new HashSet<>();
 
-    public User() {
-        // Constructor vacío requerido por JPA y Jackson
-    }
-
-    public User(String nombre, String apellido, String cedula, String telefono,
-                String correo, String direccion, String password, String fotoUrl) {
-        this.nombre = nombre;
-        this.apellido = apellido;
-        this.cedula = cedula;
-        this.telefono = telefono;
-        this.correo = correo;
-        this.direccion = direccion;
-        this.password = password;
-        this.fotoUrl = fotoUrl;
-    }
-
-    // === Getters y Setters ===
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public String getApellido() {
-        return apellido;
-    }
-
-    public void setApellido(String apellido) {
-        this.apellido = apellido;
-    }
-
-    public String getCedula() {
-        return cedula;
-    }
-
-    public void setCedula(String cedula) {
-        this.cedula = cedula;
-    }
-
-    public String getTelefono() {
-        return telefono;
-    }
-
-    public void setTelefono(String telefono) {
-        this.telefono = telefono;
-    }
-
-    public String getCorreo() {
-        return correo;
-    }
-
-    public void setCorreo(String correo) {
-        this.correo = correo;
-    }
-
-    public String getDireccion() {
-        return direccion;
-    }
-
-    public void setDireccion(String direccion) {
-        this.direccion = direccion;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getFotoUrl() {
-        return fotoUrl;
-    }
-
-    public void setFotoUrl(String fotoUrl) {
-        this.fotoUrl = fotoUrl;
-    }
 }

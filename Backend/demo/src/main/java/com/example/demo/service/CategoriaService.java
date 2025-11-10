@@ -113,6 +113,10 @@ public class CategoriaService {
         return categoriaRepository.findAllDescendantsById(idAncestro);
     }
 
+    @Transactional(readOnly = true)
+    public List<Long> findAllDescendantIdsWithSelf(Long idAncestro) {
+        return categoriaRepository.findAllDescendantIdsWithSelfById(idAncestro);
+    }
 
     @Transactional(readOnly = true)
     public boolean isDescendantOf(Long idAncestro, Long idDescendiente) {

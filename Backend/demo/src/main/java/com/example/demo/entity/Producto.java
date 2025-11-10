@@ -3,6 +3,8 @@ package com.example.demo.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import java.time.LocalDateTime;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*; 
@@ -11,8 +13,8 @@ import lombok.*;
 @Getter 
 @Setter 
 @NoArgsConstructor 
-@ToString(exclude = "categoria") // Evita bucles en logs
-@EqualsAndHashCode(exclude = {"id", "categoria"}) // Evita bucles en colecciones
+@ToString(exclude = {"categoria", "propietario"}) 
+@EqualsAndHashCode(exclude = {"id", "categoria", "propietario"})
 public class Producto {
 
     @Id
@@ -38,8 +40,10 @@ public class Producto {
 
     private String fotos; 
 
-    @NotNull(message="El propietario es obligatorio")
-    private Long propietarioId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "propietario_id", nullable = false) // Mantiene la columna 'propietario_id'
+    @JsonBackReference // Lado "hijo" de la serialización JSON
+    private User propietario;
 
     @JsonProperty("fechaCreacion")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")

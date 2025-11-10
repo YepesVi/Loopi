@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.CascadeType;
@@ -31,6 +32,7 @@ import lombok.ToString;
 @NoArgsConstructor // Requerido por JPA/Hibernate
 @ToString(exclude = {"parent", "hijos"}) //  Excluir relaciones para evitar StackOverflow
 @EqualsAndHashCode(exclude = {"id", "parent", "hijos"}) // Excluir ID y relaciones por seguridad de HashCode
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Categoria {
 
     @Id

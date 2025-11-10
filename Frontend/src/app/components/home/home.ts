@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule, DecimalPipe } from '@angular/common';
 import { Router } from '@angular/router';
-import { ProductosService, Producto } from '../../services/productos';
+import { ProductosService, } from '../../services/producto.service';
+import { Producto } from '../../models/producto.model';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
@@ -44,9 +45,16 @@ export class Home implements OnInit {
 
   agruparPorCategoria(productos: Producto[]): void {
     this.productosPorCategoria = productos.reduce((grupo, producto) => {
-      const categoria = producto.categoria || 'Otros';
-      if (!grupo[categoria]) grupo[categoria] = [];
-      grupo[categoria].push(producto);
+      
+      // 🌟 CAMBIO CRÍTICO: Acceder a 'producto.categoria.nombre'
+      const categoriaNombre = (producto.categoria && producto.categoria.nombre) 
+                              ? producto.categoria.nombre 
+                              : 'Otros';
+      
+      if (!grupo[categoriaNombre]) {
+        grupo[categoriaNombre] = [];
+      }
+      grupo[categoriaNombre].push(producto);
       return grupo;
     }, {} as Record<string, Producto[]>);
 

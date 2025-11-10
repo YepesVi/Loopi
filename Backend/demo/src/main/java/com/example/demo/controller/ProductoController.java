@@ -2,6 +2,9 @@ package com.example.demo.controller;
 
 import com.example.demo.entity.Producto;
 import com.example.demo.service.ProductoService; // 👈 IMPORTAR SERVICIO
+
+import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -11,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -41,12 +45,15 @@ public class ProductoController {
     @GetMapping("/buscar")
     public ResponseEntity<Page<Producto>> buscarProductos(
             @RequestParam(required = false) String titulo,
-            @RequestParam(required = false) Long categoriaId, // 👈 CAMBIO: Recibe Long
+            @RequestParam(required = false) Long categoriaId, 
             @RequestParam(required = false) Double precioMin,
             @RequestParam(required = false) Double precioMax,
+            @RequestParam(required = false) String estado,
+            @RequestParam(required = false) Long propietarioId,
             @PageableDefault(size = 10) Pageable pageable) {
         
-        Page<Producto> productos = productoService.buscarConFiltros(titulo, categoriaId, precioMin, precioMax, pageable);
+        Page<Producto> productos = productoService.buscarConFiltros(titulo, categoriaId,
+                                    precioMin, precioMax, estado, propietarioId, pageable);
         return ResponseEntity.ok(productos);
     }
 
@@ -89,9 +96,8 @@ public class ProductoController {
             producto.setDescripcion(descripcion);
             producto.setPrecio(precio);
             producto.setEstado(estado);
-            producto.setPropietarioId(propietarioId);
-
-            Producto nuevoProducto = productoService.crearProducto(producto, categoriaId, files);
+            
+            Producto nuevoProducto = productoService.crearProducto(producto, categoriaId, propietarioId, files);
             return ResponseEntity.status(HttpStatus.CREATED).body(nuevoProducto);
 
         } catch (NoSuchElementException e) {
@@ -119,9 +125,8 @@ public class ProductoController {
             details.setDescripcion(descripcion);
             details.setPrecio(precio);
             details.setEstado(estado);
-            details.setPropietarioId(propietarioId);
 
-            Producto productoActualizado = productoService.actualizarProducto(id, details, categoriaId, files);
+            Producto productoActualizado = productoService.actualizarProducto(id, details, categoriaId, propietarioId, files);
             return ResponseEntity.ok(productoActualizado);
             
         } catch (NoSuchElementException e) {
@@ -153,6 +158,29 @@ public class ProductoController {
             return ResponseEntity.ok(producto);
         } catch (NoSuchElementException e) {
             return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/uploads/{filename:.+}")
+    public ResponseEntity<Resource> serveFile(@PathVariable String filename, HttpServletRequest request) {
+        try {
+            Resource resource = (Resource) productoService.serveFile(filename);
+            
+            // Determinar Content-Type
+            String contentType = request.getServletContext().getMimeType(((org.springframework.core.io.Resource) resource).getFile().getAbsolutePath());
+            if (contentType == null) {
+                contentType = "application/octet-stream";
+            }
+
+            return ResponseEntity.ok()
+                    .contentType(MediaType.parseMediaType(contentType))
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + ((org.springframework.core.io.Resource) resource).getFilename() + "\"")
+                    .body(resource);
+
+        } catch (MalformedURLException | NoSuchElementException e) {
+            return ResponseEntity.notFound().build();
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 }

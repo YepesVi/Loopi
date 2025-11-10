@@ -37,9 +37,11 @@
             <span *ngIf="descCtrl.errors?.['maxlength']">Descripción demasiado larga (máx. 500 letras).</span>
           </div>
 
-          <select [(ngModel)]="nuevoProducto.categoria" name="categoria" required #categoriaSelCtrl="ngModel">
-            <option value="" disabled selected>Selecciona categoría</option>
-            <option *ngFor="let cat of categorias" [value]="cat">{{ cat }}</option>
+          <select [(ngModel)]="nuevoProducto.categoriaId" name="categoriaId" required #categoriaSelCtrl="ngModel">
+            <option [ngValue]="null" disabled>Selecciona categoría</option>
+            
+            <option *ngFor="let cat of categorias" [value]="cat.id">
+              {{ cat.nombre }} </option>
           </select>
           <div *ngIf="categoriaSelCtrl.invalid && categoriaSelCtrl.touched" style="color: #ff1919; font-size: 14px">
             <span *ngIf="categoriaSelCtrl.errors?.['required']">Seleccionar una categoría es obligatorio.</span>
@@ -84,24 +86,19 @@
 <h3>Productos registrados</h3>
 
 <div class="filtros">
-  <div class="filtro">
-    <label for="estadoFiltro">Filtrar por estado:</label>
-    <select id="estadoFiltro" name="estadoFiltro" [(ngModel)]="estadoFiltro" (change)="filtrarPorEstado()">
-      <option value="">Todos</option>
-      <option value="Publicado">Publicado</option>
-      <option value="Vendido">Vendido</option>
-      <option value="Borrador">Borrador</option>
-      <option value="Enviado">Enviado</option>
+ <div class="filtro">
+    <label for="categoriaFiltro">Filtrar por categoría:</label>
+    <select id="categoriaFiltro" name="categoriaFiltro" [(ngModel)]="categoriaFiltro" (change)="aplicarFiltros()">
+      <option [ngValue]="null">Todas</option>
+      <option *ngFor="let cat of categorias" [value]="cat.id">{{ cat.nombre }}</option>
     </select>
   </div>
 
   <div class="filtro">
-    <label for="fechaFiltro">Filtrar por fecha:</label>
-    <select id="fechaFiltro" name="fechaFiltro" [(ngModel)]="fechaFiltro" (change)="filtrarPorFecha()">
-      <option value="">Todo</option>
-      <option value="7">Últimos 7 días</option>
-      <option value="30">Últimos 30 días</option>
-      <option value="90">Últimos 90 días</option>
+    <label for="estadoFiltro">Filtrar por estado:</label>
+    <select id="estadoFiltro" name="estadoFiltro" [(ngModel)]="estadoFiltro" (change)="aplicarFiltros()">
+      <option value="">Todos</option>
+      <option *ngFor="let est of estados" [value]="est">{{ est }}</option>
     </select>
   </div>
 </div>

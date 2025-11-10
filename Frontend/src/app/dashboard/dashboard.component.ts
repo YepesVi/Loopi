@@ -1,8 +1,14 @@
-import { Component, ViewChild, ElementRef } from '@angular/core';
+import { Component, ViewChild, ElementRef, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ProductosService, Producto } from '../services/productos';
+import { ProductosService } from '../services/producto.service';
+import { Producto } from '../models/producto.model';
+import { CategoryService } from '../services/categorias/category.service';
+import { Categoria } from '../models/category.model';
+import { Page } from '../models/page.model';
+
 import { RouterModule, Router } from '@angular/router';
+import { loadavg } from 'node:os';
 
 declare var bootstrap: any;
 
@@ -13,40 +19,63 @@ declare var bootstrap: any;
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css']
 })
-export class DashboardComponent {
+export class DashboardComponent implements OnInit{
   @ViewChild('modalProducto') modalProducto!: ElementRef;
 
   productos: Producto[] = [];
-  todosLosProductos: Producto[] = [];
   estadoFiltro: string = '';
-  fechaFiltro: string = '';
-  estados = ['Publicado', 'Borrador', 'Oculto', 'vendido'];
-  categorias: string[] = ['Electrónica','Celulares y Accesorios','Computadoras y Tablets','Audio y Video','Fotografía y Cámaras','Electrodomésticos','Hogar y Muebles','Decoración','Cocina y Menaje','Ropa y Calzado','Bolsos y Accesorios','Joyería y Relojes','Deporte y Fitness','Bicicletas y Scooters','Instrumentos Musicales','Libros y Revistas','Cine, Música y Series','Videojuegos y Consolas','Juguetes y Juegos de Mesa','Coleccionismo','Antigüedades y Arte','Jardín y Herramientas','Mascotas y Accesorios','Salud y Belleza','Productos para Bebés','Coche y Moto','Industria y Oficina','Papelería y Material Escolar','Material de Construcción','Servicios','Otros'];
+  categoriaFiltro: number | null = null;
+  propietarioId: number | null = null;
+  estados = ['Publicado', 'Borrador', 'Oculto', 'Vendido'];
+  categorias: Categoria[] = [];
   imagenesSeleccionadas: File[] = [];
   imagenesPreviewUrl: string[] = [];
   imagenesInvalidas = false;
 
-  nuevoProducto: Producto = {
-    id: 0,
-    titulo: '',
-    descripcion: '',
-    categoria: '',
-    precio: 0,
-    estado: '',
-    propietarioId: 1
-  };
+  nuevoProducto: {
+    id?: number;
+    titulo: string;
+    descripcion: string;
+    categoriaId: number | null; 
+    precio: number;
+    estado: string;
+    propietarioId: number;
+  } = this.getResetProducto();
 
   editando: boolean = false;
-
-  constructor(private productosService: ProductosService, private router: Router) {
-    this.cargarProductos();
+  constructor(
+    private productosService: ProductosService, 
+    private categoryService: CategoryService, 
+    private router: Router
+    ) {
   }
 
-  cargarProductos() {
-    this.productosService.getProductos().subscribe(data => {
-      this.productos = data;
-      this.todosLosProductos = data;
+  ngOnInit(): void {
+    this.aplicarFiltros(); // Carga los productos al iniciar
+    this.cargarCategorias(); // Carga las categorías al iniciar
+    this.propietarioId = Number(localStorage.getItem('userId')) || null;
+  }
+
+  cargarCategorias() {
+    this.categoryService.getCategoriesTree().subscribe(data => {
+      // Usamos el helper para aplanar el árbol (ej. "— Subcategoría")
+      this.categorias = this.aplanarCategorias(data);
     });
+  }
+
+  private aplanarCategorias(categorias: Categoria[], nivel = 0): Categoria[] {
+    let listaPlana: Categoria[] = [];
+    for (const cat of categorias) {
+      // Creamos una copia para no mutar el nombre original en otros componentes
+      const catCopia = { ...cat }; 
+      catCopia.nombre = '-'.repeat(nivel) + ' ' + cat.nombre;
+      listaPlana.push(catCopia);
+      
+      if (cat.hijos && cat.hijos.length > 0) {
+        listaPlana = listaPlana.concat(this.aplanarCategorias(cat.hijos, nivel + 1));
+      }
+    }
+    return listaPlana;
   }
 
   onFilesSelected(event: any) {
@@ -76,9 +105,17 @@ export class DashboardComponent {
     }
 
     const formData = new FormData();
-    Object.entries(this.nuevoProducto).forEach(([k, v]) => {
-      if (v !== null && v !== undefined) formData.append(k, String(v));
-    });
+    // Añadir campos de texto
+    formData.append('titulo', this.nuevoProducto.titulo);
+    formData.append('descripcion', this.nuevoProducto.descripcion);
+    formData.append('precio', String(this.nuevoProducto.precio));
+    formData.append('estado', this.nuevoProducto.estado);
+    formData.append('propietarioId', localStorage.getItem('userId') || '0');
+    
+    
+    if (this.nuevoProducto.categoriaId) {
+      formData.append('categoriaId', String(this.nuevoProducto.categoriaId));
+    }
 
     if (this.imagenesSeleccionadas.length > 0) {
       this.imagenesSeleccionadas.forEach(img => formData.append('file', img));
@@ -89,7 +126,7 @@ export class DashboardComponent {
         next: () => {
           alert('Producto actualizado correctamente');
           this.resetFormulario();
-          this.cargarProductos();
+          this.aplicarFiltros();
           bootstrap.Modal.getInstance(this.modalProducto.nativeElement)?.hide();
         },
         error: (e) => console.error('Error al actualizar', e)
@@ -108,10 +145,20 @@ export class DashboardComponent {
   }
 
   editarProducto(producto: Producto): void {
-    this.nuevoProducto = { ...producto };
+    this.nuevoProducto = { 
+      ...producto,
+      categoriaId: producto.categoria.id // 👈 CAMBIO
+    };
+    
     this.editando = true;
     this.imagenesSeleccionadas = [];
     this.imagenesPreviewUrl = [];
+    
+    // Mostrar las imágenes existentes (Mejora de UX)
+    if (producto.fotos) {
+      this.imagenesPreviewUrl = producto.fotos.split(',').map(fotoUrl => 
+          'http://localhost:8081/api/productos' + fotoUrl);
+    }
 
     const modal = new bootstrap.Modal(this.modalProducto.nativeElement);
     modal.show();
@@ -126,7 +173,7 @@ export class DashboardComponent {
       this.productosService.eliminarProducto(id).subscribe({
         next: () => {
           alert('Producto eliminado');
-          this.cargarProductos();
+          this.aplicarFiltros();
         },
         error: (e) => console.error('Error al eliminar', e)
       });
@@ -134,19 +181,23 @@ export class DashboardComponent {
   }
 
   resetFormulario(): void {
-    this.nuevoProducto = {
-      id: 0,
-      titulo: '',
-      descripcion: '',
-      categoria: '',
-      precio: 0,
-      estado: '',
-      propietarioId: 1
-    };
+    this.nuevoProducto = this.getResetProducto();
     this.imagenesSeleccionadas = [];
     this.imagenesPreviewUrl = [];
     this.imagenesInvalidas = false;
     this.editando = false;
+  }
+
+  getResetProducto() {
+    return {
+      id: undefined, // Usar undefined en lugar de 0 para 'id'
+      titulo: '',
+      descripcion: '',
+      categoriaId: null, // 👈 CAMBIO
+      precio: 0,
+      estado: 'Borrador', // Valor por defecto
+      propietarioId: Number(localStorage.getItem('userId')) || 0
+    };
   }
 
   logout() {
@@ -158,28 +209,23 @@ export class DashboardComponent {
     this.aplicarFiltros();
   }
 
-  filtrarPorFecha() {
-    this.aplicarFiltros();
-  }
-
   aplicarFiltros() {
-    let lista = [...this.todosLosProductos];
-
-    if (this.estadoFiltro.trim()) {
-      lista = lista.filter(p => (p.estado ?? '').toLowerCase() === this.estadoFiltro.toLowerCase());
-    }
-
-    const dias = parseInt(this.fechaFiltro, 10);
-    if (!isNaN(dias) && dias > 0) {
-      const fechaLimite = new Date(Date.now() - dias * 86400000);
-      lista = lista.filter(p => {
-        const fechaStr = p.fechaCreacion ?? (p as any).fechaPublicacion;
-        if (!fechaStr) return false;
-        return new Date(fechaStr) >= fechaLimite;
-      });
-    }
-
-    this.productos = lista;
+    // Llamar al servicio con los filtros seleccionados
+    console.log(`Filtrando con: CategoriaID=${this.categoriaFiltro}, Estado=${this.estadoFiltro}`);
+   this.propietarioId = Number(localStorage.getItem('userId')) || null; 
+   this.productosService.buscarProductos(
+      this.categoriaFiltro, 
+      this.estadoFiltro,
+      this.propietarioId
+    ).subscribe({
+      next: (page: Page<Producto>) => { 
+        console.log('Respuesta del Backend:', page); // <-- Revisa la consola del navegador
+        this.productos = page.content;
+      },
+      error: (err) => {
+        console.error('Error al llamar a buscarProductos:', err); // <-- Revisa si hay error
+      }
+    });
   }
 
   scrollLeft(id: string) {

@@ -2,8 +2,14 @@ package com.example.demo.service;
 
 import com.example.demo.entity.Categoria;
 import com.example.demo.entity.Producto;
+import com.example.demo.entity.User;
 import com.example.demo.repository.ProductoRepository;
+import com.example.demo.repository.UserRepository;
+
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -11,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,9 +32,23 @@ public class ProductoService {
     // Inyección de dependencias (final)
     private final ProductoRepository productoRepository;
     private final CategoriaService categoriaService; // Para la lógica de descendientes
+    private final UserRepository userRepository;
 
     // Mantenemos tu lógica de UPLOAD_DIR
     private final String UPLOAD_DIR = "uploads/";
+    private final Path rootLocation = Paths.get("uploads");
+
+    public Resource serveFile(String filename) throws MalformedURLException {
+        
+        Path file = rootLocation.resolve(filename);
+        Resource resource = new UrlResource(file.toUri());
+
+        if (resource.exists() && resource.isReadable()) {
+            return resource;
+        } else {
+            throw new NoSuchElementException("No se pudo leer el archivo: " + filename);
+        }
+    }
 
     // --- Lógica de Guardado de Archivos (Movida del Controller) ---
     private List<String> saveFiles(List<MultipartFile> files) throws IOException {
@@ -63,13 +84,17 @@ public class ProductoService {
     }
 
     @Transactional
-    public Producto crearProducto(Producto producto, Long categoriaId, List<MultipartFile> files) throws IOException {
-        // 1. Asignar Categoría
+    public Producto crearProducto(Producto producto, Long categoriaId,Long propietarioId, List<MultipartFile> files) throws IOException {
+        
         Categoria categoria = categoriaService.findById(categoriaId)
                 .orElseThrow(() -> new NoSuchElementException("Categoría no encontrada con ID: " + categoriaId));
         producto.setCategoria(categoria);
 
-        // 2. Guardar Archivos en disco
+        User propietario = userRepository.findById(propietarioId) //
+                .orElseThrow(() -> new NoSuchElementException("Usuario (Propietario) no encontrado con ID: " + propietarioId));
+        producto.setPropietario(propietario);
+
+        
         List<String> rutas = saveFiles(files);
         producto.setFotos(String.join(",", rutas)); //
 
@@ -77,7 +102,7 @@ public class ProductoService {
     }
 
     @Transactional
-    public Producto actualizarProducto(Long id, Producto details, Long categoriaId, List<MultipartFile> files) throws IOException {
+    public Producto actualizarProducto(Long id, Producto details, Long categoriaId, Long propietarioId, List<MultipartFile> files) throws IOException {
         Producto producto = obtenerPorId(id); // Reutiliza el método
 
         // Actualizar campos
@@ -85,12 +110,15 @@ public class ProductoService {
         producto.setDescripcion(details.getDescripcion());
         producto.setPrecio(details.getPrecio());
         producto.setEstado(details.getEstado());
-        producto.setPropietarioId(details.getPropietarioId());
 
         // Asignar nueva categoría
         Categoria categoria = categoriaService.findById(categoriaId)
                 .orElseThrow(() -> new NoSuchElementException("Categoría no encontrada con ID: " + categoriaId));
         producto.setCategoria(categoria);
+
+        User propietario = userRepository.findById(propietarioId) //
+                .orElseThrow(() -> new NoSuchElementException("Usuario (Propietario) no encontrado con ID: " + propietarioId));
+        producto.setPropietario(propietario);
 
         // Si se enviaron nuevos archivos, reemplazar los antiguos
         if (files != null && !files.isEmpty() && !files.get(0).isEmpty()) {
@@ -139,22 +167,23 @@ public class ProductoService {
     // --- BÚSQUEDA AVANZADA (CON LÓGICA DE DESCENDIENTES) ---
 
     @Transactional(readOnly = true)
-    public Page<Producto> buscarConFiltros(String titulo, Long categoriaId, Double precioMin, Double precioMax, Pageable pageable) {
+    public Page<Producto> buscarConFiltros(String titulo, Long categoriaId, Double precioMin, Double precioMax, String estado, Long propietarioId, Pageable pageable) {
         List<Long> idsCategoriasBusqueda = null;
 
-        if (categoriaId != null) {
-            // 🌟 OBTENER DESCENDIENTES USANDO CategoriaService 🌟
-            // (Asumiendo que CategoriaService tiene findAllDescendants)
-            idsCategoriasBusqueda = categoriaService.findAllDescendants(categoriaId)
-                    .stream()
-                    .map(Categoria::getId)
-                    .collect(Collectors.toList());
-            
-            // Añadir el ID padre a la lista (findAllDescendants solo trae hijos)
-            idsCategoriasBusqueda.add(categoriaId);
+       if (categoriaId != null) {
+            // Llama al nuevo método que ya devuelve la lista de IDs (padre + hijos)
+            idsCategoriasBusqueda = categoriaService.findAllDescendantIdsWithSelf(categoriaId);
         }
+        String tituloLike = (titulo != null && !titulo.isEmpty()) ? "%" + titulo + "%" : null;
+        String estadoLike = (estado != null && estado.trim().isEmpty() == false) ? "%" + estado + "%" : null;
         
+        int categoriaCount = (idsCategoriasBusqueda != null) ? idsCategoriasBusqueda.size() : 0;
+        
+        List<Long> categoriasParam = (categoriaCount > 0) ? idsCategoriasBusqueda : null;
+
         // Llamar al repositorio actualizado
-        return productoRepository.buscarConFiltros(titulo, idsCategoriasBusqueda, precioMin, precioMax, pageable);
+        return productoRepository.buscarConFiltros(tituloLike, categoriasParam, categoriaCount, precioMin, precioMax, estadoLike, propietarioId, pageable);
     }
+
+    
 }

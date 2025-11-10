@@ -18,6 +18,7 @@ export class LoginRegisterComponent {
   datosEnviados = '';
 
   user = {
+    id : 0,
     nombre: '',
     apellido: '',
     cedula: '',
@@ -63,6 +64,7 @@ export class LoginRegisterComponent {
 
   private resetUser(): void {
     this.user = {
+      id : 0,
       nombre: '',
       apellido: '',
       cedula: '',
@@ -97,6 +99,7 @@ export class LoginRegisterComponent {
       next: res => {
         // Guardar en localStorage
         localStorage.setItem('token', res.token);
+        localStorage.setItem('userId', res.id.toString());
         localStorage.setItem('nombreUsuario', res.nombre);
         localStorage.setItem('apellido', res.apellido);
         localStorage.setItem('correo', res.correo);
