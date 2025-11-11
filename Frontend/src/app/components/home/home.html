@@ -61,37 +61,29 @@
                 (click)="seleccionarProducto(producto)"
               >
                 <!-- Carrusel de imágenes: solo una imagen activa -->
-                <div *ngIf="producto.fotos" class="producto-carrusel">
+                <div *ngIf="producto.imagenes && producto.imagenes.length > 0" class="producto-carrusel">
                   <button
                     class="scroll-btn left"
-                    (click)="scrollLeft('productoScroll' + producto.id)"
+                    (click)="scrollLeft('productoScroll' + producto.id); $event.stopPropagation();"
                   >
                     &#10094;
                   </button>
 
                   <div class="preview-scroll" [id]="'productoScroll' + producto.id">
                     <img
-                      *ngFor="let img of producto.fotos.split(',')"
-                      [src]="'http://localhost:8081' + img"
+                      *ngFor="let img of producto.imagenes"
+                      [src]="img.secureUrl" 
                       alt="imagen producto"
                     />
                   </div>
 
                   <button
                     class="scroll-btn right"
-                    (click)="scrollRight('productoScroll' + producto.id)"
+                    (click)="scrollRight('productoScroll' + producto.id); $event.stopPropagation();"
                   >
                     &#10095;
                   </button>
                 </div>
-
-                <!-- Si solo tiene una imagen -->
-                <img
-                  *ngIf="!producto.fotos || producto.fotos.split(',').length === 0"
-                  [src]="'http://localhost:8081' + producto.fotos"
-                  class="card-img-top"
-                  alt="{{ producto.titulo }}"
-                />
 
                 <!-- Información del producto -->
                 <div class="card-body">
@@ -100,11 +92,11 @@
                   <p class="fw-bold">$ {{ producto.precio | number }}</p>
 
                   <button 
-  *ngIf="producto.id !== undefined"
-  (click)="comprarProducto(producto.id)" 
-  [disabled]="producto.estado.toLowerCase() === 'vendido'">
-  Comprar
-</button>
+                    *ngIf="producto.id !== undefined"
+                    (click)="comprarProducto(producto.id)" 
+                    [disabled]="producto.estado.toLowerCase() === 'vendido'">
+                    Comprar
+                  </button>
                 </div>
               </div>
             </div>

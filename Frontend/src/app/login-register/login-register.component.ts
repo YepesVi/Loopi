@@ -18,7 +18,6 @@ export class LoginRegisterComponent {
   datosEnviados = '';
 
   user = {
-    id : 0,
     nombre: '',
     apellido: '',
     cedula: '',
@@ -64,7 +63,6 @@ export class LoginRegisterComponent {
 
   private resetUser(): void {
     this.user = {
-      id : 0,
       nombre: '',
       apellido: '',
       cedula: '',

@@ -9,7 +9,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyDouble;
-import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doNothing;
@@ -18,7 +17,6 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -67,7 +65,7 @@ public class ProductoControllerTest {
         productoMock.setCategoria(categoriaMock); 
         productoMock.setPrecio(10000.0);
         productoMock.setEstado("publicado");
-        productoMock.setFotos("/uploads/foto.jpg");
+        //productoMock.setFotos("/uploads/foto.jpg");
         //productoMock.setPropietarioId(1L);
         productoMock.setFechaPublicacion(LocalDateTime.now());
 

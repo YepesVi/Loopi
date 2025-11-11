@@ -1,4 +1,5 @@
 import { Categoria } from "./category.model";
+import { Imagen } from "./imagen.model";
 
 export interface Producto {
   id?: number;
@@ -7,7 +8,7 @@ export interface Producto {
   categoria: Categoria;
   precio: number;
   estado: string;
-  propietarioId: number;
-  fotos?: string;
+  propietarioId: number; 
+  imagenes: Imagen[];
   fechaCreacion?: string;
 }

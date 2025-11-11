@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 import com.example.demo.entity.Categoria;
+import com.example.demo.entity.Imagen;
 import com.example.demo.entity.Producto;
 import com.example.demo.entity.User;
 import com.example.demo.repository.ProductoRepository;
@@ -8,8 +9,7 @@ import com.example.demo.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
 
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -17,12 +17,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.nio.file.*;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -33,43 +30,8 @@ public class ProductoService {
     private final ProductoRepository productoRepository;
     private final CategoriaService categoriaService; // Para la lógica de descendientes
     private final UserRepository userRepository;
-
-    // Mantenemos tu lógica de UPLOAD_DIR
-    private final String UPLOAD_DIR = "uploads/";
-    private final Path rootLocation = Paths.get("uploads");
-
-    public Resource serveFile(String filename) throws MalformedURLException {
-        
-        Path file = rootLocation.resolve(filename);
-        Resource resource = new UrlResource(file.toUri());
-
-        if (resource.exists() && resource.isReadable()) {
-            return resource;
-        } else {
-            throw new NoSuchElementException("No se pudo leer el archivo: " + filename);
-        }
-    }
-
-    // --- Lógica de Guardado de Archivos (Movida del Controller) ---
-    private List<String> saveFiles(List<MultipartFile> files) throws IOException {
-        Path folder = Paths.get(UPLOAD_DIR);
-        if (!Files.exists(folder)) {
-            Files.createDirectories(folder);
-        }
-        List<String> rutas = new ArrayList<>();
-        if (files != null) {
-            for (MultipartFile file : files) {
-                if (file != null && !file.isEmpty()) {
-                    String filename = UUID.randomUUID() + "-" + file.getOriginalFilename();
-                    Path filePath = folder.resolve(filename);
-                    Files.write(filePath, file.getBytes());
-                    rutas.add("/uploads/" + filename);
-                }
-            }
-        }
-        return rutas;
-    }
-
+    private final CloudinaryUploadService cloudinaryUploadService;
+    
     // --- Métodos CRUD ---
 
     @Transactional(readOnly = true)
@@ -94,9 +56,24 @@ public class ProductoService {
                 .orElseThrow(() -> new NoSuchElementException("Usuario (Propietario) no encontrado con ID: " + propietarioId));
         producto.setPropietario(propietario);
 
-        
-        List<String> rutas = saveFiles(files);
-        producto.setFotos(String.join(",", rutas)); //
+        if (files != null) {
+            for (MultipartFile file : files) {
+                if (file != null && !file.isEmpty()) {
+                    // 1. Subir a la carpeta "productos"
+                    Map<String, String> uploadResult = cloudinaryUploadService.uploadFile(file, "productos");
+                    
+                    // 2. Crear la entidad Imagen
+                    Imagen imagen = Imagen.builder()
+                            .secureUrl(uploadResult.get("secure_url"))
+                            .publicId(uploadResult.get("public_id"))
+                            .producto(producto) // Relación inversa
+                            .build();
+                    
+                    // 3. Añadir al Set (Gracias a Cascade.ALL, se guarda junto al producto)
+                    producto.getImagenes().add(imagen);
+                }
+            }
+        }
 
         return productoRepository.save(producto);
     }
@@ -122,18 +99,42 @@ public class ProductoService {
 
         // Si se enviaron nuevos archivos, reemplazar los antiguos
         if (files != null && !files.isEmpty() && !files.get(0).isEmpty()) {
-            // (Opcional: lógica para borrar archivos antiguos del disco)
-            List<String> rutas = saveFiles(files);
-            producto.setFotos(String.join(",", rutas));
+            
+            // 1. Borrar imágenes antiguas de Cloudinary
+            for (Imagen imgExistente : producto.getImagenes()) {
+                cloudinaryUploadService.deleteFile(imgExistente.getPublicId());
+            }
+            
+            // 2. Limpiar la colección (orphanRemoval=true borra de la DB)
+            producto.getImagenes().clear();
+
+            // 3. Subir nuevas imágenes (lógica idéntica a crearProducto)
+            for (MultipartFile file : files) {
+                if (file != null && !file.isEmpty()) {
+                    Map<String, String> uploadResult = cloudinaryUploadService.uploadFile(file, "productos");
+                    Imagen imagen = Imagen.builder()
+                            .secureUrl(uploadResult.get("secure_url"))
+                            .publicId(uploadResult.get("public_id"))
+                            .producto(producto)
+                            .build();
+                    producto.getImagenes().add(imagen);
+                }
+            }
         }
         
         return productoRepository.save(producto);
     }
 
     @Transactional
-    public void eliminarProducto(Long id) {
+    public void eliminarProducto(Long id) throws IOException {
         if (!productoRepository.existsById(id)) {
             throw new NoSuchElementException("Producto no encontrado con ID: " + id);
+        }
+        Producto producto = obtenerPorId(id); // 1. Obtener el producto
+        
+        // 2. Iterar y borrar cada imagen de Cloudinary
+        for (Imagen img : producto.getImagenes()) {
+            cloudinaryUploadService.deleteFile(img.getPublicId());
         }
         // (Opcional: lógica para borrar archivos del disco)
         productoRepository.deleteById(id);

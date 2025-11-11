@@ -155,9 +155,8 @@ export class DashboardComponent implements OnInit{
     this.imagenesPreviewUrl = [];
     
     // Mostrar las imágenes existentes (Mejora de UX)
-    if (producto.fotos) {
-      this.imagenesPreviewUrl = producto.fotos.split(',').map(fotoUrl => 
-          'http://localhost:8081/api/productos' + fotoUrl);
+    if (producto.imagenes && producto.imagenes.length > 0) {
+      this.imagenesPreviewUrl = producto.imagenes.map(imagen => imagen.secureUrl);
     }
 
     const modal = new bootstrap.Modal(this.modalProducto.nativeElement);

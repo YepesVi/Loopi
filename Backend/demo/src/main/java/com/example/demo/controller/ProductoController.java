@@ -3,8 +3,6 @@ package com.example.demo.controller;
 import com.example.demo.entity.Producto;
 import com.example.demo.service.ProductoService; // 👈 IMPORTAR SERVICIO
 
-import jakarta.annotation.Resource;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,13 +12,12 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.util.List;
 import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/api/productos")
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "http://localhost:4200")
 @RequiredArgsConstructor 
 public class ProductoController {
 
@@ -138,7 +135,7 @@ public class ProductoController {
 
 
     @DeleteMapping("/eliminar/{id}")
-    public ResponseEntity<Void> eliminarProducto(@PathVariable Long id) {
+    public ResponseEntity<Void> eliminarProducto(@PathVariable Long id) throws IOException {
         try {
             productoService.eliminarProducto(id);
             return ResponseEntity.noContent().build();
@@ -161,26 +158,4 @@ public class ProductoController {
         }
     }
 
-    @GetMapping("/uploads/{filename:.+}")
-    public ResponseEntity<Resource> serveFile(@PathVariable String filename, HttpServletRequest request) {
-        try {
-            Resource resource = (Resource) productoService.serveFile(filename);
-            
-            // Determinar Content-Type
-            String contentType = request.getServletContext().getMimeType(((org.springframework.core.io.Resource) resource).getFile().getAbsolutePath());
-            if (contentType == null) {
-                contentType = "application/octet-stream";
-            }
-
-            return ResponseEntity.ok()
-                    .contentType(MediaType.parseMediaType(contentType))
-                    .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + ((org.springframework.core.io.Resource) resource).getFilename() + "\"")
-                    .body(resource);
-
-        } catch (MalformedURLException | NoSuchElementException e) {
-            return ResponseEntity.notFound().build();
-        } catch (IOException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
-    }
 }

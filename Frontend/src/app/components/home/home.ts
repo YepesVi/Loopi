@@ -36,8 +36,7 @@ export class Home implements OnInit {
   cargarProductosPublicados(): void {
     this.productosService.getProductosPublicados().subscribe({
       next: (productos: Producto[]) => {
-        const publicados = productos.filter(p => p.estado?.toLowerCase() === 'publicado');
-        this.agruparPorCategoria(publicados);
+        this.agruparPorCategoria(productos);
       },
       error: (err) => console.error('Error al cargar productos', err)
     });
