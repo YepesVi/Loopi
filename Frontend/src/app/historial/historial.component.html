@@ -1,0 +1,19 @@
+<div class="contenedor">
+  <h2>Historial del producto #{{ productoId }}</h2>
+
+  <div *ngIf="cargando">Cargando historial...</div>
+  <div *ngIf="sinDatos && !cargando" class="vacio">No hay registros en el historial.</div>
+
+  <ul *ngIf="!cargando && historial.length > 0">
+    <li *ngFor="let evento of historial">
+      <div class="evento">
+        <strong>{{ evento.accion }}</strong>
+        <p>{{ evento.descripcion }}</p>
+        <small>{{ evento.fechaRegistro }}</small>
+      </div>
+    </li>
+  </ul>
+
+  <!-- ✅ botón siempre visible -->
+  <button class="btn-volver" (click)="volver()">⬅ Volver</button>
+</div>

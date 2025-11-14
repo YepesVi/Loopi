@@ -23,7 +23,7 @@ body {
   width: 100%;
   max-width: 1000px;
   background: #b48ce4;
-  padding: 40px 50px;
+  padding: 40px 80px;
   border-radius: 20px;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
   text-align: center;
@@ -152,9 +152,10 @@ form button:hover {
 /* ======== GRID DE PRODUCTOS ======== */
 .productos-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 25px;
+grid-template-columns: repeat(2, 1fr);
+  gap: 40px;
   margin-top: 30px;
+  padding: 0px 30px;
 }
 
 /* ======== TARJETA DE PRODUCTO ======== */
@@ -392,6 +393,49 @@ form button:hover {
   display: none;
 }
 
+.btn-historial {
+  background: #6d5d9a; /* violeta suave */
+  color: #ffffff;
+  padding: 10px 20px;
+  font-size: 15px;
+  font-weight: 600;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 10px rgba(109, 93, 154, 0.3);
+  display: inline-block;
+  margin-bottom: 15px;
+}
+
+.btn-historial:hover {
+  background: #b48ce4; /* lila claro */
+  color: #13162c;
+  transform: scale(1.05);
+  box-shadow: 0 6px 16px rgba(180, 140, 228, 0.4);
+}
+
+.historial {
+  padding: 8px 16px;
+  background: #38355d; /* tono oscuro elegante */
+  color: #fff;
+  font-weight: 600;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  box-shadow: 0 3px 8px rgba(56, 53, 93, 0.4);
+}
+
+.historial:hover {
+  background: #b48ce4; /* lila claro */
+  color: #13162c;
+  transform: scale(1.05);
+  box-shadow: 0 6px 14px rgba(180, 140, 228, 0.5);
+}
+
+
 /* ======== RESPONSIVE ======== */
 @media (max-width: 600px) {
   .producto {
@@ -402,4 +446,6 @@ form button:hover {
   .producto img {
     margin: 15px 0 0;
   }
+
+
 }

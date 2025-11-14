@@ -70,8 +70,8 @@ buscarProductos(
       params = params.append('propietarioId', propietarioId.toString());
     }
     // Añadir paginación si es necesario
-   // params = params.append('page', '0');
-   // params = params.append('size', '50'); // Cargar 50 por defecto
+    params = params.append('page', '0');
+    params = params.append('size', '50'); // Cargar 50 por defecto
 
     return this.http.get<Page<Producto>>(`${this.apiUrl}/buscar`, { params });
   }
