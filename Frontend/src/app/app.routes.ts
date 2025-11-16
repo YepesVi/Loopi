@@ -9,7 +9,7 @@ export const routes: Routes = [
   {  
   path: 'login-register',
     loadComponent: () =>
-      import('./login-register/login-register.component').then(m => m.LoginRegisterComponent)
+      import('./components/login-register/login-register.component').then(m => m.LoginRegisterComponent)
   },
   { path: 'home',
     component: Home
@@ -18,12 +18,12 @@ export const routes: Routes = [
   path: 'dashboard',
   canActivate: [authGuard],
   loadComponent: () =>
-    import('./dashboard/dashboard.component').then(m => m.DashboardComponent)
+    import('./components/dashboard/dashboard.component').then(m => m.DashboardComponent)
   },
   {
     path: 'reset-password',
     loadComponent: () =>
-      import('./reset-password/reset-password.component').then(m => m.ResetPasswordComponent)
+      import('./components/reset-password/reset-password.component').then(m => m.ResetPasswordComponent)
   },
   
     {
@@ -38,7 +38,7 @@ export const routes: Routes = [
   path: 'editar-perfil',
   canActivate: [authGuard],
   loadComponent: () =>
-    import('./EditarPerfil/editar-perfil.component').then(m => m.EditarPerfilComponent)
+    import('./components/EditarPerfil/editar-perfil.component').then(m => m.EditarPerfilComponent)
 },
 
 {

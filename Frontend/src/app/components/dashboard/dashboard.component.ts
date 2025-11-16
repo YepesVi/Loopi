@@ -1,11 +1,11 @@
 import { Component, ViewChild, ElementRef, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ProductosService } from '../services/producto.service';
-import { Producto } from '../models/producto.model';
-import { CategoryService } from '../services/categorias/category.service';
-import { Categoria } from '../models/category.model';
-import { Page } from '../models/page.model';
+import { ProductosService } from '../../services/producto.service';
+import { Producto } from '../../models/producto.model';
+import { CategoryService } from '../../services/categorias/category.service';
+import { Categoria } from '../../models/category.model';
+import { Page } from '../../models/page.model';
 
 import { RouterModule, Router } from '@angular/router';
 import { loadavg } from 'node:os';

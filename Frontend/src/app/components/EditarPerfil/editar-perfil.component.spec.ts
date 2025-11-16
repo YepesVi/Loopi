@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { EditarPerfilComponent } from './editar-perfil.component';
-import { AuthService } from '../services/auth.service';
-import { UsuarioService } from '../services/usuario.service';
+import { AuthService } from '../../services/auth.service';
+import { UsuarioService } from '../../services/usuario.service';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { of, throwError } from 'rxjs';
 
