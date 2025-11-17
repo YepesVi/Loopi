@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -65,5 +66,8 @@ public class Producto {
     @JsonProperty("fechaCreacion")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime fechaPublicacion = LocalDateTime.now();
+
+    @OneToMany(mappedBy = "producto")
+    private List<CarritoItem> carritoItems;
 
 }
