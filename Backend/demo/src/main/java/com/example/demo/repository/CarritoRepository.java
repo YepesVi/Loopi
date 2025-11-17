@@ -7,5 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.example.demo.entity.Carrito;
 
 public interface CarritoRepository extends JpaRepository<Carrito, Long>{
-    Optional<Carrito> findByUsuarioId(String usuarioId);
+    Optional<Carrito> findByUser_Cedula(String usuarioCedula);
 } 

@@ -30,12 +30,9 @@ public class CarritoService {
     @Autowired
     private ProductoRepository productoRepository;
 
-    // ------------------------------------------------------
-    // 1) OBTENER CARRITO DEL USUARIO
-    // ------------------------------------------------------
     @Transactional(readOnly = true)
     public Carrito getCarritoDeUsuario(String userId) {
-        return carritoRepository.findByUsuarioId(userId)
+        return carritoRepository.findByUser_Cedula(userId)
             .orElseGet(() -> crearCarritoParaUsuario(userId));
     }
 
@@ -44,14 +41,19 @@ public class CarritoService {
         User user = userRepository.findByCedula(userId)
             .orElseThrow(() -> new IllegalArgumentException("Usuario no existe"));
 
+        Optional<Carrito> carritoExistente = carritoRepository.findByUser_Cedula(userId);
+
+        if (carritoExistente.isPresent()) {
+            throw new IllegalArgumentException("El usuario ya tiene un carrito activo.");
+        }
+
         Carrito carrito = new Carrito();
         carrito.setUser(user);
+
         return carritoRepository.save(carrito);
     }
 
-    // ------------------------------------------------------
-    // 2) AGREGAR PRODUCTO AL CARRITO
-    // ------------------------------------------------------
+
     @Transactional
     public Carrito agregarProducto(String userId, Long productoId) {
 
@@ -64,34 +66,30 @@ public class CarritoService {
             throw new IllegalArgumentException("No hay disponibilidad de este producto.");
         }
 
-        Optional<CarritoItem> itemExistenteOpt = carrito.getItems().stream()
-            .filter(i -> i.getProducto().getId().equals(productoId))
-            .findFirst();
+        boolean yaEstaEnCarrito = carrito.getItems().stream()
+            .anyMatch(i -> i.getProducto().getId().equals(productoId));
 
-        CarritoItem item = null;
-
-        if (!itemExistenteOpt.isPresent()) {
-            item = new CarritoItem();
-            item.setCarrito(carrito);
-            item.setProducto(producto);
-            carrito.getItems().add(item);
+        if (yaEstaEnCarrito) {
+            throw new IllegalArgumentException("Este producto ya está agregado al carrito.");
         }
 
+        CarritoItem item = new CarritoItem();
+        item.setCarrito(carrito);
+        item.setProducto(producto);
+
+        carrito.getItems().add(item);
+
         carritoItemRepository.save(item);
+
         return carritoRepository.save(carrito);
     }
 
-    // ------------------------------------------------------
-    // 4) ELIMINAR UN ITEM
-    // ------------------------------------------------------
+
     @Transactional
     public void eliminarItem(Long itemId) {
         carritoItemRepository.deleteById(itemId);
     }
 
-    // ------------------------------------------------------
-    // 5) VACIAR CARRITO
-    // ------------------------------------------------------
     @Transactional
     public void vaciarCarrito(String userId) {
         Carrito carrito = getCarritoDeUsuario(userId);

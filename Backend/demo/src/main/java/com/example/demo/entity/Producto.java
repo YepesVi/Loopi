@@ -9,6 +9,7 @@ import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*; 
@@ -68,6 +69,7 @@ public class Producto {
     private LocalDateTime fechaPublicacion = LocalDateTime.now();
 
     @OneToMany(mappedBy = "producto")
+    @JsonIgnore
     private List<CarritoItem> carritoItems;
 
 }
