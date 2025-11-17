@@ -1,0 +1,41 @@
+<div class="carrito-container" *ngIf="!cargando; else loading">
+  
+    <h2>🛒 Tu Carrito</h2>
+
+    <div *ngIf="carrito.length === 0" class="carrito-vacio">
+        <p>No hay productos en el carrito.</p>
+    </div>
+
+    <div class="items-container" *ngIf="carrito.length > 0">
+        <div class="item" *ngFor="let item of carrito">
+            
+            <div class="info">
+                <h3>{{ item.nombre }}</h3>
+                <p>Precio: ${{ item.precio }}</p>
+            </div>
+
+            <div class="cantidad">
+                <button (click)="disminuir(item)">−</button>
+                <span>{{ item.cantidad }}</span>
+                <button (click)="aumentar(item)">+</button>
+            </div>
+
+            <div class="subtotal">
+                <p>$ {{ item.subtotal }}</p>
+            </div>
+
+            <button class="eliminar" (click)="eliminar(item)">🗑</button>
+        </div>
+    </div>
+
+    <div class="total" *ngIf="carrito.length > 0">
+        <h3>Total: ${{ total }}</h3>
+        <button class="vaciar" (click)="vaciar()">Vaciar carrito</button>
+        <button class="comprar">Continuar compra</button>
+    </div>
+</div>
+
+<ng-template #loading>
+    <p>Cargando carrito...</p>
+</ng-template>
+  
