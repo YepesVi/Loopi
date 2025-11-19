@@ -92,10 +92,11 @@
                   <p class="fw-bold">$ {{ producto.precio | number }}</p>
 
                   <button 
+                    class="btn-comprar"
                     *ngIf="producto.id !== undefined"
-                    (click)="comprarProducto(producto.id)" 
+                    (click)="comprarProducto(producto.id, $event)"
                     [disabled]="producto.estado.toLowerCase() === 'vendido'">
-                    Comprar
+                    Añadir al Carrito
                   </button>
                 </div>
               </div>

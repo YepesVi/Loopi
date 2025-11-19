@@ -38,14 +38,6 @@ export class Carrito implements OnInit {
     this.total = this.carrito.reduce((acc: number, item: any) => acc + item.subtotal, 0);
   }
 
-  aumentar(item: any) {
-    this.carritoService.agregarProducto(item.productoId).subscribe(() => {
-      item.cantidad++;
-      item.subtotal = item.cantidad * item.precio;
-      this.calcularTotal();
-    });
-  }
-
   eliminar(item: any) {
     this.carritoService.eliminarProducto(item.productoId).subscribe(() => {
       this.carrito = this.carrito.filter((x: any) => x.productoId !== item.productoId);

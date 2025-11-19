@@ -4,6 +4,8 @@ import { Router } from '@angular/router';
 import { ProductosService, } from '../../services/producto.service';
 import { Producto } from '../../models/producto.model';
 import { AuthService } from '../../services/auth.service';
+import { CarritoService } from '../../services/carrito/carrito-service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-home',
@@ -20,6 +22,7 @@ export class Home implements OnInit {
 
   constructor(
     private productosService: ProductosService,
+    private carritoService: CarritoService,
     private auth: AuthService,
     private router: Router
   ) {}
@@ -31,6 +34,7 @@ export class Home implements OnInit {
 
   ngOnInit(): void {
     this.cargarProductosPublicados();
+    this.verificarProductoPendiente();
   }
 
   cargarProductosPublicados(): void {
@@ -97,18 +101,61 @@ export class Home implements OnInit {
     this.router.navigateByUrl('/login-register');
   }
 
+  comprarProducto(id: number, event: Event) {
+    event.stopPropagation();
 
-comprarProducto(id: number) {
-  this.productosService.actualizarEstado(id, 'Vendido').subscribe({
-    next: () => {
-      // Refresca el listado o recarga datos, muestra mensaje de éxito, etc.
-      this.cargarProductosPublicados();
-      alert('¡Producto comprado!');
-    },
-    error: () => {
-      alert('No se pudo completar la compra.');
+    if (typeof window === 'undefined') return;
+  
+    const usuarioCedula = localStorage.getItem('cedula');
+  
+    if (!usuarioCedula) {
+      localStorage.setItem('productoPendiente', id.toString());
+  
+      this.mostrarAdvertencia = true;
+      return;
     }
-  });
-}
+
+    this.agregarProductoAlCarrito(id);
+  }
+
+  agregarProductoAlCarrito(productoId: number) {
+
+    if (typeof window === 'undefined') return;
+  
+    this.carritoService.agregarProducto(productoId).subscribe({
+      next: () => {
+        Swal.fire({
+          icon: 'success',
+          title: 'Producto agregado',
+          text: '✔ El producto fue agregado al carrito',
+          confirmButtonColor: '#6a5af9'
+        });
+      },
+      error: () => {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: '❌ No se pudo agregar al carrito',
+          confirmButtonColor: '#d33'
+        });
+      }
+    });
+  }  
+  
+  verificarProductoPendiente() {
+
+    if (typeof window === 'undefined') return;
+
+    const pendiente = localStorage.getItem('productoPendiente');
+    const cedula = localStorage.getItem('cedula');
+  
+    if (pendiente && cedula) {
+      const idProducto = parseInt(pendiente);
+      this.agregarProductoAlCarrito(idProducto);
+  
+      localStorage.removeItem('productoPendiente');
+    }
+  }
+  
 }
 
