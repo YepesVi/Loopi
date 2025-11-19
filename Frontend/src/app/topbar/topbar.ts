@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router, NavigationEnd } from '@angular/router';
+import { Router, NavigationEnd, RouterModule } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -10,7 +10,7 @@ import { AuthService } from '../services/auth.service';
 @Component({
   selector: 'app-topbar',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterModule],
   templateUrl: './topbar.html',
   styleUrls: ['./topbar.css']
 })
@@ -89,5 +89,16 @@ export class Topbar implements OnInit {
 
   home(): void {
     this.router.navigateByUrl('/home');
+  }
+
+  irAlCarrito() {
+    const cedula = localStorage.getItem('cedula');
+
+    if (!cedula) {
+      this.router.navigate(['/login-register']);
+      return;
+    }
+
+    this.router.navigate(['/carrito']);
   }
 }

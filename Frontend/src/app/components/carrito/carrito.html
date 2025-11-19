@@ -1,0 +1,50 @@
+<div class="carrito-container">
+
+    @if (!cargando) {
+  
+      <h2>Tu Carrito</h2>
+  
+      @if (carrito.length === 0) {
+        <div class="carrito-vacio">
+          <p>No hay productos en el carrito.</p>
+        </div>
+      }
+  
+      @if (carrito.length > 0) {
+  
+        <div class="items-container">   
+  
+          @for (item of carrito; track item.productoId) {
+            <div class="item">
+              
+              <div class="info">
+                <h3>{{ item.nombre }}</h3>
+                <p>Precio: ${{ item.precio }}</p>
+              </div>
+  
+              <div class="subtotal">
+                <p>$ {{ item.subtotal }}</p>
+              </div>
+  
+              <button class="eliminar" (click)="eliminar(item)">🗑</button>
+  
+            </div>
+          }
+  
+        </div>
+      }
+  
+      @if (carrito.length > 0) {
+        <div class="total">
+          <h3>Total: ${{ total }}</h3>
+          <button class="vaciar" (click)="vaciar()">Vaciar carrito</button>
+          <button class="comprar">Continuar compra</button>
+        </div>
+      }
+  
+    } @else {
+      <p>Cargando carrito...</p>
+    }
+  
+  </div>
+  
