@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { CarritoService } from '../../services/carrito/carrito-service';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-carrito',
-  imports: [],
+  imports: [RouterModule],
   templateUrl: './carrito.html',
   styleUrl: './carrito.css'
 })
@@ -43,16 +44,6 @@ export class Carrito implements OnInit {
       item.subtotal = item.cantidad * item.precio;
       this.calcularTotal();
     });
-  }
-
-  disminuir(item: any) {
-    if (item.cantidad > 1) {
-      this.carritoService.disminuirProducto(item.productoId).subscribe(() => {
-        item.cantidad--;
-        item.subtotal = item.cantidad * item.precio;
-        this.calcularTotal();
-      });
-    }
   }
 
   eliminar(item: any) {

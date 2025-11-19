@@ -6,43 +6,30 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class CarritoService {
-  private baseUrl = 'http://localhost:8080/api/carrito'; 
-  // Ajusta la URL según tu backend
+  private baseUrl = 'http://localhost:8081/api/carrito'; 
 
   constructor(private http: HttpClient) {}
 
-  /**
-   * Obtiene el carrito del usuario
-   */
   getCarrito(): Observable<any> {
-    return this.http.get(`${this.baseUrl}/mi-carrito`);
+    const cedula = localStorage.getItem('cedula');
+    return this.http.get(`${this.baseUrl}/${cedula}`);
+  }
+  
+  crearCarrito(cedula: String): Observable<any> {
+    return this.http.post(`${this.baseUrl}/crear/${cedula}`, {});
   }
 
-  /**
-   * Agrega un producto al carrito del usuario
-   */
   agregarProducto(productoId: number): Observable<any> {
-    return this.http.post(`${this.baseUrl}/agregar/${productoId}`, {});
+    const cedula = localStorage.getItem('cedula');
+    return this.http.post(`${this.baseUrl}/agregar/${cedula}/${productoId}`, {});
   }
 
-  /**
-   * Disminuye la cantidad de un producto del carrito
-   */
-  disminuirProducto(productoId: number): Observable<any> {
-    return this.http.post(`${this.baseUrl}/disminuir/${productoId}`, {});
+  eliminarProducto(itemId: number): Observable<any> {
+    return this.http.delete(`${this.baseUrl}/item/${itemId}`);
   }
 
-  /**
-   * Elimina un producto del carrito completamente
-   */
-  eliminarProducto(productoId: number): Observable<any> {
-    return this.http.delete(`${this.baseUrl}/eliminar/${productoId}`);
-  }
-
-  /**
-   * Vaciar carrito por completo
-   */
   vaciarCarrito(): Observable<any> {
-    return this.http.delete(`${this.baseUrl}/vaciar`);
+    const cedula = localStorage.getItem('cedula');
+    return this.http.delete(`${this.baseUrl}/vaciar/${cedula}`);
   }
 }

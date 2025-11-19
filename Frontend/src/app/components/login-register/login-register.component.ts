@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 import { Router, RouterModule } from '@angular/router';
 import { UsuarioService } from '../../services/usuario.service';
+import { CarritoService } from '../../services/carrito/carrito-service';
 
 @Component({
   selector: 'app-login-register',
@@ -31,7 +32,8 @@ export class LoginRegisterComponent {
   constructor(
     private authService: AuthService,
     private router: Router,
-    private usuarioService: UsuarioService
+    private usuarioService: UsuarioService,
+    private carritoService: CarritoService
   ) {}
 
   goToRegister() {
@@ -128,7 +130,7 @@ export class LoginRegisterComponent {
 
   register() {
     const correoValido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.user.correo);
-
+  
     if (
       !this.user.nombre ||
       !this.user.correo ||
@@ -139,7 +141,7 @@ export class LoginRegisterComponent {
       this.clearMessageAfterDelay();
       return;
     }
-
+  
     const formData = new FormData();
     for (const key in this.user) {
       const value = (this.user as any)[key];
@@ -163,6 +165,12 @@ export class LoginRegisterComponent {
     this.authService.register(formData).subscribe({
       next: () => {
         this.message = '✅ Registro exitoso';
+
+        this.carritoService.crearCarrito(this.user.cedula).subscribe({
+          next: () => console.log("Carrito creado automáticamente"),
+          error: (err) => console.error("Error creando carrito:", err)
+        });
+  
         this.clearMessageAfterDelay();
         this.resetUser();
         this.goToLogin();
