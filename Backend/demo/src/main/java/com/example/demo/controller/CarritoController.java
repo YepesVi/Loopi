@@ -47,7 +47,7 @@ public class CarritoController {
         return ResponseEntity.ok("Item eliminado correctamente.");
     }
 
-    @DeleteMapping("/{userId}/vaciar")
+    @DeleteMapping("/vaciar/{userId}")
     public ResponseEntity<String> vaciar(@PathVariable String userId) {
         carritoService.vaciarCarrito(userId);
         return ResponseEntity.ok("Carrito vaciado correctamente.");
