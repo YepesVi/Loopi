@@ -231,3 +231,33 @@ h1 {
 .producto-carrusel.single-image .scroll-btn {
   display: none;
 }
+
+.btn-comprar {
+  background: linear-gradient(135deg, #6a5af9, #7f40ff);
+  color: white;
+  border: none;
+  padding: 12px 22px;
+  font-size: 15px;
+  font-weight: 600;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.25s;
+  box-shadow: 0 4px 12px rgba(122, 74, 255, 0.3);
+  display: inline-block;
+}
+
+.btn-comprar:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(122, 74, 255, 0.4);
+}
+
+.btn-comprar:active {
+  transform: scale(0.97);
+}
+
+.btn-comprar:disabled {
+  background: #b3b3b3;
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+}

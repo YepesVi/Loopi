@@ -1,5 +1,7 @@
 package com.example.demo.controller;
 
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -42,14 +44,15 @@ public class CarritoController {
     }
 
     @DeleteMapping("/item/{itemId}")
-    public ResponseEntity<String> eliminarItem(@PathVariable Long itemId) {
+    public ResponseEntity<?> eliminarItem(@PathVariable Long itemId) {
         carritoService.eliminarItem(itemId);
-        return ResponseEntity.ok("Item eliminado correctamente.");
+        return ResponseEntity.ok(Map.of("message", "Item eliminado"));
+
     }
 
-    @DeleteMapping("/{userId}/vaciar")
-    public ResponseEntity<String> vaciar(@PathVariable String userId) {
+    @DeleteMapping("/vaciar/{userId}")
+    public ResponseEntity<?> vaciar(@PathVariable String userId) {
         carritoService.vaciarCarrito(userId);
-        return ResponseEntity.ok("Carrito vaciado correctamente.");
+        return ResponseEntity.ok(Map.of("message", "Carrito eliminado"));
     }
 }
