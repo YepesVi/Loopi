@@ -1,10 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { CarritoService } from '../../services/carrito/carrito-service';
 import { RouterModule } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-carrito',
-  imports: [RouterModule],
+  imports: [RouterModule, CommonModule],
   templateUrl: './carrito.html',
   styleUrl: './carrito.css'
 })
@@ -19,6 +21,10 @@ export class Carrito implements OnInit {
     this.cargarCarrito();
   }
 
+  trackById(index: number, item: any) {
+    return item.id;
+  }
+  
   cargarCarrito() {
     this.cargando = true;
     this.carritoService.getCarrito().subscribe(
@@ -35,20 +41,41 @@ export class Carrito implements OnInit {
   }
 
   calcularTotal() {
-    this.total = this.carrito.reduce((acc: number, item: any) => acc + item.subtotal, 0);
-  }
+    const items = this.carrito || [];
+  
+    this.total = items.reduce(
+      (sum: number, item: any) => sum + (item.producto?.precio ?? 0),
+      0
+    );
+  }  
 
   eliminar(item: any) {
-    this.carritoService.eliminarProducto(item.productoId).subscribe(() => {
-      this.carrito = this.carrito.filter((x: any) => x.productoId !== item.productoId);
-      this.calcularTotal();
+    this.carritoService.eliminarProducto(item).subscribe(() => {
+  
+      Swal.fire({
+        title: 'Eliminado',
+        text: 'Producto eliminado del carrito',
+        icon: 'success',
+        timer: 1200,
+        showConfirmButton: false
+      });
+  
+      this.cargarCarrito();
     });
   }
 
   vaciar() {
     this.carritoService.vaciarCarrito().subscribe(() => {
-      this.carrito = [];
-      this.total = 0;
+  
+      Swal.fire({
+        title: 'Carrito vaciado',
+        text: 'Se han eliminado todos los productos',
+        icon: 'success',
+        timer: 1500,
+        showConfirmButton: false
+      });
+  
+      this.cargarCarrito();
     });
   }
 }

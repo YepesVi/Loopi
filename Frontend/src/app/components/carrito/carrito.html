@@ -1,50 +1,53 @@
-<div class="carrito-container">
+<div class="carrito-wrapper">
+  
+  <div class="col productos">
 
-    @if (!cargando) {
-  
-      <h2>Tu Carrito</h2>
-  
-      @if (carrito.length === 0) {
-        <div class="carrito-vacio">
-          <p>No hay productos en el carrito.</p>
+    <h2>Tu Carrito</h2>
+
+    <div *ngIf="carrito.length === 0" class="carrito-vacio">
+      <p>No hay productos en el carrito.</p>
+    </div>
+
+    <div *ngIf="carrito.length > 0" class="items-container">
+
+      <div class="item" *ngFor="let item of carrito; trackBy: trackById">
+
+        <img 
+          class="product-img"
+          [src]="item.producto.imagenes?.[0]?.secureUrl"
+          alt="Imagen producto"
+        />
+
+        <div class="info">
+          <h3>{{ item.producto.titulo }}</h3>
+          <p class="precio">$ {{ item.producto.precio }}</p>
         </div>
-      }
-  
-      @if (carrito.length > 0) {
-  
-        <div class="items-container">   
-  
-          @for (item of carrito; track item.productoId) {
-            <div class="item">
-              
-              <div class="info">
-                <h3>{{ item.nombre }}</h3>
-                <p>Precio: ${{ item.precio }}</p>
-              </div>
-  
-              <div class="subtotal">
-                <p>$ {{ item.subtotal }}</p>
-              </div>
-  
-              <button class="eliminar" (click)="eliminar(item)">🗑</button>
-  
-            </div>
-          }
-  
-        </div>
-      }
-  
-      @if (carrito.length > 0) {
-        <div class="total">
-          <h3>Total: ${{ total }}</h3>
-          <button class="vaciar" (click)="vaciar()">Vaciar carrito</button>
-          <button class="comprar">Continuar compra</button>
-        </div>
-      }
-  
-    } @else {
-      <p>Cargando carrito...</p>
-    }
-  
+
+        <button class="eliminar" (click)="eliminar(item.id)">🗑</button>
+
+      </div>
+
+    </div>
+
   </div>
-  
+
+  <div class="col resumen" *ngIf="carrito.length > 0">
+
+    <h3>Resumen de compra</h3>
+
+    <div class="resumen-dato">
+      <span>Cantidad de productos:</span>
+      <strong>{{ carrito.length }}</strong>
+    </div>
+
+    <div class="resumen-dato">
+      <span>Total a pagar:</span>
+      <strong class="total-precio">$ {{ total }}</strong>
+    </div>
+
+    <button class="btn vaciar" (click)="vaciar()">Vaciar carrito</button>
+    <button class="btn comprar">Compra</button>
+
+  </div>
+
+</div>

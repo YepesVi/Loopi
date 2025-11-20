@@ -1,79 +1,112 @@
-.carrito-container {
-max-width: 850px;
-margin: 20px auto;
-padding: 20px;
-background: #ffffff;
-border-radius: 12px;
-box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-}
-
-.carrito-vacio {
-text-align: center;
-font-size: 18px;
-padding: 30px;
-}
-
-.items-container {
-margin-top: 20px;
-}
-
-.item {
-display: grid;
-grid-template-columns: 1fr 150px 100px 40px;
-align-items: center;
-padding: 12px;
-border-bottom: 1px solid #ddd;
-}
-
-.item h3 {
-margin: 0;
-}
-
-.cantidad button {
-width: 30px;
-height: 30px;
-border: none;
-background: #eee;
-font-size: 18px;
-cursor: pointer;
-border-radius: 5px;
-}
-
-.cantidad span {
-padding: 0 10px;
-font-size: 18px;
-}
-
-.eliminar {
-border: none;
-background: transparent;
-cursor: pointer;
-font-size: 20px;
-}
-
-.total {
-display: flex;
-justify-content: space-between;
-align-items: center;
-margin-top: 25px;
-padding-top: 15px;
-border-top: 2px solid #333;
-}
-
-.vaciar {
-background: #d9534f;
-padding: 10px 15px;
-color: #fff;
-border: none;
-border-radius: 8px;
-cursor: pointer;
-}
-
-.comprar {
-background: #28a745;
-padding: 10px 15px;
-color: #fff;
-border: none;
-border-radius: 8px;
-cursor: pointer;
-}
+.carrito-wrapper {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 25px;
+    max-width: 1100px;
+    margin: 30px auto;
+    padding: 20px;
+  }
+  
+  .col {
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  }
+  
+  .productos h2 {
+    margin-bottom: 15px;
+  }
+  
+  .carrito-vacio {
+    text-align: center;
+    padding: 40px;
+    color: #666;
+    font-size: 18px;
+  }
+  
+  .item {
+    display: grid;
+    grid-template-columns: 100px 1fr 40px;
+    align-items: center;
+    gap: 15px;
+    padding: 15px 0;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .product-img {
+    width: 100%;
+    border-radius: 10px;
+    object-fit: cover;
+  }
+  
+  .info h3 {
+    margin: 0;
+    font-size: 18px;
+  }
+  
+  .precio {
+    margin: 5px 0 0;
+    color: #28a745;
+    font-weight: bold;
+    font-size: 16px;
+  }
+  
+  .eliminar {
+    background: transparent;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    color: #d9534f;
+  }
+  
+  .eliminar:hover {
+    transform: scale(1.1);
+  }
+  
+  .resumen h3 {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .resumen-dato {
+    display: flex;
+    justify-content: space-between;
+    margin: 12px 0;
+    font-size: 18px;
+  }
+  
+  .total-precio {
+    color: #28a745;
+    font-size: 20px;
+  }
+  
+  .btn {
+    width: 100%;
+    padding: 12px;
+    margin-top: 12px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: .2s ease;
+  }
+  
+  .vaciar {
+    background: #d9534f;
+    color: #fff;
+  }
+  
+  .vaciar:hover {
+    background: #c9302c;
+  }
+  
+  .comprar {
+    background: #28a745;
+    color: #fff;
+  }
+  
+  .comprar:hover {
+    background: #218838;
+  }
+  
