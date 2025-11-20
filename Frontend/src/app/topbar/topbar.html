@@ -19,11 +19,16 @@
       />
     </form>
 
+    <!-- 🛒 Carrito con badge dinámico -->
     <a class="nav-link text-light position-relative me-3"
       title="Carrito"
       (click)="irAlCarrito()">
       <i class="bi bi-cart-fill fs-4"></i>
-      <span class="badge bg-warning text-dark position-absolute top-0 start-100 translate-middle rounded-pill"></span>
+      <span 
+        *ngIf="cantidadCarrito > 0" 
+        class="badge  position-absolute top-0 start-100 translate-middle rounded-pill">
+        {{ cantidadCarrito }}
+      </span>
     </a>
 
     <div class="dropdown me-3">

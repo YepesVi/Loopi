@@ -6,6 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { UsuarioService } from '../services/usuario.service';
 import { PopupService } from '../services/categorias/popup';
 import { AuthService } from '../services/auth.service';
+import { CarritoService } from '../services/carrito/carrito-service';
 
 @Component({
   selector: 'app-topbar',
@@ -19,16 +20,21 @@ export class Topbar implements OnInit {
   nombreUsuario = 'Usuario';
   fotoUsuario = 'https://cdn-icons-png.flaticon.com/512/4140/4140048.png';
   sesionActiva = false;
-  cerrandoSesion = false; // ✅ NUEVO
+  cerrandoSesion = false;
+
+  // 🔹 Nueva propiedad para el carrito
+  cantidadCarrito: number = 0;
 
   constructor(
     private router: Router,
     private usuarioService: UsuarioService,
     private popupService: PopupService,
-    private auth: AuthService
+    private auth: AuthService,
+    private carritoService: CarritoService
   ) {}
 
   ngOnInit(): void {
+    // Suscripción al nombre y foto del usuario
     this.usuarioService.nombreUsuario$.subscribe(nombre => {
       this.nombreUsuario = nombre || 'Usuario';
     });
@@ -37,6 +43,7 @@ export class Topbar implements OnInit {
       this.fotoUsuario = foto || 'https://cdn-icons-png.flaticon.com/512/4140/4140048.png';
     });
 
+    // Actualizar sesión en cada navegación
     this.router.events
       .pipe(filter(event => event instanceof NavigationEnd))
       .subscribe(() => {
@@ -44,11 +51,28 @@ export class Topbar implements OnInit {
       });
 
     this.actualizarSesion();
+
+    // 🔹 Suscripción a la cantidad del carrito
+    this.carritoService.cantidad$.subscribe(cantidad => {
+      this.cantidadCarrito = cantidad;
+    });
+
+    // 🔹 Cargar carrito inicial para mostrar badge
+    this.carritoService.getCarrito().subscribe();
   }
 
   actualizarSesion(): void {
-    this.sesionActiva = this.auth.loggedInSignal();
+  this.sesionActiva = this.auth.loggedInSignal();
+
+  if (this.sesionActiva) {
+    // 🔹 Refrescar carrito al iniciar sesión
+    this.carritoService.getCarrito().subscribe();
+  } else {
+    // 🔹 Si no hay sesión, resetear contador
+    this.carritoService.resetCantidad();
   }
+}
+
 
   toggleCategoryPopup(): void {
     this.popupService.toggleCategoryPopup();
@@ -73,10 +97,11 @@ export class Topbar implements OnInit {
       this.usuarioService.actualizarNombre('Usuario');
       localStorage.clear();
       this.usuarioService.actualizarFoto('https://cdn-icons-png.flaticon.com/512/4140/4140048.png');
+      this.carritoService.resetCantidad();
       this.cerrandoSesion = false;
       this.actualizarSesion();
       this.router.navigate(['/home']);
-    }, 1500); // ⏳ duración del mensaje
+    }, 1500);
   }
 
   edit(): void {
