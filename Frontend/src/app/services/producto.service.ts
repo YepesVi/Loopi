@@ -15,6 +15,10 @@ export class ProductosService {
   getProductos(): Observable<Producto[]> {
     return this.http.get<Producto[]>(this.apiUrl);
   }
+  
+  getProductoPorId(id: number): Observable<Producto> {
+    return this.http.get<Producto>(`${this.apiUrl}/${id}`);
+  }
 
   getProductosPublicados(): Observable<Producto[]> {
   return this.http.get<Producto[]>(`${this.apiUrl}/publicados`);
@@ -54,12 +58,16 @@ actualizarEstado(id: number, estado: string): Observable<any> {
   }
 
 buscarProductos(
+    titulo: string | null,
     categoriaId: number | null, 
     estado: string | null,
     propietarioId: number | null,
   ): Observable<Page<Producto>> { // 👈 Devuelve un Page
     
     let params = new HttpParams();
+    if (titulo && titulo.trim() !== '') {
+      params = params.append('titulo', titulo);
+    }
     if (categoriaId) {
       params = params.append('categoriaId', categoriaId.toString());
     }

@@ -1,0 +1,67 @@
+<div class="detail-container" *ngIf="!loading && producto; else loader">
+  
+  <button class="btn-back" (click)="redirigirAHome()">
+    <i class="bi bi-arrow-left"></i> Volver al catálogo
+  </button>
+
+  <div class="product-content">
+    
+    <div class="gallery-section">
+      <div class="main-image-container">
+        <img [src]="imagenSeleccionada || 'assets/placeholder.jpg'" 
+             alt="{{ producto.titulo }}" 
+             class="main-image">
+      </div>
+
+      <div class="thumbnails" *ngIf="producto.imagenes && producto.imagenes.length > 1">
+        <div *ngFor="let img of producto.imagenes" 
+             class="thumb-item" 
+             [class.active]="img.secureUrl === imagenSeleccionada"
+             (click)="seleccionarImagen(img)">
+          <img [src]="img.secureUrl" alt="thumbnail">
+        </div>
+      </div>
+    </div>
+
+    <div class="info-section">
+      
+      <span class="category-badge">{{ producto.categoria.nombre }}</span>
+      
+      <h1 class="product-title">{{ producto.titulo }}</h1>
+      
+      <p class="product-price">$ {{ producto.precio | number }}</p>
+      
+      <div class="product-meta">
+        <span class="state-label" [class]="producto.estado.toLowerCase()">
+          {{ producto.estado }}
+        </span>
+        <span class="date-label">
+          Publicado: {{ producto.fechaCreacion | date:'mediumDate' }}
+        </span>
+      </div>
+
+      <div class="description-box">
+        <h3>Descripción</h3>
+        <p>{{ producto.descripcion }}</p>
+      </div>
+
+      <div class="actions">
+        <button 
+          class="btn-buy" 
+          (click)="agregarAlCarrito()"
+          [disabled]="producto.estado.toLowerCase() === 'vendido'">
+          {{ producto.estado.toLowerCase() === 'vendido' ? 'Producto Vendido' : 'Añadir al Carrito' }}
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<ng-template #loader>
+  <div class="loader-container">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Cargando...</span>
+    </div>
+  </div>
+</ng-template>

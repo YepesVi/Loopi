@@ -23,6 +23,7 @@ export class DashboardComponent implements OnInit{
   @ViewChild('modalProducto') modalProducto!: ElementRef;
 
   productos: Producto[] = [];
+  tituloFiltro: string = '';
   estadoFiltro: string = '';
   categoriaFiltro: number | null = null;
   propietarioId: number | null = null;
@@ -213,6 +214,7 @@ export class DashboardComponent implements OnInit{
     console.log(`Filtrando con: CategoriaID=${this.categoriaFiltro}, Estado=${this.estadoFiltro}`);
    this.propietarioId = Number(localStorage.getItem('userId')) || null; 
    this.productosService.buscarProductos(
+      this.tituloFiltro || null,
       this.categoriaFiltro, 
       this.estadoFiltro,
       this.propietarioId

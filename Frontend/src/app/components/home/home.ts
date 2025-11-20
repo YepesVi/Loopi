@@ -6,11 +6,12 @@ import { Producto } from '../../models/producto.model';
 import { AuthService } from '../../services/auth.service';
 import { CarritoService } from '../../services/carrito/carrito-service';
 import Swal from 'sweetalert2';
+import { ProductCard } from '../product-card/product-card';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, DecimalPipe],
+  imports: [CommonModule, ProductCard],
   templateUrl: './home.html',
   styleUrls: ['./home.css']
 })
@@ -101,22 +102,6 @@ export class Home implements OnInit {
     this.router.navigateByUrl('/login-register');
   }
 
-  comprarProducto(id: number, event: Event) {
-    event.stopPropagation();
-
-    if (typeof window === 'undefined') return;
-  
-    const usuarioCedula = localStorage.getItem('cedula');
-  
-    if (!usuarioCedula) {
-      localStorage.setItem('productoPendiente', id.toString());
-  
-      this.mostrarAdvertencia = true;
-      return;
-    }
-
-    this.agregarProductoAlCarrito(id);
-  }
 
   agregarProductoAlCarrito(productoId: number) {
 

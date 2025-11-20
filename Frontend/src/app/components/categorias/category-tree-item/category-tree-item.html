@@ -4,7 +4,8 @@
       <div class="category-item" [ngStyle]="getIndentationStyle()">
         {{ '  '.repeat(level) }} 
 
-        <span *ngIf="activeEditId !== category.id">
+        <span *ngIf="activeEditId !== category.id"
+            (click)="filtrarPorCategoria(category.id)">
               {{ category.nombre }}
         </span>
         <input 

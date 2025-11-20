@@ -4,6 +4,8 @@ import { Categoria, CrudCategoria } from '../../../models/category.model';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CategoryService } from '../../../services/categorias/category.service';
+import { Router } from '@angular/router';
+import { PopupService } from '../../../services/categorias/popup';
 
 @Component({
   selector: 'app-category-tree-item', // <--- Se llamará a sí mismo
@@ -33,8 +35,16 @@ export class CategoryTreeItem {
   newRootCategoryName: string = '';
   expandedCategories: Set<number> = new Set<number>();
 
-  constructor(private categoryService: CategoryService) {}
+  constructor(private categoryService: CategoryService, private router: Router, private popupService: PopupService) {}
   
+  filtrarPorCategoria(id: number): void {
+    this.router.navigate(['/productos'], { 
+      queryParams: { categoriaId: id }
+      // queryParamsHandling: 'merge' // Si quieres mantener el texto de búsqueda
+    });
+    this.popupService.closeCategoryPopup(); // Cerrar el popup al seleccionar
+  }
+
   // Calcula el margen izquierdo basado en la profundidad (por ejemplo, 20px por nivel)
   getIndentationStyle() {
     return { 

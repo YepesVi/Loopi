@@ -1,0 +1,61 @@
+<div 
+  class="card product-card"
+  (click)="irAlDetalle()" 
+>
+  <div *ngIf="producto.imagenes && producto.imagenes.length > 0" class="producto-carrusel">
+    <button
+      class="scroll-btn left"
+      (click)="scrollLeft($event)"
+    >
+      &#10094;
+    </button>
+
+    <div class="preview-scroll" #scrollContainer>
+      <img
+        *ngFor="let img of producto.imagenes"
+        [src]="img.secureUrl" 
+        alt="imagen producto"
+      />
+    </div>
+
+    <button
+      class="scroll-btn right"
+      (click)="scrollRight($event)"
+    >
+      &#10095;
+    </button>
+  </div>
+
+  <img
+    *ngIf="!producto.imagenes || producto.imagenes.length === 0"
+    src="assets/placeholder.jpg" 
+    class="card-img-top placeholder-img"
+    alt="{{ producto.titulo }}"
+  />
+
+  <div class="card-body">
+    <div class="card-info-top">
+      <h5 class="card-title" title="{{ producto.titulo }}">{{ producto.titulo }}</h5>
+      <p class="card-text text-muted">{{ producto.descripcion }}</p>
+    </div>
+    
+    <div class="card-info-bottom">
+      <p class="price-tag">$ {{ producto.precio | number }}</p>
+
+      <button 
+        class="btn-comprar"
+        *ngIf="producto.id !== undefined"
+        (click)="comprarProducto($event)"
+        [disabled]="producto.estado.toLowerCase() === 'vendido'"
+        [class.btn-vendido]="producto.estado.toLowerCase() === 'vendido'">
+        
+        <span *ngIf="producto.estado.toLowerCase() !== 'vendido'">
+          <i class="fas fa-cart-plus"></i> Añadir
+        </span>
+        <span *ngIf="producto.estado.toLowerCase() === 'vendido'">
+          Vendido
+        </span>
+      </button>
+    </div>
+  </div>
+</div>

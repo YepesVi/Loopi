@@ -57,48 +57,10 @@
             <div class="col-md-3" *ngFor="let producto of chunk">
               <div 
                 *ngIf="producto.estado?.toLowerCase() === 'publicado'" 
-                class="card product-card"
-                (click)="seleccionarProducto(producto)"
+                class="h-100"
               >
-                <!-- Carrusel de imágenes: solo una imagen activa -->
-                <div *ngIf="producto.imagenes && producto.imagenes.length > 0" class="producto-carrusel">
-                  <button
-                    class="scroll-btn left"
-                    (click)="scrollLeft('productoScroll' + producto.id); $event.stopPropagation();"
-                  >
-                    &#10094;
-                  </button>
-
-                  <div class="preview-scroll" [id]="'productoScroll' + producto.id">
-                    <img
-                      *ngFor="let img of producto.imagenes"
-                      [src]="img.secureUrl" 
-                      alt="imagen producto"
-                    />
-                  </div>
-
-                  <button
-                    class="scroll-btn right"
-                    (click)="scrollRight('productoScroll' + producto.id); $event.stopPropagation();"
-                  >
-                    &#10095;
-                  </button>
-                </div>
-
-                <!-- Información del producto -->
-                <div class="card-body">
-                  <h5 class="card-title">{{ producto.titulo }}</h5>
-                  <p class="card-text text-muted">{{ producto.descripcion }}</p>
-                  <p class="fw-bold">$ {{ producto.precio | number }}</p>
-
-                  <button 
-                    class="btn-comprar"
-                    *ngIf="producto.id !== undefined"
-                    (click)="comprarProducto(producto.id, $event)"
-                    [disabled]="producto.estado.toLowerCase() === 'vendido'">
-                    Añadir al Carrito
-                  </button>
-                </div>
+                <app-product-card [producto]="producto"></app-product-card>
+                
               </div>
             </div>
           </div>

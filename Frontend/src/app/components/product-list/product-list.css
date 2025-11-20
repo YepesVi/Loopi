@@ -1,0 +1,12 @@
+.container {
+  min-height: 80vh;
+}
+
+.badge {
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.btn-close {
+  font-size: 0.7rem;
+}

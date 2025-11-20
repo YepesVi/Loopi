@@ -20,6 +20,10 @@ export class CategoryService {
     return this.http.get<Categoria[]>(`${this.baseUrl}/roots`);
   }
 
+  getCategoriaPorId(id: number): Observable<Categoria> {
+    return this.http.get<Categoria>(`${this.baseUrl}/${id}`);
+  }
+
   createCategory(category: CrudCategoria): Observable<Categoria> {
     return this.http.post<Categoria>(this.baseUrl, category);
   }

@@ -2,6 +2,8 @@ import { Routes } from '@angular/router';
 import { authGuard } from './guards/auth.guards';
 import { Home } from './components/home/home';
 import { Carrito } from './components/carrito/carrito';
+import { ProductDetail } from './components/product-detail/product-detail';
+import { ProductList } from './components/product-list/product-list';
 
 
 export const routes: Routes = [
@@ -50,6 +52,10 @@ export const routes: Routes = [
   },
   { path: 'carrito',
     component: Carrito
-  }
+  },
+
+  { path: 'producto/:id', component: ProductDetail },
+
+  { path: 'productos', component: ProductList },
 
 ];

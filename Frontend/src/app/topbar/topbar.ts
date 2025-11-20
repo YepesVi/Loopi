@@ -56,7 +56,17 @@ export class Topbar implements OnInit {
 
   searchProduct(): void {
     if (this.searchQuery.trim()) {
-      console.log('Buscando:', this.searchQuery);
+      // 🌟 NAVEGAR CON QUERY PARAMS
+      this.router.navigate(['/productos'], { 
+        queryParams: { q: this.searchQuery.trim() },
+        queryParamsHandling: 'merge' // Opcional: mantener categoría si ya estabas filtrando
+      });
+    } else {
+        // Si limpia la barra, quizás quieras limpiar el filtro
+        this.router.navigate(['/productos'], { 
+            queryParams: { q: null },
+            queryParamsHandling: 'merge'
+        });
     }
   }
 
