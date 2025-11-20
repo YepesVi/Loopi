@@ -50,7 +50,7 @@
         [class.btn-vendido]="producto.estado.toLowerCase() === 'vendido'">
         
         <span *ngIf="producto.estado.toLowerCase() !== 'vendido'">
-          <i class="fas fa-cart-plus"></i> Añadir
+          <i class="bi bi-cart-plus"></i> Añadir
         </span>
         <span *ngIf="producto.estado.toLowerCase() === 'vendido'">
           Vendido

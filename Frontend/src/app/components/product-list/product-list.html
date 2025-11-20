@@ -1,24 +1,29 @@
 <div class="container mt-4">
   
   <div class="filtros-activos mb-4" *ngIf="filtroTexto || filtroCategoriaId">
-    <h5 class="mb-3">Resultados de búsqueda:</h5>
+    <h5 class="titulo-resultados mb-3">Resultados de búsqueda:</h5>
     
-    <div class="d-flex gap-2 flex-wrap">
-      <span class="badge bg-primary d-flex align-items-center p-2" *ngIf="filtroTexto">
-        "{{ filtroTexto }}"
+    <div class="d-flex gap-2 flex-wrap align-items-center">
+      
+      <span class="badge badge-filtro d-flex align-items-center gap-2" *ngIf="filtroTexto">
+        <i class="bi bi-search"></i> "{{ filtroTexto }}"
         <button type="button" class="btn-close btn-close-white ms-2" aria-label="Close" (click)="limpiarBusqueda()"></button>
       </span>
 
-      <span class="badge bg-secondary d-flex align-items-center p-2" *ngIf="filtroCategoriaId">
-        Categoría: {{ nombreCategoria }} <button type="button" class="btn-close btn-close-white ms-2" aria-label="Close" (click)="limpiarCategoria()"></button>
+      <span class="badge badge-categoria d-flex align-items-center gap-2" *ngIf="filtroCategoriaId">
+        <i class="bi bi-tags-fill"></i> 
+        Categoría: {{ nombreCategoria || filtroCategoriaId }} 
+        <button type="button" class="btn-close btn-close-white ms-2" aria-label="Close" (click)="limpiarCategoria()"></button>
       </span>
       
-      <button class="btn btn-link text-decoration-none btn-sm" (click)="limpiarTodo()">Limpiar todo</button>
+      <button class="btn btn-limpiar btn-sm" (click)="limpiarTodo()">
+        <i class="bi bi-trash3-fill"></i> Limpiar todo
+      </button>
     </div>
   </div>
 
   <div *ngIf="loading" class="text-center py-5">
-    <div class="spinner-border text-primary" role="status">
+    <div class="spinner-border text-purple" role="status">
       <span class="visually-hidden">Cargando...</span>
     </div>
   </div>

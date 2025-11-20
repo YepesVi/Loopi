@@ -1,12 +1,71 @@
+/* src/app/components/product-list/product-list.component.css */
+
 .container {
   min-height: 80vh;
+  padding-top: 20px;
 }
 
+.titulo-resultados {
+  color: #38355d; /* Tu tono oscuro */
+  font-weight: 600;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* === ESTILOS DE LOS BADGES (Filtros) === */
 .badge {
-  font-size: 0.9rem;
+  font-size: 0.95rem;
   font-weight: 500;
+  padding: 8px 16px;
+  border-radius: 50px; /* Bordes completamente redondeados */
+  box-shadow: 0 2px 5px rgba(109, 93, 154, 0.2);
+  transition: all 0.3s ease;
+  border: 1px solid transparent;
 }
 
-.btn-close {
+/* Filtro de Texto (Morado Principal) */
+.badge-filtro {
+  background-color: #6d5d9a; /* Tu violeta suave */
+  color: white;
+}
+
+/* Filtro de Categoría (Morado Oscuro) */
+.badge-categoria {
+  background-color: #38355d; /* Tu tono oscuro */
+  color: #ffc3ff; /* Tu tono rosa claro para texto */
+  border: 1px solid #6d5d9a;
+}
+
+/* Ajuste del botón de cerrar dentro del badge */
+.badge .btn-close {
   font-size: 0.7rem;
+  opacity: 0.8;
+}
+.badge .btn-close:hover {
+  opacity: 1;
+}
+
+/* === BOTÓN LIMPIAR TODO === */
+.btn-limpiar {
+  color: #b48ce4; /* Tu lila claro */
+  font-weight: 600;
+  text-decoration: none;
+  padding: 6px 12px;
+  border-radius: 20px;
+  transition: all 0.2s;
+}
+
+.btn-limpiar:hover {
+  color: #6d5d9a;
+  background-color: rgba(180, 140, 228, 0.1); /* Fondo sutil al pasar el mouse */
+}
+
+/* === LOADER PERSONALIZADO === */
+.spinner-border.text-purple {
+  color: #6d5d9a;
+}
+
+/* Icono de búsqueda vacío */
+.display-1 {
+    color: #b48ce4 !important;
+    opacity: 0.5;
 }

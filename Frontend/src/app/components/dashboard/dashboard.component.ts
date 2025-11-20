@@ -1,14 +1,15 @@
+// src/app/components/dashboard/dashboard.component.ts
+
 import { Component, ViewChild, ElementRef, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { RouterModule, Router } from '@angular/router';
 import { ProductosService } from '../../services/producto.service';
-import { Producto } from '../../models/producto.model';
 import { CategoryService } from '../../services/categorias/category.service';
+import { Producto } from '../../models/producto.model';
 import { Categoria } from '../../models/category.model';
 import { Page } from '../../models/page.model';
-
-import { RouterModule, Router } from '@angular/router';
-import { loadavg } from 'node:os';
+import Swal from 'sweetalert2'; // 👈 IMPORTAR SWEETALERT2
 
 declare var bootstrap: any;
 
@@ -19,7 +20,7 @@ declare var bootstrap: any;
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css']
 })
-export class DashboardComponent implements OnInit{
+export class DashboardComponent implements OnInit {
   @ViewChild('modalProducto') modalProducto!: ElementRef;
 
   productos: Producto[] = [];
@@ -44,22 +45,21 @@ export class DashboardComponent implements OnInit{
   } = this.getResetProducto();
 
   editando: boolean = false;
+
   constructor(
     private productosService: ProductosService, 
     private categoryService: CategoryService, 
     private router: Router
-    ) {
-  }
+  ) {}
 
   ngOnInit(): void {
-    this.aplicarFiltros(); // Carga los productos al iniciar
-    this.cargarCategorias(); // Carga las categorías al iniciar
+    this.aplicarFiltros();
+    this.cargarCategorias();
     this.propietarioId = Number(localStorage.getItem('userId')) || null;
   }
 
   cargarCategorias() {
     this.categoryService.getCategoriesTree().subscribe(data => {
-      // Usamos el helper para aplanar el árbol (ej. "— Subcategoría")
       this.categorias = this.aplanarCategorias(data);
     });
   }
@@ -67,7 +67,6 @@ export class DashboardComponent implements OnInit{
   private aplanarCategorias(categorias: Categoria[], nivel = 0): Categoria[] {
     let listaPlana: Categoria[] = [];
     for (const cat of categorias) {
-      // Creamos una copia para no mutar el nombre original en otros componentes
       const catCopia = { ...cat }; 
       catCopia.nombre = '-'.repeat(nivel) + ' ' + cat.nombre;
       listaPlana.push(catCopia);
@@ -88,6 +87,16 @@ export class DashboardComponent implements OnInit{
       (file) => validFormats.includes(file.type) && file.size <= maxSize
     );
 
+    if (imagenesValidas.length !== files.length) {
+        // 🌟 ALERTA DE IMÁGENES INVÁLIDAS
+        Swal.fire({
+            icon: 'warning',
+            title: 'Archivos ignorados',
+            text: 'Algunos archivos no eran imágenes válidas o excedían 2MB.',
+            confirmButtonColor: '#6d5d9a'
+        });
+    }
+
     this.imagenesInvalidas = imagenesValidas.length !== files.length;
     this.imagenesSeleccionadas = imagenesValidas;
     this.imagenesPreviewUrl = [];
@@ -102,17 +111,32 @@ export class DashboardComponent implements OnInit{
   crearProducto() {
     if (!this.editando && this.imagenesSeleccionadas.length === 0) {
       this.imagenesInvalidas = true;
+
+      Swal.fire({
+        icon: 'error',
+        title: 'Faltan imágenes',
+        text: 'Debes seleccionar al menos una imagen para el producto.',
+        confirmButtonColor: '#d33'
+      });
       return;
     }
 
+    
+    Swal.fire({
+        title: this.editando ? 'Actualizando...' : 'Creando...',
+        text: 'Por favor espera',
+        allowOutsideClick: false,
+        didOpen: () => {
+            Swal.showLoading();
+        }
+    });
+
     const formData = new FormData();
-    // Añadir campos de texto
     formData.append('titulo', this.nuevoProducto.titulo);
     formData.append('descripcion', this.nuevoProducto.descripcion);
     formData.append('precio', String(this.nuevoProducto.precio));
     formData.append('estado', this.nuevoProducto.estado);
     formData.append('propietarioId', localStorage.getItem('userId') || '0');
-    
     
     if (this.nuevoProducto.categoriaId) {
       formData.append('categoriaId', String(this.nuevoProducto.categoriaId));
@@ -122,40 +146,48 @@ export class DashboardComponent implements OnInit{
       this.imagenesSeleccionadas.forEach(img => formData.append('file', img));
     }
 
-    if (this.editando && this.nuevoProducto.id) {
-      this.productosService.actualizarProducto(this.nuevoProducto.id, formData).subscribe({
-        next: () => {
-          alert('Producto actualizado correctamente');
-          this.resetFormulario();
-          this.aplicarFiltros();
-          bootstrap.Modal.getInstance(this.modalProducto.nativeElement)?.hide();
-        },
-        error: (e) => console.error('Error al actualizar', e)
-      });
-    } else {
-      this.productosService.crearProductoConImagen(formData).subscribe({
-        next: (p) => {
-          alert('Producto agregado correctamente');
-          this.productos.push(p);
-          this.resetFormulario();
-          bootstrap.Modal.getInstance(this.modalProducto.nativeElement)?.hide();
-        },
-        error: (e) => console.error('Error al crear', e)
-      });
-    }
+    const request = this.editando && this.nuevoProducto.id
+      ? this.productosService.actualizarProducto(this.nuevoProducto.id, formData)
+      : this.productosService.crearProductoConImagen(formData);
+
+    request.subscribe({
+      next: (p) => {
+        this.resetFormulario();
+        this.aplicarFiltros();
+        bootstrap.Modal.getInstance(this.modalProducto.nativeElement)?.hide();
+        
+        // 🌟 ALERTA DE ÉXITO
+        Swal.fire({
+            icon: 'success',
+            title: this.editando ? '¡Actualizado!' : '¡Creado!',
+            text: `El producto ha sido ${this.editando ? 'actualizado' : 'creado'} exitosamente.`,
+            timer: 2000,
+            showConfirmButton: false
+        });
+      },
+      error: (e) => {
+        console.error('Error:', e);
+        // 🌟 ALERTA DE ERROR
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Ocurrió un error al procesar la solicitud.',
+            confirmButtonColor: '#d33'
+        });
+      }
+    });
   }
 
   editarProducto(producto: Producto): void {
     this.nuevoProducto = { 
       ...producto,
-      categoriaId: producto.categoria.id // 👈 CAMBIO
+      categoriaId: producto.categoria.id 
     };
     
     this.editando = true;
     this.imagenesSeleccionadas = [];
     this.imagenesPreviewUrl = [];
     
-    // Mostrar las imágenes existentes (Mejora de UX)
     if (producto.imagenes && producto.imagenes.length > 0) {
       this.imagenesPreviewUrl = producto.imagenes.map(imagen => imagen.secureUrl);
     }
@@ -169,15 +201,48 @@ export class DashboardComponent implements OnInit{
   }
 
   eliminarProducto(id: number): void {
-    if (confirm('¿Seguro que deseas eliminar este producto?')) {
-      this.productosService.eliminarProducto(id).subscribe({
-        next: () => {
-          alert('Producto eliminado');
-          this.aplicarFiltros();
-        },
-        error: (e) => console.error('Error al eliminar', e)
-      });
-    }
+    // 🌟 ALERTA DE CONFIRMACIÓN (SweetAlert2)
+    Swal.fire({
+      title: '¿Estás seguro?',
+      text: "No podrás revertir esta acción. El producto será eliminado permanentemente.",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#6d5d9a',
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar',
+      background: '#fff',
+      color: '#333'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // Mostrar loading mientras elimina
+        Swal.fire({
+            title: 'Eliminando...',
+            didOpen: () => Swal.showLoading()
+        });
+
+        this.productosService.eliminarProducto(id).subscribe({
+          next: () => {
+            this.aplicarFiltros();
+            // 🌟 ALERTA DE ÉXITO
+            Swal.fire(
+              '¡Eliminado!',
+              'El producto ha sido eliminado.',
+              'success'
+            );
+          },
+          error: (e) => {
+            console.error('Error al eliminar', e);
+            // 🌟 ALERTA DE ERROR
+            Swal.fire(
+              'Error',
+              'No se pudo eliminar el producto.',
+              'error'
+            );
+          }
+        });
+      }
+    });
   }
 
   resetFormulario(): void {
@@ -190,19 +255,32 @@ export class DashboardComponent implements OnInit{
 
   getResetProducto() {
     return {
-      id: undefined, // Usar undefined en lugar de 0 para 'id'
+      id: undefined,
       titulo: '',
       descripcion: '',
-      categoriaId: null, // 👈 CAMBIO
+      categoriaId: null,
       precio: 0,
-      estado: 'Borrador', // Valor por defecto
+      estado: 'Borrador',
       propietarioId: Number(localStorage.getItem('userId')) || 0
     };
   }
 
   logout() {
-    localStorage.removeItem('token');
-    this.router.navigate(['/login-register']);
+    // 🌟 ALERTA DE CONFIRMACIÓN DE LOGOUT (Opcional)
+    Swal.fire({
+        title: 'Cerrar sesión',
+        text: '¿Deseas salir de tu cuenta?',
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#6d5d9a',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Sí, salir'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            localStorage.removeItem('token');
+            this.router.navigate(['/login-register']);
+        }
+    });
   }
 
   filtrarPorEstado() {
@@ -210,21 +288,29 @@ export class DashboardComponent implements OnInit{
   }
 
   aplicarFiltros() {
-    // Llamar al servicio con los filtros seleccionados
-    console.log(`Filtrando con: CategoriaID=${this.categoriaFiltro}, Estado=${this.estadoFiltro}`);
-   this.propietarioId = Number(localStorage.getItem('userId')) || null; 
-   this.productosService.buscarProductos(
+    this.propietarioId = Number(localStorage.getItem('userId')) || null; 
+    this.productosService.buscarProductos(
       this.tituloFiltro || null,
       this.categoriaFiltro, 
       this.estadoFiltro,
       this.propietarioId
     ).subscribe({
       next: (page: Page<Producto>) => { 
-        console.log('Respuesta del Backend:', page); // <-- Revisa la consola del navegador
         this.productos = page.content;
       },
       error: (err) => {
-        console.error('Error al llamar a buscarProductos:', err); // <-- Revisa si hay error
+        console.error('Error al llamar a buscarProductos:', err);
+        // Opcional: Mostrar toast de error discreto
+        const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000
+        });
+        Toast.fire({
+            icon: 'error',
+            title: 'Error al cargar productos'
+        });
       }
     });
   }
