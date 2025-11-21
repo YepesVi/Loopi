@@ -78,4 +78,31 @@ export class Carrito implements OnInit {
       this.cargarCarrito();
     });
   }
+
+  comprar() {
+
+    const carritoDTO = {
+      items: this.carrito.map((i: any) => ({
+        productoId: i.producto.id,
+        titulo: i.producto.titulo,
+        precio: i.producto.precio,
+      }))
+    };
+  
+    this.carritoService.crearPago(carritoDTO).subscribe({
+      next: (res) => {
+        console.log("Respuesta completa MP:", res);
+        if (res.initPoint) {
+          window.location.href = res.sandboxInitPoint;
+        } else {
+          alert("No se recibió la URL de pago.");
+        }
+      },
+      error: (err) => {
+        console.error(err);
+        alert("Error al generar el pago.");
+      }
+    });
+  }
+  
 }

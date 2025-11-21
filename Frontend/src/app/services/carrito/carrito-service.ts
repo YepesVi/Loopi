@@ -32,4 +32,10 @@ export class CarritoService {
     const cedula = localStorage.getItem('cedula');
     return this.http.delete(`${this.baseUrl}/vaciar/${cedula}`);
   }
+
+  crearPago(carrito: any) {
+    console.log(carrito);
+    return this.http.post<any>('http://localhost:8081/api/pago/crear', carrito);
+  }
+  
 }
