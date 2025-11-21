@@ -23,7 +23,7 @@ public interface ProductoRepository extends JpaRepository<Producto, Long> {
 
     @Query(value = "SELECT * FROM producto p WHERE " +
            
-           "(CAST(:titulo AS varchar) IS NULL OR p.titulo ILIKE :titulo) AND " +
+         "(CAST(:titulo AS varchar) IS NULL OR unaccent(p.titulo) ILIKE unaccent(:titulo)) AND " +
            "(:categoriaCount = 0 OR p.categoria_id IN (:categoriaIds)) AND " +
            "(CAST(:precioMin AS double precision) IS NULL OR p.precio >= :precioMin) AND " +
            "(CAST(:precioMax AS double precision) IS NULL OR p.precio <= :precioMax) AND " +
@@ -32,7 +32,7 @@ public interface ProductoRepository extends JpaRepository<Producto, Long> {
            
            // --- COUNT QUERY (Debe coincidir exactamente) ---
            countQuery = "SELECT count(p.id) FROM producto p WHERE " +
-           "(CAST(:titulo AS varchar) IS NULL OR p.titulo ILIKE :titulo) AND " +
+           "(CAST(:titulo AS varchar) IS NULL OR unaccent(p.titulo) ILIKE unaccent(:titulo)) AND " +
            "(:categoriaCount = 0 OR p.categoria_id IN (:categoriaIds)) AND " +
            "(CAST(:precioMin AS double precision) IS NULL OR p.precio >= :precioMin) AND " +
            "(CAST(:precioMax AS double precision) IS NULL OR p.precio <= :precioMax) AND " +
