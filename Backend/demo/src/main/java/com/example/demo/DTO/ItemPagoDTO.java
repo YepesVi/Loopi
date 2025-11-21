@@ -1,11 +1,12 @@
 package com.example.demo.DTO;
 
+import java.math.BigDecimal;
+
 import lombok.Data;
 
 @Data
 public class ItemPagoDTO {
     private Long productoId;
     private String titulo;
-    private Double precio;
-    private Integer cantidad;
+    private BigDecimal precio;
 }
