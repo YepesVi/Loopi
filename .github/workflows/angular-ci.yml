@@ -14,9 +14,6 @@ jobs:
     - name: Checkout código
       uses: actions/checkout@v3
 
-    - name: Entrar a carpeta frontend
-      run: cd frontend
-
     - name: Instalar Node.js
       uses: actions/setup-node@v3
       with:
