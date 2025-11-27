@@ -10,13 +10,12 @@ jobs:
   test:
     runs-on: ubuntu-latest
 
-    defaults:
-      run:
-        working-directory: frontend   # 👈 Entramos a la carpeta frontend
-
     steps:
     - name: Checkout código
       uses: actions/checkout@v3
+
+    - name: Entrar a carpeta frontend
+      run: cd frontend
 
     - name: Instalar Node.js
       uses: actions/setup-node@v3
@@ -25,6 +24,8 @@ jobs:
 
     - name: Instalar dependencias
       run: npm install
+      working-directory: frontend
 
     - name: Ejecutar pruebas con ng test
       run: npx ng test --watch=false --browsers=ChromeHeadless
+      working-directory: frontend
