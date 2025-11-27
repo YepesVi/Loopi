@@ -1,0 +1,16 @@
+name: Debug Repo
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  debug:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout código
+      uses: actions/checkout@v3
+
+    - name: Mostrar archivos y carpetas
+      run: ls -R .

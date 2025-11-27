@@ -1,9 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { LoginRegisterComponent } from './login-register.component';
-import { AuthService } from '../services/auth.service';
-import { UsuarioService } from '../services/usuario.service';
+import { AuthService } from '../../services/auth.service';
+import { UsuarioService } from '../../services/usuario.service';
+import { CarritoService } from '../../services/carrito/carrito-service';
 import { Router } from '@angular/router';
-import { FormsModule } from '@angular/forms';
 import { of, throwError } from 'rxjs';
 
 describe('LoginRegisterComponent', () => {
@@ -11,18 +11,21 @@ describe('LoginRegisterComponent', () => {
   let fixture: ComponentFixture<LoginRegisterComponent>;
   let mockAuth: jasmine.SpyObj<AuthService>;
   let mockUsuario: jasmine.SpyObj<UsuarioService>;
+  let mockCarrito: jasmine.SpyObj<CarritoService>;
   let mockRouter: jasmine.SpyObj<Router>;
 
   beforeEach(async () => {
     mockAuth = jasmine.createSpyObj('AuthService', ['login', 'register', 'recoverPassword']);
     mockUsuario = jasmine.createSpyObj('UsuarioService', ['actualizarNombre', 'actualizarFoto']);
+    mockCarrito = jasmine.createSpyObj('CarritoService', ['crearCarrito']);
     mockRouter = jasmine.createSpyObj('Router', ['navigate']);
 
     await TestBed.configureTestingModule({
-      imports: [LoginRegisterComponent, FormsModule], // ✅ standalone component goes in imports
+      imports: [LoginRegisterComponent],
       providers: [
         { provide: AuthService, useValue: mockAuth },
         { provide: UsuarioService, useValue: mockUsuario },
+        { provide: CarritoService, useValue: mockCarrito },
         { provide: Router, useValue: mockRouter }
       ]
     }).compileComponents();
@@ -32,6 +35,11 @@ describe('LoginRegisterComponent', () => {
     fixture.detectChanges();
   });
 
+  it('debería crear el componente', () => {
+    expect(component).toBeTruthy();
+  });
+
+  // LOGIN
   it('debería mostrar error si login se envía vacío', () => {
     component.user.correo = '';
     component.user.password = '';
@@ -39,15 +47,15 @@ describe('LoginRegisterComponent', () => {
     expect(component.message).toContain('❌');
   });
 
-  it('debería llamar login() y navegar al home si es exitoso', () => {
+  it('debería hacer login exitoso y navegar al home', () => {
     const mockResponse = {
       token: 'abc123',
       id: 1,
       nombre: 'Derinson',
       apellido: 'Dev',
       correo: 'derinson@mail.com',
-      telefono: '123456789',
-      cedula: '123456',
+      telefono: '123456',
+      cedula: '123',
       direccion: 'Calle 123',
       password: 'secure',
       fotoUrl: 'avatar.png'
@@ -59,7 +67,7 @@ describe('LoginRegisterComponent', () => {
 
     component.login();
 
-    expect(mockAuth.login).toHaveBeenCalled();
+    expect(mockAuth.login).toHaveBeenCalledWith({ correo: mockResponse.correo, password: mockResponse.password });
     expect(mockUsuario.actualizarNombre).toHaveBeenCalledWith('Derinson');
     expect(mockUsuario.actualizarFoto).toHaveBeenCalledWith('avatar.png');
     expect(mockRouter.navigate).toHaveBeenCalledWith(['/home']);
@@ -74,6 +82,7 @@ describe('LoginRegisterComponent', () => {
     expect(component.message).toContain('❌ Usuario o contraseña incorrectos');
   });
 
+  // REGISTER
   it('debería validar campos antes de registrar', () => {
     component.user.nombre = '';
     component.user.correo = 'invalid';
@@ -81,37 +90,40 @@ describe('LoginRegisterComponent', () => {
     component.register();
     expect(component.message).toContain('❌');
   });
-/*
-  it('debería llamar register() si los datos son válidos', () => {
-  component.user = {
-    nombre: 'Derinson',
-    apellido: 'Dev',
-    cedula: '123',
-    telefono: '456',
-    correo: 'derinson@mail.com',
-    direccion: 'Calle 123',
-    password: 'secure',
-    foto: null
-  };
 
-  mockAuth.register.and.returnValue(of({}));
+  it('debería registrar exitosamente y crear carrito', () => {
+    component.user = {
+      nombre: 'Derinson',
+      apellido: 'Dev',
+      cedula: '123',
+      telefono: '456',
+      correo: 'derinson@mail.com',
+      direccion: 'Calle 123',
+      password: 'secure',
+      foto: null
+    };
 
-  component.register();
+    mockAuth.register.and.returnValue(of({}));
+    mockCarrito.crearCarrito.and.returnValue(of({}));
 
-  expect(mockAuth.register).toHaveBeenCalled();
-  expect(component.message).toContain('✅ Registro exitoso'); // ✅ símbolo correcto
-  expect(component.mode).toBe('login');
-});
-*/
+    component.register();
+
+    expect(mockAuth.register).toHaveBeenCalled();
+    expect(mockCarrito.crearCarrito).toHaveBeenCalledWith('123');
+    expect(component.message).toContain('✅ Registro exitoso');
+    expect(component.mode).toBe('login');
+  });
 
   it('debería manejar error en registro', () => {
     mockAuth.register.and.returnValue(throwError(() => new Error('Error')));
+    component.user.nombre = 'Derinson';
     component.user.correo = 'derinson@mail.com';
     component.user.password = 'secure';
     component.register();
-    expect(component.message).toContain('❌');
+    expect(component.message).toContain('❌ Error al registrar');
   });
 
+  // RECOVER PASSWORD
   it('debería validar correo antes de recuperar contraseña', () => {
     component.user.correo = '';
     component.recoverPassword();
