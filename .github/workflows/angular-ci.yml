@@ -1,16 +1,30 @@
-name: Debug Repo
+name: Angular CI
 
 on:
   push:
     branches: [ main ]
+  pull_request:
+    branches: [ main ]
 
 jobs:
-  debug:
+  test:
     runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: Frontend   # 👈 Correcto: tu carpeta inicia con F mayúscula
 
     steps:
     - name: Checkout código
       uses: actions/checkout@v3
 
-    - name: Mostrar archivos y carpetas
-      run: ls -R .
+    - name: Instalar Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+
+    - name: Instalar dependencias
+      run: npm install
+
+    - name: Ejecutar pruebas con ng test
+      run: npx ng test --watch=false --browsers=ChromeHeadless
