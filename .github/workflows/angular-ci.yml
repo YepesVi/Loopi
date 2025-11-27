@@ -12,7 +12,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: Loopi/frontend   # 👈 Entramos a la carpeta frontend
+        working-directory: frontend   # 👈 Entramos a la carpeta frontend
 
     steps:
     - name: Checkout código
