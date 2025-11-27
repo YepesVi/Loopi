@@ -12,7 +12,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: Frontend   # 👈 Correcto: tu carpeta inicia con F mayúscula
+        working-directory: Frontend
 
     steps:
     - name: Checkout código
@@ -21,7 +21,7 @@ jobs:
     - name: Instalar Node.js
       uses: actions/setup-node@v3
       with:
-        node-version: '18'
+        node-version: '22' 
 
     - name: Instalar dependencias
       run: npm install
