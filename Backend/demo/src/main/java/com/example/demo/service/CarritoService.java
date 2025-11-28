@@ -68,7 +68,7 @@ public class CarritoService {
         Producto producto = productoRepository.findById(productoId)
             .orElseThrow(() -> new IllegalArgumentException("Producto no existe"));
 
-        if (producto.getEstado().equalsIgnoreCase("Disponible")) {
+        if (producto.getEstado().equalsIgnoreCase("Vendido")) {
             throw new IllegalArgumentException("No hay disponibilidad de este producto.");
         }
 

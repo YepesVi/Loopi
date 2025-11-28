@@ -10,6 +10,7 @@ import com.example.demo.entity.Carrito;
 import com.example.demo.entity.CarritoItem;
 import com.example.demo.entity.Producto;
 import com.example.demo.entity.HistorialCompra;
+import com.example.demo.repository.CarritoItemRepository;
 import com.example.demo.repository.CarritoRepository;
 import com.example.demo.repository.HistorialCompraRepository;
 import com.example.demo.repository.UserRepository;
@@ -26,6 +27,9 @@ public class HistorialCompraService {
 
     @Autowired
     private HistorialCompraRepository historialCompraRepository;
+
+    @Autowired
+    private CarritoItemRepository carritoItemRepository;
 
     @Transactional
     public HistorialCompra generarHistorial(String userId) {
@@ -52,6 +56,8 @@ public class HistorialCompraService {
             producto.setEstado("VENDIDO");
 
             historial.getProductos().add(producto);
+            
+            carritoItemRepository.deleteByProducto_Id(producto.getId());
         }
 
         HistorialCompra guardado = historialCompraRepository.save(historial);
