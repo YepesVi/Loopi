@@ -79,7 +79,7 @@ export class Carrito implements OnInit {
     });
   }
 
-  comprar() {
+  comprarPasarelaDePago() {
 
     const carritoDTO = {
       items: this.carrito.map((i: any) => ({
@@ -101,6 +101,36 @@ export class Carrito implements OnInit {
       error: (err) => {
         console.error(err);
         alert("Error al generar el pago.");
+      }
+    });
+  }
+
+  comprar() {
+    this.carritoService.comprar(this.carrito).subscribe({
+      next: (resp) => {
+        Swal.fire({
+          icon: 'success',
+          title: '¡Compra exitosa!',
+          text: 'Tu compra fue procesada correctamente.',
+          confirmButtonText: 'Aceptar'
+        });
+  
+        // Opcional: limpiar carrito en el front
+        this.carrito.productos = [];
+  
+        // Opcional: recargar carrito del backend
+        this.cargarCarrito();
+      },
+  
+      error: (err) => {
+        console.error('Error al comprar', err);
+  
+        Swal.fire({
+          icon: 'error',
+          title: 'Error en la compra',
+          text: err.error?.message || 'Hubo un problema al procesar la compra.',
+          confirmButtonText: 'Aceptar'
+        });
       }
     });
   }
