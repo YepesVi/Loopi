@@ -13,6 +13,7 @@ import com.example.demo.entity.HistorialCompra;
 import com.example.demo.repository.CarritoItemRepository;
 import com.example.demo.repository.CarritoRepository;
 import com.example.demo.repository.HistorialCompraRepository;
+import com.example.demo.repository.ProductoRepository;
 import com.example.demo.repository.UserRepository;
 
 import jakarta.transaction.Transactional;
@@ -31,6 +32,9 @@ public class HistorialCompraService {
     @Autowired
     private CarritoItemRepository carritoItemRepository;
 
+    @Autowired
+    private ProductoRepository productoRepository;
+
     @Transactional
     public HistorialCompra generarHistorial(String userId) {
 
@@ -44,10 +48,14 @@ public class HistorialCompraService {
             throw new RuntimeException("El carrito está vacío");
         }
 
+        // 1️⃣ Crear historial y guardarlo vacío
         HistorialCompra historial = new HistorialCompra();
         historial.setFechaCompra(LocalDateTime.now());
         historial.setUsuario(user);
 
+        historial = historialCompraRepository.save(historial);
+
+        // 2️⃣ Actualizar productos y asignarlos al historial
         for (CarritoItem item : carrito.getItems()) {
 
             Producto producto = item.getProducto();
@@ -55,17 +63,20 @@ public class HistorialCompraService {
             producto.setHistorial(historial);
             producto.setEstado("VENDIDO");
 
+            productoRepository.save(producto); // 👈 GUARDAR PRODUCTO AQUÍ
+
             historial.getProductos().add(producto);
-            
+
             carritoItemRepository.deleteByProducto_Id(producto.getId());
         }
 
-        HistorialCompra guardado = historialCompraRepository.save(historial);
+        // 3️⃣ Guardar historial ya con productos asignados (opcional)
+        historial = historialCompraRepository.save(historial);
 
         carrito.getItems().clear();
         carritoRepository.save(carrito);
 
-        return guardado;
+        return historial;
     }
 
 }

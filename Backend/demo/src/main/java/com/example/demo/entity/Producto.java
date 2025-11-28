@@ -74,7 +74,7 @@ public class Producto {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "historial_id")
-    @JsonBackReference
+    @JsonIgnore
     private HistorialCompra historial;
 
 
