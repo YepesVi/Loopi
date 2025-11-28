@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.entity.Carrito;
+import com.example.demo.entity.HistorialCompra;
 import com.example.demo.service.CarritoService;
 
 @RestController
@@ -54,5 +55,16 @@ public class CarritoController {
     public ResponseEntity<?> vaciar(@PathVariable String userId) {
         carritoService.vaciarCarrito(userId);
         return ResponseEntity.ok(Map.of("message", "Carrito eliminado"));
+    }
+
+    @PostMapping("/comprar/{userId}")
+    public ResponseEntity<?> realizarCompra(@PathVariable String userId) {
+        try {
+            HistorialCompra historial = carritoService.realizarCompra(userId);
+            return ResponseEntity.ok(historial);
+
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 }

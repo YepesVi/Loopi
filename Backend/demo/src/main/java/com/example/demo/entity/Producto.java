@@ -72,4 +72,9 @@ public class Producto {
     @JsonIgnore
     private List<CarritoItem> carritoItems;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "historial_id")
+    private HistorialCompra historial;
+
+
 }
