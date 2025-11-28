@@ -4,10 +4,11 @@ import { Home } from './components/home/home';
 import { Carrito } from './components/carrito/carrito';
 import { ProductDetail } from './components/product-detail/product-detail';
 import { ProductList } from './components/product-list/product-list';
+import { HistorialCompra } from './components/historial-compra/historial-compra';
 
 
 export const routes: Routes = [
-  { path: '', redirectTo: 'home', pathMatch: 'full' }, // Ruta por defecto redirige a 'home'
+  { path: '', redirectTo: 'home', pathMatch: 'full' },
 
   {  
   path: 'login-register',
@@ -57,5 +58,7 @@ export const routes: Routes = [
   { path: 'producto/:id', component: ProductDetail },
 
   { path: 'productos', component: ProductList },
+
+  { path: 'historial-compras', component: HistorialCompra },
 
 ];

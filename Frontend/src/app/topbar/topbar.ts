@@ -111,4 +111,15 @@ export class Topbar implements OnInit {
 
     this.router.navigate(['/carrito']);
   }
+
+  irAHistorialCompras() {
+    const cedula = localStorage.getItem('cedula');
+
+    if (!cedula) {
+      this.router.navigate(['/login-register']);
+      return;
+    }
+
+    this.router.navigate(['/historial-compras']);
+  }
 }

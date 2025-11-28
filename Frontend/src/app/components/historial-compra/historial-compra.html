@@ -1,0 +1,51 @@
+<div class="contenedor">
+
+    <h2>Historial de Compras</h2>
+  
+    <div *ngIf="cargando" class="cargando">
+      <p>Cargando historial...</p>
+    </div>
+  
+    <div *ngIf="!cargando && historial.length === 0" class="vacio">
+      <p>No tienes compras registradas.</p>
+    </div>
+  
+    <div *ngIf="historial.length > 0">
+  
+      <div class="compra" *ngFor="let compra of historial; trackBy: trackById">
+  
+        <h3>ID de Compra #{{ compra.id }}</h3>
+        <p class="fecha">
+          Fecha: {{ compra.fechaCompra | date:'dd/MM/yyyy HH:mm' }}
+        </p>
+  
+        <div class="productos">
+  
+          <div class="producto" *ngFor="let p of compra.productos">
+            <img 
+              class="img"
+              [src]="p.imagenes?.[0]?.secureUrl" 
+              alt="img"
+            >
+            <div>
+              <h4>{{ p.titulo }}</h4>
+              <p class="precio">
+                $ {{ p.precio.toLocaleString('es-CO') }}
+              </p>
+            </div>
+          </div>
+  
+        </div>
+  
+        <div class="total">
+            Total:
+            <strong>
+                $ {{ calcularTotal(compra) }}
+            </strong>
+        </div>        
+  
+      </div>
+  
+    </div>
+  
+</div>
