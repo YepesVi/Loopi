@@ -20,7 +20,7 @@
 
         <div class="info">
           <h3>{{ item.producto.titulo }}</h3>
-          <p class="precio">$ {{ item.producto.precio | number:'1.0-0' }}</p>
+          <p class="precio">$ {{ item.producto.precio.toLocaleString('es-CO') }}</p>
         </div>
 
         <button class="eliminar" (click)="eliminar(item.id)">🗑</button>
@@ -42,7 +42,7 @@
 
     <div class="resumen-dato">
       <span>Total a pagar:</span>
-      <strong class="total-precio">$ {{ total | number:'1.0-0' }}</strong>
+      <strong class="total-precio">$ {{ total.toLocaleString('es-CO') }}</strong>
     </div>
 
     <button class="btn vaciar" (click)="vaciar()">Vaciar carrito</button>
