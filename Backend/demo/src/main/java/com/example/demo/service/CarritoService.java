@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.entity.Carrito;
 import com.example.demo.entity.CarritoItem;
+import com.example.demo.entity.HistorialCompra;
 import com.example.demo.entity.Producto;
 import com.example.demo.entity.User;
 import com.example.demo.repository.CarritoItemRepository;
@@ -29,6 +30,12 @@ public class CarritoService {
 
     @Autowired
     private ProductoRepository productoRepository;
+
+    @Autowired
+    private HistorialCompraService historialCompraService;
+
+    @Autowired
+    private EmailService emailService;
 
     @Transactional(readOnly = true)
     public Carrito getCarritoDeUsuario(String userId) {
@@ -53,7 +60,6 @@ public class CarritoService {
         return carritoRepository.save(carrito);
     }
 
-
     @Transactional
     public Carrito agregarProducto(String userId, Long productoId) {
 
@@ -62,7 +68,7 @@ public class CarritoService {
         Producto producto = productoRepository.findById(productoId)
             .orElseThrow(() -> new IllegalArgumentException("Producto no existe"));
 
-        if (producto.getEstado().equalsIgnoreCase("Disponible")) {
+        if (producto.getEstado().equalsIgnoreCase("Vendido")) {
             throw new IllegalArgumentException("No hay disponibilidad de este producto.");
         }
 
@@ -84,7 +90,6 @@ public class CarritoService {
         return carritoRepository.save(carrito);
     }
 
-
     @Transactional
     public void eliminarItem(Long itemId) {
         carritoItemRepository.deleteById(itemId);
@@ -98,26 +103,23 @@ public class CarritoService {
         carritoRepository.save(carrito);
     }
 
-    // ------------------------------------------------------
-    // 6) CHECKOUT BÁSICO (solo para futura integración)
-    // ------------------------------------------------------
-    /*@Transactional
-    public void checkout(String userId) {
-        Carrito carrito = getCarritoDeUsuario(userId);
+    @Transactional
+    public HistorialCompra realizarCompra(String userId) {
 
-        for (CarritoItem item : carrito.getItems()) {
-            if (!item.getProducto().getEstado().equalsIgnoreCase("Disponible")) {
-                throw new IllegalArgumentException("Stock insuficiente en " + item.getProducto().getTitulo());
-            }
+        User user = userRepository.findByCedula(userId)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+        Carrito carrito = carritoRepository.findByUser_Cedula(userId)
+                .orElseThrow(() -> new RuntimeException("El usuario no tiene carrito"));
+
+        if (carrito.getItems().isEmpty()) {
+            throw new RuntimeException("El carrito está vacío");
         }
 
-        for (CarritoItem item : carrito.getItems()) {
-            Producto producto = item.getProducto();
-            producto.setStock(producto.getStock() - item.getCantidad());
-            productoRepository.save(producto);
-        }
+        HistorialCompra historial = historialCompraService.generarHistorial(userId);
 
-        // Vaciar carrito
-        vaciarCarrito(userId);
-    }*/
+        emailService.sendPurchaseEmail(user.getCorreo(), historial);
+
+        return historial;
+    }
 }

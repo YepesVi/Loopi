@@ -7,36 +7,39 @@ import { AuthService } from '../../services/auth.service';
 import { CarritoService } from '../../services/carrito/carrito-service';
 import { Imagen } from '../../models/imagen.model';
 import Swal from 'sweetalert2';
-
+import { HttpClient } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-product-detail',
   standalone: true,
-  imports: [CommonModule, DecimalPipe],
+  imports: [CommonModule, DecimalPipe, FormsModule],
   templateUrl: './product-detail.html',
   styleUrl: './product-detail.css'
 })
-export class ProductDetail implements OnInit{
+export class ProductDetail implements OnInit {
 
-producto: Producto | null = null;
-  imagenSeleccionada: string = ''; // URL de la imagen principal actual
+  producto: Producto | null = null;
+  imagenSeleccionada: string = '';
   loading = true;
+
+  // Modal personalizado
+  mostrarModalReporte: boolean = false;
+  mensajeReporte: string = '';
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private productoService: ProductosService,
     private auth: AuthService,
-    private carritoService: CarritoService
+    private carritoService: CarritoService,
+    private http: HttpClient
   ) {}
 
   ngOnInit(): void {
-    // Obtener el ID de la URL
     this.route.paramMap.subscribe(params => {
       const id = Number(params.get('id'));
-      if (id) {
-        this.cargarProducto(id);
-      }
+      if (id) this.cargarProducto(id);
     });
   }
 
@@ -58,17 +61,15 @@ producto: Producto | null = null;
       error: (err) => {
         console.error('Error al cargar producto', err);
         Swal.fire('Error', 'No se pudo cargar el producto', 'error');
-        this.router.navigate(['/home']); // Volver si falla
+        this.router.navigate(['/home']);
       }
     });
   }
 
-  // 🖼️ Cambiar la imagen principal al hacer click en una miniatura
   seleccionarImagen(img: Imagen) {
     this.imagenSeleccionada = img.secureUrl;
   }
 
-  // 🛒 Lógica de Compra (Reutilizada y Adaptada)
   agregarAlCarrito() {
     if (!this.producto) return;
 
@@ -81,9 +82,8 @@ producto: Producto | null = null;
         confirmButtonText: 'Ir al Login',
         cancelButtonText: 'Cancelar',
         confirmButtonColor: '#6f42c1'
-      }).then((result) => {
+      }).then(result => {
         if (result.isConfirmed) {
-          // Guardar intención y redirigir
           if (this.producto?.id) {
             localStorage.setItem('productoPendiente', this.producto.id.toString());
           }
@@ -97,17 +97,57 @@ producto: Producto | null = null;
     if (this.producto.id) {
       this.carritoService.agregarProducto(this.producto.id).subscribe({
         next: () => {
-          Swal.fire({
-            icon: 'success',
-            title: '¡Agregado!',
-            text: 'El producto está en tu carrito',
-            confirmButtonColor: '#6a5af9',
-            timer: 2000
+          this.mostrarModalReporte = false; // 1️⃣ Cerrar modal primero
+        
+          Promise.resolve().then(() => {     // 2️⃣ Esperar a que Angular actualice el DOM
+            Swal.fire({
+              title: 'Éxito',
+              text: 'El reporte fue enviado',
+              icon: 'success'
+            });
           });
-        },
-        error: () => Swal.fire('Error', 'No se pudo agregar al carrito', 'error')
+        }
       });
     }
   }
 
+  enviarReporte() {
+    console.log("➡ Enviando reporte...");
+  
+    if (!this.producto?.id) {
+      console.log("❌ No hay ID de producto");
+      return;
+    }
+  
+    if (!this.mensajeReporte.trim()) {
+      Swal.fire('Advertencia', 'Debes escribir un mensaje', 'warning');
+      return;
+    }
+  
+    const payload = {
+      productId: this.producto.id,
+      reporterMessage: this.mensajeReporte
+    };
+  
+    this.http.post('http://localhost:8081/api/notificacion-reporte', payload)
+      .subscribe({
+        next: (res) => {
+  
+          this.mostrarModalReporte = false;
+          this.mensajeReporte = '';
+  
+          setTimeout(() => {
+            Swal.fire('Éxito', 'El reporte fue enviado', 'success');
+          }, 100);
+        },
+        error: (err) => {
+  
+          setTimeout(() => {
+            Swal.fire('Error', 'No se pudo enviar', 'error');
+          }, 100);
+        }
+      });
+  }
+  
 }
+

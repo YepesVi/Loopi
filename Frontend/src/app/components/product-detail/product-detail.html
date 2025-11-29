@@ -54,6 +54,10 @@
         </button>
       </div>
 
+      <button class="btn-report" (click)="mostrarModalReporte = true">
+        Reportar Producto
+      </button>
+
     </div>
   </div>
 </div>
@@ -65,3 +69,30 @@
     </div>
   </div>
 </ng-template>
+
+<div class="custom-modal-overlay" *ngIf="mostrarModalReporte">
+  <div class="custom-modal">
+
+    <h2>Reportar producto</h2>
+
+    <p>Escribe el motivo del reporte:</p>
+
+    <textarea
+      [(ngModel)]="mensajeReporte"
+      placeholder="Escribe tu mensaje..."
+      rows="4"
+      class="custom-textarea">
+    </textarea>
+
+    <div class="custom-actions">
+      <button class="btn-cancel" (click)="mostrarModalReporte = false">
+        Cancelar
+      </button>
+
+      <button class="btn-send" (click)="enviarReporte()">
+        Enviar reporte
+      </button>
+    </div>
+
+  </div>
+</div>

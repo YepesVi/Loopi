@@ -37,5 +37,10 @@ export class CarritoService {
     console.log(carrito);
     return this.http.post<any>('http://localhost:8081/api/pago/crear', carrito);
   }
+
+  comprar(carrito: any) {
+    const cedula = localStorage.getItem('cedula');
+    return this.http.post<any>(`${this.baseUrl}/comprar/${cedula}`, null);
+  }
   
 }
