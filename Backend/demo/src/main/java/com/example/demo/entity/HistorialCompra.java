@@ -7,7 +7,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-//import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Data
 @Entity
@@ -24,6 +23,5 @@ public class HistorialCompra {
     private User usuario;
 
     @OneToMany(mappedBy = "historial", cascade = CascadeType.ALL)
-    //@JsonManagedReference
     private List<Producto> productos = new ArrayList<>();
 }

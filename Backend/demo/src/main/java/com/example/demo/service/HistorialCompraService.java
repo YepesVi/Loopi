@@ -49,14 +49,12 @@ public class HistorialCompraService {
             throw new RuntimeException("El carrito está vacío");
         }
 
-        // 1️⃣ Crear historial y guardarlo vacío
         HistorialCompra historial = new HistorialCompra();
         historial.setFechaCompra(LocalDateTime.now());
         historial.setUsuario(user);
 
         historial = historialCompraRepository.save(historial);
 
-        // 2️⃣ Actualizar productos y asignarlos al historial
         for (CarritoItem item : carrito.getItems()) {
 
             Producto producto = item.getProducto();
@@ -64,14 +62,13 @@ public class HistorialCompraService {
             producto.setHistorial(historial);
             producto.setEstado("VENDIDO");
 
-            productoRepository.save(producto); // 👈 GUARDAR PRODUCTO AQUÍ
+            productoRepository.save(producto);
 
             historial.getProductos().add(producto);
 
             carritoItemRepository.deleteByProducto_Id(producto.getId());
         }
 
-        // 3️⃣ Guardar historial ya con productos asignados (opcional)
         historial = historialCompraRepository.save(historial);
 
         carrito.getItems().clear();
