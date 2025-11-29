@@ -1,0 +1,48 @@
+<div class="about-container">
+  <h1>Acerca de Loopi</h1>
+  <p><strong>Versión:</strong> {{ version }}</p>
+
+  <section>
+    <h2>Misión</h2>
+    <p>{{ mision }}</p>
+  </section>
+
+  <section>
+    <h2>Pregunta problematizadora</h2>
+    <p>{{ pregunta }}</p>
+  </section>
+
+  <section>
+    <h2>Justificación</h2>
+    <p>{{ justificacion }}</p>
+  </section>
+
+  <section>
+    <h2>Alcance</h2>
+    <ul>
+      <li *ngFor="let item of alcance">{{ item }}</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Objetivos</h2>
+    <ul>
+      <li *ngFor="let obj of objetivos">{{ obj }}</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Equipo</h2>
+    <div class="roles">
+      <div *ngFor="let rol of roles" class="rol-card">
+        <h3>{{ rol.titulo }}</h3>
+        <ul>
+          <li *ngFor="let miembro of rol.integrantes">
+            <strong>{{ miembro.nombre }}</strong><br />
+            <small>{{ miembro.correo }}</small>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</div>
