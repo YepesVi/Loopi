@@ -1,6 +1,6 @@
 
 import { Component, ElementRef, Input, ViewChild } from '@angular/core';
-import { CommonModule, DecimalPipe } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { Producto } from '../../models/producto.model';
 import { AuthService } from '../../services/auth.service';
@@ -10,7 +10,7 @@ import Swal from 'sweetalert2';
 @Component({
   selector: 'app-product-card',
   standalone: true,
-  imports: [CommonModule, DecimalPipe],
+  imports: [CommonModule],
   templateUrl: './product-card.html',
   styleUrl: './product-card.css'
 })

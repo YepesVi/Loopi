@@ -17,7 +17,8 @@ public class EmailService {
     public void sendPurchaseEmail(String correoDestino, HistorialCompra historial) {
 
         StringBuilder sb = new StringBuilder();
-        sb.append("Gracias por tu compra!\n\n");
+        sb.append("Loopi\n\n");
+        sb.append("!Gracias por tu compra!\n\n");
         sb.append("Fecha de compra: ").append(historial.getFechaCompra()).append("\n\n");
 
         sb.append("Productos adquiridos:\n");
@@ -25,7 +26,7 @@ public class EmailService {
         for (Producto p : historial.getProductos()) {
             sb.append("- ").append(p.getTitulo())
               .append(" | Valor: ").append(p.getPrecio())
-              .append("\n");
+              .append("\n\n");
         }
 
         SimpleMailMessage message = new SimpleMailMessage();

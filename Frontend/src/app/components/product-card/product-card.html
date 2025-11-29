@@ -40,7 +40,7 @@
     </div>
     
     <div class="card-info-bottom">
-      <p class="price-tag">$ {{ producto.precio | number }}</p>
+      <p class="price-tag">$ {{ producto.precio.toLocaleString('es-CO') }}</p>
 
       <button 
         class="btn-comprar"

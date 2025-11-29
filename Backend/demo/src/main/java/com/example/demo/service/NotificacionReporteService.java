@@ -30,7 +30,7 @@ public class NotificacionReporteService {
         }
 
         Producto producto = productOpt.get();
-        User owner = producto.getPropietario(); // Asumiendo que product tiene relación ManyToOne con User
+        User owner = producto.getPropietario();
 
         if (owner == null || owner.getCorreo() == null) {
             System.out.println("❌ El producto no tiene dueño o no tiene correo.");
@@ -65,12 +65,15 @@ public class NotificacionReporteService {
                 Tu producto ha sido reportado.
 
                 🛒 Producto: %s
-                📩 Mensaje del reporte:
+
+                📩 Mensaje del reporte: 
                 %s
 
                 Por favor revisa este reporte y toma las acciones necesarias.
 
                 Gracias.
+
+                Loopi Team
                 """.formatted(
                 product.getTitulo(),
                 request.getReporterMessage()
