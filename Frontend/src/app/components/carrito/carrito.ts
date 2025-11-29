@@ -115,10 +115,8 @@ export class Carrito implements OnInit {
           confirmButtonText: 'Aceptar'
         });
   
-        // Opcional: limpiar carrito en el front
         this.carrito.productos = [];
   
-        // Opcional: recargar carrito del backend
         this.cargarCarrito();
       },
   

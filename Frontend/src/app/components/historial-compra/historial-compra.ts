@@ -42,7 +42,7 @@ export class HistorialCompra {
       0
     );
   
-    return total.toLocaleString('es-CO'); // Agrega puntos de miles
+    return total.toLocaleString('es-CO');
   }  
 
 }
