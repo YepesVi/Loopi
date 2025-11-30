@@ -28,10 +28,20 @@
 }
 
 .badge {
-  font-size: 0.8rem;
-  position: relative;
-  top: -8px;
-  right: 5px;
+ position: absolute;
+  top: -5px;
+  right: -10px;
+  background-color: #E6E6FA;
+  color: #38355d;
+  font-size: 0.75rem;
+  font-weight: bold;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
 }
 
 .opciones {
