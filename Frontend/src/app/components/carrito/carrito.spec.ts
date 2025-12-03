@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Carrito } from './carrito';
 import { CarritoService } from '../../services/carrito/carrito-service';
 import { of, throwError } from 'rxjs';
+import Swal from 'sweetalert2';
 
 describe('CarritoComponent', () => {
   let component: Carrito;
@@ -13,10 +14,10 @@ describe('CarritoComponent', () => {
       'getCarrito',
       'eliminarProducto',
       'vaciarCarrito',
-      'crearPago'
+      'crearPago',
+      'comprar'
     ]);
 
-    // ✅ Simular getCarrito antes de crear el componente
     mockCarrito.getCarrito.and.returnValue(of({ items: [] }));
 
     await TestBed.configureTestingModule({
@@ -65,16 +66,15 @@ describe('CarritoComponent', () => {
     expect(component.total).toBe(200);
   });
 
-it('debería eliminar producto y recargar carrito', () => {
-  mockCarrito.eliminarProducto.and.returnValue(of(void 0));
-  mockCarrito.getCarrito.and.returnValue(of({ items: [] }));
+  it('debería eliminar producto y recargar carrito', () => {
+    mockCarrito.eliminarProducto.and.returnValue(of(void 0));
+    mockCarrito.getCarrito.and.returnValue(of({ items: [] }));
 
-  component.eliminar(1);
+    component.eliminar(1);
 
-  expect(mockCarrito.eliminarProducto).toHaveBeenCalledWith(1);
-  expect(mockCarrito.getCarrito).toHaveBeenCalled();
-});
-
+    expect(mockCarrito.eliminarProducto).toHaveBeenCalledWith(1);
+    expect(mockCarrito.getCarrito).toHaveBeenCalled();
+  });
 
   it('debería vaciar carrito y recargar', () => {
     mockCarrito.vaciarCarrito.and.returnValue(of(void 0));
@@ -86,40 +86,65 @@ it('debería eliminar producto y recargar carrito', () => {
     expect(mockCarrito.getCarrito).toHaveBeenCalled();
   });
 
-  it('debería comprar y redirigir si initPoint existe', () => {
-  Object.defineProperty(window, 'location', {
-    value: { href: '' },
-    writable: true
+  it('debería comprar por pasarela y redirigir si initPoint existe', () => {
+    Object.defineProperty(window, 'location', {
+      value: { href: '' },
+      writable: true
+    });
+
+    mockCarrito.crearPago.and.returnValue(of({ initPoint: true, sandboxInitPoint: 'http://sandbox' }));
+
+    component.carrito = [{ producto: { id: 1, titulo: 'Test', precio: 100 } }];
+    component.comprarPasarelaDePago();
+
+    expect(mockCarrito.crearPago).toHaveBeenCalled();
+    expect(window.location.href).toBe('http://sandbox');
   });
 
-  mockCarrito.crearPago.and.returnValue(of({ initPoint: true, sandboxInitPoint: 'http://sandbox' }));
-
-  component.carrito = [{ producto: { id: 1, titulo: 'Test', precio: 100 } }];
-  component.comprar();
-
-  expect(mockCarrito.crearPago).toHaveBeenCalled();
-  expect(window.location.href).toBe('http://sandbox');
-});
-
-
-  it('debería mostrar alerta si no hay initPoint', () => {
+  it('debería mostrar alerta si no hay initPoint en pasarela', () => {
     spyOn(window, 'alert');
     mockCarrito.crearPago.and.returnValue(of({}));
 
     component.carrito = [{ producto: { id: 1, titulo: 'Test', precio: 100 } }];
-    component.comprar();
+    component.comprarPasarelaDePago();
 
     expect(window.alert).toHaveBeenCalledWith('No se recibió la URL de pago.');
   });
-  
-  
-  it('debería manejar error al comprar', () => {
+
+  it('debería manejar error en pasarela de pago', () => {
     spyOn(window, 'alert');
     mockCarrito.crearPago.and.returnValue(throwError(() => new Error('Error')));
 
-    component.carrito = [{ producto: { id: 1, titulo: 'Test', precio: 100 } }];
-    component.comprar();
+    component.comprarPasarelaDePago();
 
     expect(window.alert).toHaveBeenCalledWith('Error al generar el pago.');
+  });
+
+  it('debería comprar correctamente y vaciar carrito', () => {
+    spyOn(Swal, 'fire');
+    mockCarrito.comprar.and.returnValue(of({}));
+    mockCarrito.getCarrito.and.returnValue(of({ items: [] }));
+
+    component.carrito = [{ producto: { id: 1, precio: 100 } }];
+    component.comprar();
+
+    expect(mockCarrito.comprar).toHaveBeenCalled();
+    expect(Swal.fire).toHaveBeenCalledWith(jasmine.objectContaining({ icon: 'success' }));
+    expect(mockCarrito.getCarrito).toHaveBeenCalled();
+  });
+
+  it('debería manejar error al comprar', () => {
+    spyOn(Swal, 'fire');
+    mockCarrito.comprar.and.returnValue(throwError(() => ({ error: { message: 'Error compra' } })));
+
+    component.comprar();
+
+    expect(Swal.fire).toHaveBeenCalledWith(jasmine.objectContaining({ icon: 'error', text: 'Error compra' }));
+  });
+
+  it('debería retornar id en trackById', () => {
+    const item = { id: 123 };
+    const result = component.trackById(0, item);
+    expect(result).toBe(123);
   });
 });

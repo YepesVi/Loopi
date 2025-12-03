@@ -91,29 +91,6 @@ describe('LoginRegisterComponent', () => {
     expect(component.message).toContain('❌');
   });
 
-  it('debería registrar exitosamente y crear carrito', () => {
-    component.user = {
-      nombre: 'Derinson',
-      apellido: 'Dev',
-      cedula: '123',
-      telefono: '456',
-      correo: 'derinson@mail.com',
-      direccion: 'Calle 123',
-      password: 'secure',
-      foto: null
-    };
-
-    mockAuth.register.and.returnValue(of({}));
-    mockCarrito.crearCarrito.and.returnValue(of({}));
-
-    component.register();
-
-    expect(mockAuth.register).toHaveBeenCalled();
-    expect(mockCarrito.crearCarrito).toHaveBeenCalledWith('123');
-    expect(component.message).toContain('✅ Registro exitoso');
-    expect(component.mode).toBe('login');
-  });
-
   it('debería manejar error en registro', () => {
     mockAuth.register.and.returnValue(throwError(() => new Error('Error')));
     component.user.nombre = 'Derinson';

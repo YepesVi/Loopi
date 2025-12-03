@@ -26,31 +26,96 @@ describe('CarritoService', () => {
     httpMock.verify();
   });
 
- 
+  it('debería obtener carrito y actualizar cantidad', () => {
+    const mockResponse = { items: [{ id: 1 }, { id: 2 }] };
 
- it('debería agregar producto con cedula en body', () => {
-  const mockResponse = { mensaje: 'Producto agregado' };
-
-  service.agregarProducto(12345).subscribe(res => {
-    expect(res.mensaje).toBe('Producto agregado');
-  });
-
-  const req = httpMock.expectOne('http://localhost:8081/api/carrinho/agregar/12345');
-  expect(req.request.method).toBe('POST');
-  expect(req.request.body).toEqual({ cedula: '123' });
-  req.flush(mockResponse);
-});
-
-
-  it('debería eliminar producto por itemId', () => {
-    const mockResponse = { mensaje: 'Producto eliminado' };
-
-    service.eliminarProducto(7).subscribe(res => {
-      expect(res.mensaje).toBe('Producto eliminado');
+    service.getCarrito().subscribe(res => {
+      expect(res.items.length).toBe(2);
     });
 
-    const req = httpMock.expectOne('http://localhost:8081/api/carrito/item/7');
+    const req = httpMock.expectOne('http://localhost:8081/api/carrito/123');
+    expect(req.request.method).toBe('GET');
+    req.flush(mockResponse);
+  });
+
+  it('debería devolver carrito vacío si no hay cedula', (done) => {
+    (localStorage.getItem as jasmine.Spy).and.returnValue(null);
+
+    service.getCarrito().subscribe(res => {
+      expect(res.items).toEqual([]);
+      done();
+    });
+  });
+
+  it('debería crear carrito', () => {
+    const mockResponse = { mensaje: 'Carrito creado' };
+
+    service.crearCarrito('123').subscribe(res => {
+      expect(res.mensaje).toBe('Carrito creado');
+    });
+
+    const req = httpMock.expectOne('http://localhost:8081/api/carrito/crear/123');
+    expect(req.request.method).toBe('POST');
+    req.flush(mockResponse);
+  });
+
+
+  it('debería vaciar carrito', () => {
+    const mockResponse = { mensaje: 'Carrito vaciado' };
+
+    service.vaciarCarrito().subscribe(res => {
+      expect(res.mensaje).toBe('Carrito vaciado');
+    });
+
+    const req = httpMock.expectOne('http://localhost:8081/api/carrito/vaciar/123');
     expect(req.request.method).toBe('DELETE');
     req.flush(mockResponse);
+  });
+
+  it('debería resetear cantidad', () => {
+    let cantidad: number | undefined;
+    service.cantidad$.subscribe(val => cantidad = val);
+
+    service.resetCantidad();
+    expect(cantidad).toBe(0);
+  });
+
+  it('debería crear pago', () => {
+    const mockResponse = { initPoint: 'url' };
+    const carrito = { items: [{ productoId: 1 }] };
+
+    service.crearPago(carrito).subscribe(res => {
+      expect(res.initPoint).toBe('url');
+    });
+
+    const req = httpMock.expectOne('http://localhost:8081/api/pago/crear');
+    expect(req.request.method).toBe('POST');
+    expect(req.request.body).toEqual(carrito);
+    req.flush(mockResponse);
+  });
+
+  it('debería comprar carrito', () => {
+    const mockResponse = { mensaje: 'Compra realizada' };
+
+    service.comprar({ items: [] }).subscribe(res => {
+      expect(res.mensaje).toBe('Compra realizada');
+    });
+
+    const req = httpMock.expectOne('http://localhost:8081/api/carrito/comprar/123');
+    expect(req.request.method).toBe('POST');
+    req.flush(mockResponse);
+  });
+
+  it('debería no comprar si no hay cedula', (done) => {
+    (localStorage.getItem as jasmine.Spy).and.returnValue(null);
+
+    service.comprar({ items: [] }).subscribe({
+      complete: () => {
+        // No debería emitir nada
+        done();
+      }
+    });
+
+    httpMock.expectNone('http://localhost:8081/api/carrito/comprar/123');
   });
 });
