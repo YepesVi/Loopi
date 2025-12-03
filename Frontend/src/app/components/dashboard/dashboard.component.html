@@ -3,9 +3,6 @@
   {{ editando ? 'Editar producto' : 'Agregar producto' }}
 </button>
 
-<button routerLink="/historial-general" class="btn-historial">
-  Historial general
-</button>
 
 
 <!-- Modal para crear o editar producto -->
@@ -119,7 +116,6 @@
         <button class="editar" (click)="editarProducto(p)">Editar</button>
         <button class="eliminar" (click)="eliminarProducto(p.id!)">Eliminar</button>
 
-        <button class="historial" [routerLink]="['/historial', p.id]">Historial</button>
 
       </div>
     </div>
