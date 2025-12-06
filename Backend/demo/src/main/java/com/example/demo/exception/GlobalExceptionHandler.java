@@ -10,7 +10,6 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-// Maneja las excepciones globales de validación y otras excepciones personalizadas para devolver respuestas adecuadas.
 @RestControllerAdvice
 public class GlobalExtensionHandler {
 
