@@ -17,7 +17,7 @@ import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/api/productos")
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "https://loopi-app.onrender.com")
 @RequiredArgsConstructor 
 public class ProductoController {
 
