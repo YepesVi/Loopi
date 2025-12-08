@@ -13,7 +13,7 @@ import com.example.demo.service.CarritoService;
 
 @RestController
 @RequestMapping("/api/carrito")
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "https://loopi-app.onrender.com")
 public class CarritoController {
     @Autowired
     private CarritoService carritoService;

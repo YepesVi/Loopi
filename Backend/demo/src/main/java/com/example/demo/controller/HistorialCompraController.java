@@ -15,7 +15,7 @@ import com.example.demo.service.HistorialCompraService;
 
 @RestController
 @RequestMapping("/api/historial-compra")
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "https://loopi-app.onrender.com")
 public class HistorialCompraController {
     
     @Autowired

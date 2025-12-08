@@ -15,7 +15,7 @@ import com.example.demo.service.NotificacionReporteService;
 
 @RestController
 @RequestMapping("/api/notificacion-reporte")
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "https://loopi-app.onrender.com")
 public class NotificacionReporteController {
 
     @Autowired
