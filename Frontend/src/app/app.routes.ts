@@ -49,7 +49,7 @@ export const routes: Routes = [
     component: Carrito
   },
   {
-    path: 'producto/:id',
+    path: 'producto',
     component: ProductDetail
   },
   {
