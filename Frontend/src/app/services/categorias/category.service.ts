@@ -11,7 +11,7 @@ import { Categoria, CrudCategoria } from '../../models/category.model';
 export class CategoryService {
   
   // URL base para todos los métodos del servicio
-  private baseUrl = 'http://localhost:8081/api/categorias'; 
+  private baseUrl = 'https://loopi-back.onrender.com/api/categorias'; 
 
   constructor(private http: HttpClient) { }
 
