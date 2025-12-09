@@ -4,7 +4,7 @@ import { Observable, tap } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private baseUrl = 'http://localhost:8081/api/auth';
+  private baseUrl = 'https://loopi-back.onrender.com/api/auth';
 
   // Estado reactivo de sesión
   private readonly loggedIn = signal(false);

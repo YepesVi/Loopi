@@ -7,7 +7,7 @@ import { tap } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class CarritoService {
-  private baseUrl = 'http://localhost:8081/api/carrito'; 
+  private baseUrl = 'https://loopi-back.onrender.com/api/carrito'; 
 
   private cantidadSubject = new BehaviorSubject<number>(0);
   cantidad$ = this.cantidadSubject.asObservable();

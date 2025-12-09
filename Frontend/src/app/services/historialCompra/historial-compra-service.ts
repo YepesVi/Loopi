@@ -5,7 +5,7 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class HistorialCompraService {
-  private baseUrl = 'http://localhost:8081/api/historial-compra';
+  private baseUrl = 'https://loopi-back.onrender.com/api/historial-compra';
 
   constructor(private http: HttpClient) {}
 

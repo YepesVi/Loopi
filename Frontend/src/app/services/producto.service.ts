@@ -8,7 +8,7 @@ import { Page } from '../models/page.model';
   providedIn: 'root'
 })
 export class ProductosService {
-  private apiUrl = 'http://localhost:8081/api/productos';
+  private apiUrl = 'https://loopi-back.onrender.com/api/productos';
 
   constructor(private http: HttpClient) {}
 
